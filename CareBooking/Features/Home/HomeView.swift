@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppModel.self) private var appModel
     @State private var showFilters = false
+    @State private var showSettings = false
     @State private var bookingProvider: Provider?
     @State private var sortNewest = true
 
@@ -29,7 +30,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        // Settings entry point from design hamburger
+                        showSettings = true
                     } label: {
                         Image(systemName: "line.3.horizontal")
                     }
@@ -72,6 +73,9 @@ struct HomeView: View {
             .sheet(isPresented: $showFilters) {
                 FilterSheet()
                     .presentationDetents([.medium, .large])
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
             .sheet(item: $bookingProvider) { provider in
                 BookProviderSheet(provider: provider)
