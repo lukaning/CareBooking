@@ -112,7 +112,12 @@ struct SettingsView: View {
                 }
             }
             .navigationDestination(for: SettingsDestination.self) { destination in
-                SettingsDetailPlaceholder(destination: destination)
+                switch destination {
+                case .userManagement:
+                    UserManagementView()
+                default:
+                    SettingsDetailPlaceholder(destination: destination)
+                }
             }
         }
     }

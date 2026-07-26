@@ -21,6 +21,10 @@
 		C5EAC8970E2A40A99703B386 /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D761365D7E1A4CAAA4730F7D /* ProfileModels.swift */; };
 		70ABC330977D45CF8E6B6A5B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC90410B92A471FBE8CFBBB /* Theme.swift */; };
 		B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */; };
+		E2B3C4D5E6F7489012BCDEF0 /* UserManagementModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */; };
+		A4D5E6F708194A0234DEF012 /* FeatureAccessListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */; };
+		C6F708192A3B4C2456F01234 /* UserManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6F708192A4B1345EF0123 /* UserManagementView.swift */; };
+		E8092A3B4C5D4E4678123456 /* InviteUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F8192A3B4C4D3567012345 /* InviteUserView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +44,10 @@
 		4FC90410B92A471FBE8CFBBB /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		30D1503C76AA4E0198DB2D93 /* CareBooking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CareBooking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementModels.swift; sourceTree = "<group>"; };
+		F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureAccessListView.swift; sourceTree = "<group>"; };
+		B5E6F708192A4B1345EF0123 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
+		D7F8192A3B4C4D3567012345 /* InviteUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUserView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +98,9 @@
 		C0F53E804D6F4C3B1E9A7F42 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				D7F8192A3B4C4D3567012345 /* InviteUserView.swift */,
+				B5E6F708192A4B1345EF0123 /* UserManagementView.swift */,
+				F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */,
 				A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -140,6 +151,7 @@
 		AADFE0B15A0D4164BC258B0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */,
 				811085CE35FB4C15896EFEA8 /* AppModel.swift */,
 				9A4AE86E400646F7A553090E /* Models.swift */,
 				D761365D7E1A4CAAA4730F7D /* ProfileModels.swift */,
@@ -245,6 +257,10 @@
 				4B6EC2DD3715474E9D5F87FA /* ProfileDetailEditView.swift in Sources */,
 				9DE90EA2C0D54B59AF6B0C95 /* ProfileView.swift in Sources */,
 				B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */,
+				E8092A3B4C5D4E4678123456 /* InviteUserView.swift in Sources */,
+				C6F708192A3B4C2456F01234 /* UserManagementView.swift in Sources */,
+				A4D5E6F708194A0234DEF012 /* FeatureAccessListView.swift in Sources */,
+				E2B3C4D5E6F7489012BCDEF0 /* UserManagementModels.swift in Sources */,
 				CE753D7345124DD88BF76338 /* AppModel.swift in Sources */,
 				E961C1B8F4C14D9192DE87D5 /* Models.swift in Sources */,
 				C5EAC8970E2A40A99703B386 /* ProfileModels.swift in Sources */,

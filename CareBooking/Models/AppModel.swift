@@ -55,6 +55,7 @@ final class AppModel {
     var profile = UserProfile()
     var bookings: [Booking] = []
     var providers: [Provider] = Provider.samples
+    var managedUsers: [ManagedTeamUser] = ManagedTeamUser.samples
 
     func completeSignIn(email: String, name: String = "") {
         userEmail = email
@@ -106,6 +107,68 @@ final class AppModel {
 
     func addBooking(_ booking: Booking) {
         bookings.insert(booking, at: 0)
+    }
+
+    func inviteManagedUser(
+        firstName: String,
+        lastName: String,
+        email: String,
+        role: TeamAccessRole,
+        permissions: [FeatureAccessKey: Bool],
+        nestedPermissions: [FeatureAccessKey: [NestedFeatureAccess]]
+    ) {
+        let user = ManagedTeamUser(
+            id: UUID().uuidString,
+            firstName: firstName.trimmingCharacters(in: .whitespacesAndNewlines),
+            lastName: lastName.trimmingCharacters(in: .whitespacesAndNewlines),
+            email: email.trimmingCharacters(in: .whitespacesAndNewlines),
+            role: role,
+            invitePending: true,
+            permissions: permissions,
+            nestedPermissions: nestedPermissions
+        )
+        managedUsers.append(user)
+    }
+
+    func updateManagedUserRole(id: String, role: TeamAccessRole) {
+        guard let index = managedUsers.firstIndex(where: { $0.id == id }) else { return }
+        var user = managedUsers[index]
+        user.role = role
+        user.permissions = FeatureAccessKey.defaults(for: role)
+        if role == .admin {
+            user.invitePending = false
+        }
+        managedUsers[index] = user
+    }
+
+    func updateManagedUserPermission(id: String, key: FeatureAccessKey, isEnabled: Bool) {
+        guard let index = managedUsers.firstIndex(where: { $0.id == id }) else { return }
+        var user = managedUsers[index]
+        user.permissions[key] = isEnabled
+        managedUsers[index] = user
+    }
+
+    func updateManagedNestedPermission(id: String, key: FeatureAccessKey, nestedID: String, isEnabled: Bool) {
+        guard let index = managedUsers.firstIndex(where: { $0.id == id }) else { return }
+        var user = managedUsers[index]
+        guard var items = user.nestedPermissions[key],
+              let nestedIndex = items.firstIndex(where: { $0.id == nestedID })
+        else { return }
+        items[nestedIndex].isEnabled = isEnabled
+        user.nestedPermissions[key] = items
+        managedUsers[index] = user
+    }
+
+    func updateManagedUserPermissions(
+        id: String,
+        permissions: [FeatureAccessKey: Bool],
+        nestedPermissions: [FeatureAccessKey: [NestedFeatureAccess]]
+    ) {
+        guard let index = managedUsers.firstIndex(where: { $0.id == id }) else { return }
+        var user = managedUsers[index]
+        user.permissions = permissions
+        user.nestedPermissions = nestedPermissions
+        managedUsers[index] = user
     }
 
     func publishProfile(_ draft: UserProfile) {
