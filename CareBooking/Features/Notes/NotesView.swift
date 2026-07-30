@@ -39,11 +39,7 @@ struct NotesView: View {
 
     private var welcomeContent: some View {
         VStack(spacing: 0) {
-            Image("onboardingHero")
-                .resizable()
-                .scaledToFill()
-                .frame(height: 280)
-                .clipped()
+            HeroHeaderImage()
 
             VStack(alignment: .leading, spacing: 12) {
                 greetingHeader

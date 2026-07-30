@@ -26,12 +26,7 @@ struct OnboardingFlowView: View {
 
 struct OnboardingHero: View {
     var body: some View {
-        Image("onboardingHero")
-            .resizable()
-            .scaledToFill()
-            .frame(maxWidth: .infinity)
-            .frame(height: 180)
-            .clipped()
+        HeroHeaderImage()
             .overlay(alignment: .top) {
                 Theme.brandOrange
                     .frame(height: 0)

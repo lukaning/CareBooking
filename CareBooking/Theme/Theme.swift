@@ -14,6 +14,23 @@ enum Theme {
     static let segmentBG = Color(red: 0.941, green: 0.957, blue: 0.976)
 }
 
+/// Full-width hero image preserving the asset's 3:2 aspect ratio.
+struct HeroHeaderImage: View {
+    private static let aspectRatio: CGFloat = 1000 / 667
+
+    var body: some View {
+        Color.clear
+            .aspectRatio(Self.aspectRatio, contentMode: .fit)
+            .overlay {
+                Image("onboardingHero")
+                    .resizable()
+                    .scaledToFill()
+            }
+            .clipped()
+            .frame(maxWidth: .infinity)
+    }
+}
+
 struct PrimaryOrangeButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
