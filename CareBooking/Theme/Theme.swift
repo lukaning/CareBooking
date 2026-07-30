@@ -55,6 +55,31 @@ struct PrimaryBlackButtonStyle: ButtonStyle {
     }
 }
 
+struct EmBeLifeLogo: View {
+    var body: some View {
+        HStack(spacing: 4) {
+            Text("Em")
+                .font(.title.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(width: 44, height: 44)
+                .background(Theme.brandOrange)
+                .clipShape(Circle())
+
+            HStack(spacing: 0) {
+                Text("Be")
+                Text("Life")
+            }
+            .font(.system(size: 28, weight: .bold))
+            .foregroundStyle(Theme.brandOrange)
+
+            Text("™")
+                .font(.caption)
+                .foregroundStyle(Theme.brandOrange)
+                .offset(y: -8)
+        }
+    }
+}
+
 struct AuthTextField: View {
     let title: String
     let placeholder: String

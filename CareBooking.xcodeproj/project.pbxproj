@@ -36,6 +36,7 @@
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 		C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1NOTESMDL234567890ABC /* NotesModels.swift */; };
 		E4NOTESVW234567890ABCD /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3NOTESVW234567890ABCD /* NotesView.swift */; };
+		F1ONBRDMDL234567890ABC /* OnboardingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2ONBRDMDL234567890ABC /* OnboardingModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		E5MSGVW234567890ABCDEF /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		B1NOTESMDL234567890ABC /* NotesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesModels.swift; sourceTree = "<group>"; };
+		E2ONBRDMDL234567890ABC /* OnboardingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingModels.swift; sourceTree = "<group>"; };
 		D3NOTESVW234567890ABCD /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -178,6 +180,7 @@
 		AADFE0B15A0D4164BC258B0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E2ONBRDMDL234567890ABC /* OnboardingModels.swift */,
 				B1NOTESMDL234567890ABC /* NotesModels.swift */,
 				C3NOTMDL234567890ABCDE /* NotificationModels.swift */,
 				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
@@ -337,6 +340,7 @@
 				D4NOTMDL234567890ABCDE /* NotificationModels.swift in Sources */,
 				E4NOTESVW234567890ABCD /* NotesView.swift in Sources */,
 				C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */,
+				F1ONBRDMDL234567890ABC /* OnboardingModels.swift in Sources */,
 				B2MSGMDL234567890ABCDE /* MessageModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

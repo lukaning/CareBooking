@@ -49,8 +49,13 @@ final class AppModel {
     var preferredLanguage = "English"
     var selectedRole: UserRole?
     var selectedServiceIDs: Set<String> = []
+    var selectedSubServiceIDs: [String: Set<String>] = [:]
     var locationChoice: LocationChoice?
     var customLocation = ""
+    var customAddress = ""
+    var customZipcode = ""
+    var searchRadiusMiles: Double = 25
+    var customLocationConfirmed = false
 
     var profile = UserProfile()
     var bookings: [Booking] = []
@@ -80,7 +85,13 @@ final class AppModel {
             case .current:
                 profile.address = "Current location"
             case .custom:
-                profile.address = customLocation
+                if !customAddress.isEmpty {
+                    profile.address = [customAddress, customZipcode]
+                        .filter { !$0.isEmpty }
+                        .joined(separator: ", ")
+                } else {
+                    profile.address = customLocation
+                }
             case .none:
                 break
             }
@@ -89,9 +100,19 @@ final class AppModel {
             let titles = ServiceCategory.all
                 .filter { selectedServiceIDs.contains($0.id) }
                 .map(\.title)
-            profile.servicesRequestedFor = titles.prefix(3).joined(separator: ", ")
+            profile.servicesRequestedFor = titles.isEmpty
+                ? selectedSubServiceLabels.joined(separator: ", ")
+                : titles.prefix(3).joined(separator: ", ")
         }
         flow = .main
+    }
+
+    var selectedSubServiceLabels: [String] {
+        selectedSubServiceIDs.flatMap { categoryID, ids in
+            OnboardingServiceCatalog.subOptions(for: categoryID)
+                .filter { ids.contains($0.id) }
+                .map(\.title)
+        }
     }
 
     func signOut() {
@@ -99,7 +120,12 @@ final class AppModel {
         hasCompletedOnboarding = false
         selectedRole = nil
         selectedServiceIDs = []
+        selectedSubServiceIDs = [:]
         locationChoice = nil
+        customLocation = ""
+        customAddress = ""
+        customZipcode = ""
+        customLocationConfirmed = false
         profile = UserProfile()
         bookings = []
         flow = .auth
