@@ -109,6 +109,25 @@ final class AppModel {
         bookings.insert(booking, at: 0)
     }
 
+    func updateBooking(_ booking: Booking) {
+        guard let index = bookings.firstIndex(where: { $0.id == booking.id }) else { return }
+        bookings[index] = booking
+    }
+
+    func rescheduleBooking(id: UUID, date: Date, startTime: Date) {
+        guard let index = bookings.firstIndex(where: { $0.id == id }) else { return }
+        bookings[index].date = date
+        bookings[index].startTime = startTime
+    }
+
+    func cancelBooking(id: UUID) {
+        bookings.removeAll { $0.id == id }
+    }
+
+    func booking(id: UUID) -> Booking? {
+        bookings.first { $0.id == id }
+    }
+
     func inviteManagedUser(
         firstName: String,
         lastName: String,
@@ -189,6 +208,7 @@ final class AppModel {
             let calendar = Calendar.current
             let date = calendar.date(from: DateComponents(year: 2025, month: 1, day: 25)) ?? .now
             let start = calendar.date(bySettingHour: 15, minute: 0, second: 0, of: date) ?? date
+            let created = calendar.date(from: DateComponents(year: 2024, month: 11, day: 10)) ?? .now
             addBooking(
                 Booking(
                     provider: eric,
@@ -196,7 +216,8 @@ final class AppModel {
                     startTime: start,
                     durationMinutes: 120,
                     status: .requested,
-                    serviceProvidedTo: next.familyMembers.first?.displayName ?? "S. Roger"
+                    serviceProvidedTo: "Katie M's Parent: Mike",
+                    dateCreated: created
                 )
             )
         }

@@ -84,6 +84,18 @@ enum BookingStatus: String, CaseIterable, Identifiable {
     }
 }
 
+struct BookingChecklistTask: Identifiable, Hashable {
+    let id: UUID
+    var title: String
+    var category: String
+
+    init(id: UUID = UUID(), title: String, category: String) {
+        self.id = id
+        self.title = title
+        self.category = category
+    }
+}
+
 struct Booking: Identifiable, Hashable {
     let id: UUID
     let provider: Provider
@@ -92,9 +104,26 @@ struct Booking: Identifiable, Hashable {
     var durationMinutes: Int
     var status: BookingStatus
     var serviceProvidedTo: String
+    var title: String
+    var taskDescription: String
+    var location: String
+    var dateCreated: Date
+    var checklistTasks: [BookingChecklistTask]
 
     var endTime: Date {
         startTime.addingTimeInterval(TimeInterval(durationMinutes * 60))
+    }
+
+    var timeRangeLabel: String {
+        let start = startTime.formatted(date: .omitted, time: .shortened)
+        let end = endTime.formatted(date: .omitted, time: .shortened)
+        return "\(start) - \(end)"
+    }
+
+    var timeRangeWithDurationLabel: String {
+        let hours = durationMinutes / 60
+        let duration = hours == 1 ? "1 Hour" : "\(hours) Hours"
+        return "\(timeRangeLabel) (\(duration))"
     }
 
     init(
@@ -104,7 +133,12 @@ struct Booking: Identifiable, Hashable {
         startTime: Date,
         durationMinutes: Int,
         status: BookingStatus = .requested,
-        serviceProvidedTo: String = ""
+        serviceProvidedTo: String = "",
+        title: String = "Spear Street Household Task",
+        taskDescription: String = "This task is aimed at taking care of daily chores and some lightweight cooking and taking care of this and that.",
+        location: String = "San Francisco, Detailed Location",
+        dateCreated: Date = .now,
+        checklistTasks: [BookingChecklistTask] = Booking.defaultChecklist
     ) {
         self.id = id
         self.provider = provider
@@ -113,5 +147,18 @@ struct Booking: Identifiable, Hashable {
         self.durationMinutes = durationMinutes
         self.status = status
         self.serviceProvidedTo = serviceProvidedTo
+        self.title = title
+        self.taskDescription = taskDescription
+        self.location = location
+        self.dateCreated = dateCreated
+        self.checklistTasks = checklistTasks
     }
+
+    static let defaultChecklist: [BookingChecklistTask] = [
+        BookingChecklistTask(title: "Position changes/ transfers", category: "Category 1"),
+        BookingChecklistTask(title: "Assistance with waking/ tucking in", category: "Category 1"),
+        BookingChecklistTask(title: "Medication Routine", category: "Category 2"),
+        BookingChecklistTask(title: "Bathing/ dressing", category: "Category 2"),
+        BookingChecklistTask(title: "Grooming and personal hygiene", category: "Category 1")
+    ]
 }

@@ -14,6 +14,8 @@
 		4B6EC2DD3715474E9D5F87FA /* ProfileDetailEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233FEB2A55E4F9BA9124241 /* ProfileDetailEditView.swift */; };
 		70ABC330977D45CF8E6B6A5B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC90410B92A471FBE8CFBBB /* Theme.swift */; };
 		8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */; };
+		A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */; };
+		C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDITBK234567890ABCDEF /* EditBookingView.swift */; };
 		9DE90EA2C0D54B59AF6B0C95 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBD3560D1BC4998BD69B719 /* ProfileView.swift */; };
 		A4D5E6F708194A0234DEF012 /* FeatureAccessListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */; };
 		B6373694A844458AA0C86287 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D4A1803BAD494E9EA0297C /* MainTabView.swift */; };
@@ -45,6 +47,8 @@
 		5233FEB2A55E4F9BA9124241 /* ProfileDetailEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailEditView.swift; sourceTree = "<group>"; };
 		811085CE35FB4C15896EFEA8 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookProviderSheet.swift; sourceTree = "<group>"; };
+		B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RescheduleBookingSheet.swift; sourceTree = "<group>"; };
+		D4EDITBK234567890ABCDEF /* EditBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBookingView.swift; sourceTree = "<group>"; };
 		9A4AE86E400646F7A553090E /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		9E3BA9C6496A444DABE40EFF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */,
+				D4EDITBK234567890ABCDEF /* EditBookingView.swift */,
+				B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */,
 			);
 			path = Booking;
 			sourceTree = "<group>";
@@ -308,6 +314,8 @@
 				34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */,
 				B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */,
 				8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */,
+				A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */,
+				C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */,
 				3DDB0209F71D4590A2F3B444 /* HomeView.swift in Sources */,
 				B6373694A844458AA0C86287 /* MainTabView.swift in Sources */,
 				08F72FE0F2824771ABB5D4AD /* OnboardingViews.swift in Sources */,

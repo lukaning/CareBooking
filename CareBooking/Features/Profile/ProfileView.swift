@@ -6,6 +6,8 @@ struct ProfileView: View {
     @State private var showEdit = false
     @State private var expandedBookingID: UUID?
     @State private var expandedMemberID: UUID?
+    @State private var bookingToReschedule: Booking?
+    @State private var bookingRoute: BookingRoute?
 
     private var profile: UserProfile { appModel.profile }
 
@@ -40,6 +42,12 @@ struct ProfileView: View {
             }
             .navigationDestination(isPresented: $showEdit) {
                 ProfileDetailEditView(profile: editingSeed)
+            }
+            .navigationDestination(item: $bookingRoute) { route in
+                EditBookingView(bookingID: route.id)
+            }
+            .sheet(item: $bookingToReschedule) { booking in
+                RescheduleBookingSheet(booking: booking)
             }
         }
     }
@@ -530,7 +538,12 @@ struct ProfileView: View {
             }
 
             HStack(spacing: 12) {
-                Button("Cancel") {}
+                Button("Cancel") {
+                    appModel.cancelBooking(id: booking.id)
+                    if expandedBookingID == booking.id {
+                        expandedBookingID = nil
+                    }
+                }
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -538,8 +551,12 @@ struct ProfileView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                 Menu {
-                    Button("Reschedule") {}
-                    Button("Edit details") {}
+                    Button("Reschedule") {
+                        bookingToReschedule = booking
+                    }
+                    Button("Edit booking") {
+                        bookingRoute = BookingRoute(id: booking.id)
+                    }
                 } label: {
                     HStack {
                         Text("Modify")
@@ -566,12 +583,19 @@ struct ProfileView: View {
             }
 
             HStack {
-                Text("Checklist Details")
-                    .font(.subheadline.weight(.semibold))
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.grayscale60)
+                Button {
+                    bookingRoute = BookingRoute(id: booking.id)
+                } label: {
+                    HStack {
+                        Text("Checklist Details")
+                            .font(.subheadline.weight(.semibold))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.grayscale60)
+                    }
+                }
+                .buttonStyle(.plain)
             }
             .foregroundStyle(Theme.darkText)
         }
@@ -605,4 +629,8 @@ struct ProfileView: View {
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
+}
+
+private struct BookingRoute: Identifiable, Hashable {
+    let id: UUID
 }
