@@ -14,9 +14,9 @@ enum Theme {
     static let segmentBG = Color(red: 0.941, green: 0.957, blue: 0.976)
 }
 
-/// Full-width hero image preserving the asset's 3:2 aspect ratio.
+/// Full-width hero image at 16:9 aspect ratio.
 struct HeroHeaderImage: View {
-    private static let aspectRatio: CGFloat = 1000 / 667
+    private static let aspectRatio: CGFloat = 16 / 9
 
     var body: some View {
         Color.clear

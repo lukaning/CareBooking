@@ -58,11 +58,7 @@ struct WelcomeStep: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                Image("onboardingHero")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 340)
-                    .clipped()
+                HeroHeaderImage()
 
                 Button("Skip", action: onSkip)
                     .font(.subheadline.weight(.bold))
