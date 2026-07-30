@@ -76,7 +76,7 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.notification)
 
-            PlaceholderTabView(title: AppTab.payment.title, systemImage: AppTab.payment.fillSymbol)
+            PaymentView()
                 .tabItem {
                     tabLabel(.payment)
                 }
