@@ -32,6 +32,8 @@
 		D4NOTMDL234567890ABCDE /* NotificationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3NOTMDL234567890ABCDE /* NotificationModels.swift */; };
 		F6MSGVW234567890ABCDEF /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5MSGVW234567890ABCDEF /* MessagesView.swift */; };
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
+		C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1NOTESMDL234567890ABC /* NotesModels.swift */; };
+		E4NOTESVW234567890ABCD /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3NOTESVW234567890ABCD /* NotesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +63,8 @@
 		C3NOTMDL234567890ABCDE /* NotificationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModels.swift; sourceTree = "<group>"; };
 		E5MSGVW234567890ABCDEF /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		B1NOTESMDL234567890ABC /* NotesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesModels.swift; sourceTree = "<group>"; };
+		D3NOTESVW234567890ABCD /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,7 @@
 				1DC5BACEC57B4D968E09C544 /* Booking */,
 				7C179F7F316C483C8B6F219A /* Home */,
 				E1F2A3B4C5D6478910MSG001 /* Messages */,
+				A9NOTESGP1234567890ABCD /* Notes */,
 				F2A3B4C5D6E7489021NOT001 /* Notification */,
 				92337F985607488E9AFC0A96 /* Onboarding */,
 				F1A2B3C4D5E6478910E4F201 /* Payment */,
@@ -129,6 +134,14 @@
 				A7NOTVW234567890ABCDEF /* NotificationView.swift */,
 			);
 			path = Notification;
+			sourceTree = "<group>";
+		};
+		A9NOTESGP1234567890ABCD /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				D3NOTESVW234567890ABCD /* NotesView.swift */,
+			);
+			path = Notes;
 			sourceTree = "<group>";
 		};
 		F1A2B3C4D5E6478910E4F201 /* Payment */ = {
@@ -159,6 +172,7 @@
 		AADFE0B15A0D4164BC258B0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B1NOTESMDL234567890ABC /* NotesModels.swift */,
 				C3NOTMDL234567890ABCDE /* NotificationModels.swift */,
 				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
 				A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */,
@@ -313,6 +327,8 @@
 				B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */,
 				F6MSGVW234567890ABCDEF /* MessagesView.swift in Sources */,
 				D4NOTMDL234567890ABCDE /* NotificationModels.swift in Sources */,
+				E4NOTESVW234567890ABCD /* NotesView.swift in Sources */,
+				C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */,
 				B2MSGMDL234567890ABCDE /* MessageModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

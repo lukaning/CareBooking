@@ -64,7 +64,7 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.messages)
 
-            PlaceholderTabView(title: AppTab.notes.title, systemImage: AppTab.notes.fillSymbol)
+            NotesView()
                 .tabItem {
                     tabLabel(.notes)
                 }
