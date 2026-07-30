@@ -218,119 +218,194 @@ struct ServiceNeedsStep: View {
     @Environment(AppModel.self) private var appModel
     var onContinue: () -> Void
 
-    @State private var expandedCategoryID: String?
+    @State private var selectedCategoryID: String?
+
+    private let expandAnimation = Animation.spring(response: 0.38, dampingFraction: 0.86)
+    private let chipAnimation = Animation.spring(response: 0.28, dampingFraction: 0.72)
 
     private var canContinue: Bool {
-        guard let categoryID = expandedCategoryID else { return false }
-        let subs = appModel.selectedSubServiceIDs[categoryID] ?? []
-        return !subs.isEmpty
+        guard let categoryID = selectedCategoryID else { return false }
+        return !(appModel.selectedSubServiceIDs[categoryID] ?? []).isEmpty
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("What kind of help or support do you need?")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                        .padding(.top, 20)
-                        .padding(.bottom, 4)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("What kind of help or support do you need?")
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                            .padding(.top, 20)
+                            .padding(.bottom, 12)
 
-                    ForEach(ServiceCategory.all) { service in
-                        serviceCategoryCard(service)
+                        ForEach(ServiceCategory.all) { service in
+                            serviceCategoryRow(service)
+                                .id(service.id)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
+                }
+                .onChange(of: selectedCategoryID) { _, newValue in
+                    guard let newValue else { return }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        withAnimation(expandAnimation) {
+                            proxy.scrollTo(newValue, anchor: .top)
+                        }
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
             }
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
     }
 
-    private func serviceCategoryCard(_ service: ServiceCategory) -> some View {
-        let isSelected = expandedCategoryID == service.id
+    private func serviceCategoryRow(_ service: ServiceCategory) -> some View {
+        let isSelected = selectedCategoryID == service.id
         let subOptions = OnboardingServiceCatalog.subOptions(for: service.id)
         let selectedSubs = appModel.selectedSubServiceIDs[service.id] ?? []
 
-        return VStack(alignment: .leading, spacing: 12) {
+        return VStack(alignment: .leading, spacing: 0) {
             Button {
-                withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
-                    if expandedCategoryID == service.id {
-                        expandedCategoryID = nil
-                    } else {
-                        expandedCategoryID = service.id
-                        appModel.selectedServiceIDs = [service.id]
-                        if appModel.selectedSubServiceIDs[service.id] == nil {
-                            appModel.selectedSubServiceIDs[service.id] = []
-                        }
-                    }
-                }
+                selectCategory(service.id)
             } label: {
-                HStack(spacing: 14) {
+                HStack(alignment: .center, spacing: 14) {
                     Image(isSelected ? "radioFilled" : "radioEmpty")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 28, height: 28)
+                        .frame(width: 26, height: 26)
+                        .scaleEffect(isSelected ? 1.06 : 1)
 
                     Image(service.imageName)
                         .resizable()
+                        .renderingMode(.template)
                         .scaledToFit()
-                        .frame(width: 56, height: 56)
+                        .frame(width: 48, height: 48)
+                        .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
+                        .scaleEffect(isSelected ? 1.04 : 1)
 
                     Text(service.title)
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(isSelected ? Theme.brandOrange : .primary)
+                        .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(14)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .shadow(color: Color(red: 0.8, green: 0.73, blue: 0.73).opacity(0.25), radius: 8, y: 4)
+                .padding(.vertical, 12)
+                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(ServiceRowButtonStyle())
 
             if isSelected {
                 FlowLayout(spacing: 10) {
-                    ForEach(subOptions) { option in
-                        subServiceChip(option, categoryID: service.id, isSelected: selectedSubs.contains(option.id))
+                    ForEach(Array(subOptions.enumerated()), id: \.element.id) { index, option in
+                        subServiceChip(
+                            option,
+                            categoryID: service.id,
+                            isSelected: selectedSubs.contains(option.id)
+                        )
+                        .transition(
+                            .asymmetric(
+                                insertion: .opacity
+                                    .combined(with: .scale(scale: 0.92, anchor: .topLeading))
+                                    .combined(with: .offset(y: -6)),
+                                removal: .opacity.combined(with: .scale(scale: 0.96))
+                            )
+                        )
+                        .animation(chipAnimation.delay(Double(index) * 0.03), value: isSelected)
                     }
                 }
-                .padding(.horizontal, 4)
-                .transition(.opacity.combined(with: .move(edge: .top)))
+                .padding(.leading, 40)
+                .padding(.top, 4)
+                .padding(.bottom, 12)
+                .transition(
+                    .asymmetric(
+                        insertion: .opacity.combined(with: .move(edge: .top)),
+                        removal: .opacity.combined(with: .scale(scale: 0.98, anchor: .top))
+                    )
+                )
+            }
+        }
+        .animation(expandAnimation, value: isSelected)
+    }
+
+    private func selectCategory(_ id: String) {
+        guard selectedCategoryID != id else { return }
+
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+
+        withAnimation(expandAnimation) {
+            // Keep only the active category's sub-selections.
+            if let previous = selectedCategoryID {
+                appModel.selectedSubServiceIDs[previous] = []
+            }
+            selectedCategoryID = id
+            appModel.selectedServiceIDs = [id]
+            if appModel.selectedSubServiceIDs[id] == nil {
+                appModel.selectedSubServiceIDs[id] = []
             }
         }
     }
 
     private func subServiceChip(_ option: ServiceSubOption, categoryID: String, isSelected: Bool) -> some View {
         Button {
-            var set = appModel.selectedSubServiceIDs[categoryID] ?? []
-            if isSelected {
-                set.remove(option.id)
-            } else {
-                set.insert(option.id)
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            withAnimation(chipAnimation) {
+                var set = appModel.selectedSubServiceIDs[categoryID] ?? []
+                if isSelected {
+                    set.remove(option.id)
+                } else {
+                    set.insert(option.id)
+                }
+                appModel.selectedSubServiceIDs[categoryID] = set
             }
-            appModel.selectedSubServiceIDs[categoryID] = set
         } label: {
             HStack(spacing: 8) {
                 Text(option.title)
-                    .font(.subheadline)
+                    .font(.subheadline.weight(.medium))
                     .foregroundStyle(isSelected ? .white : Theme.darkText)
-                Image(systemName: "xmark.circle.fill")
-                    .font(.caption)
-                    .foregroundStyle(isSelected ? .white.opacity(0.9) : Theme.grayscale60)
+                    .lineLimit(1)
+
+                Image(systemName: isSelected ? "xmark.circle.fill" : "plus.circle")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(isSelected ? .white.opacity(0.95) : Theme.grayscale60)
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+            .padding(.vertical, 11)
             .background(isSelected ? Theme.brandOrange : Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Color(red: 0.933, green: 0.933, blue: 0.933), lineWidth: isSelected ? 0 : 1)
+                    .stroke(
+                        isSelected ? Theme.brandOrange : Color(red: 0.933, green: 0.933, blue: 0.933),
+                        lineWidth: 1
+                    )
             )
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .shadow(
+                color: isSelected ? Theme.brandOrange.opacity(0.22) : .clear,
+                radius: isSelected ? 6 : 0,
+                y: isSelected ? 2 : 0
+            )
+            .scaleEffect(isSelected ? 1.02 : 1)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(ChipPressButtonStyle())
+    }
+}
+
+private struct ServiceRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.72 : 1)
+            .scaleEffect(configuration.isPressed ? 0.985 : 1)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
+private struct ChipPressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.spring(response: 0.22, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
