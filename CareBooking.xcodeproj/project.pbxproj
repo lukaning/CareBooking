@@ -28,6 +28,10 @@
 		EF740A1E67BE48519D2A321A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6AE23790F13461B911BAD1F /* Assets.xcassets */; };
 		B2C3D4E5F647891021BCDEF0 /* PaymentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */; };
 		D4E5F647891043231DEF0123 /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F64789103212CDEF01 /* PaymentView.swift */; };
+		B2MSGMDL234567890ABCDE /* MessageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1MSGMDL234567890ABCDE /* MessageModels.swift */; };
+		D4NOTMDL234567890ABCDE /* NotificationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3NOTMDL234567890ABCDE /* NotificationModels.swift */; };
+		F6MSGVW234567890ABCDEF /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5MSGVW234567890ABCDEF /* MessagesView.swift */; };
+		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +57,10 @@
 		F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureAccessListView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModels.swift; sourceTree = "<group>"; };
 		C3D4E5F64789103212CDEF01 /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
+		A1MSGMDL234567890ABCDE /* MessageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModels.swift; sourceTree = "<group>"; };
+		C3NOTMDL234567890ABCDE /* NotificationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModels.swift; sourceTree = "<group>"; };
+		E5MSGVW234567890ABCDEF /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +105,30 @@
 				CC069C10E34341E2A37A2EDE /* Auth */,
 				1DC5BACEC57B4D968E09C544 /* Booking */,
 				7C179F7F316C483C8B6F219A /* Home */,
+				E1F2A3B4C5D6478910MSG001 /* Messages */,
+				F2A3B4C5D6E7489021NOT001 /* Notification */,
 				92337F985607488E9AFC0A96 /* Onboarding */,
 				F1A2B3C4D5E6478910E4F201 /* Payment */,
 				E26F03889FA94E0789722FD0 /* Profile */,
 				C0F53E804D6F4C3B1E9A7F42 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		E1F2A3B4C5D6478910MSG001 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				E5MSGVW234567890ABCDEF /* MessagesView.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		F2A3B4C5D6E7489021NOT001 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				A7NOTVW234567890ABCDEF /* NotificationView.swift */,
+			);
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		F1A2B3C4D5E6478910E4F201 /* Payment */ = {
@@ -133,6 +159,8 @@
 		AADFE0B15A0D4164BC258B0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C3NOTMDL234567890ABCDE /* NotificationModels.swift */,
+				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
 				A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */,
 				D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */,
 				811085CE35FB4C15896EFEA8 /* AppModel.swift */,
@@ -282,6 +310,10 @@
 				70ABC330977D45CF8E6B6A5B /* Theme.swift in Sources */,
 				D4E5F647891043231DEF0123 /* PaymentView.swift in Sources */,
 				B2C3D4E5F647891021BCDEF0 /* PaymentModels.swift in Sources */,
+				B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */,
+				F6MSGVW234567890ABCDEF /* MessagesView.swift in Sources */,
+				D4NOTMDL234567890ABCDE /* NotificationModels.swift in Sources */,
+				B2MSGMDL234567890ABCDE /* MessageModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
