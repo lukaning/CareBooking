@@ -462,7 +462,7 @@ struct LocationStep: View {
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
-        .alert("Allow CareBooking to use your location?", isPresented: $showLocationPermission) {
+        .alert("Allow EmBeLife to use your location?", isPresented: $showLocationPermission) {
             Button("Allow While Using the App") {
                 appModel.locationChoice = .current
             }

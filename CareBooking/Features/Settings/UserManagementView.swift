@@ -62,7 +62,7 @@ struct UserManagementView: View {
         .alert("User Management", isPresented: $showInfo) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text("Invite teammates and control what each role can access in CareBooking.")
+            Text("Invite teammates and control what each role can access in EmBeLife.")
         }
     }
 

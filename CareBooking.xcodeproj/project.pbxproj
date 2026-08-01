@@ -42,7 +42,7 @@
 /* Begin PBXFileReference section */
 		18D4A1803BAD494E9EA0297C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1F1050CDF517458A8ACD1927 /* AuthViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViews.swift; sourceTree = "<group>"; };
-		30D1503C76AA4E0198DB2D93 /* CareBooking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CareBooking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30D1503C76AA4E0198DB2D93 /* EmBeLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmBeLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45B75D03AEEC4CF6974167B0 /* CareBookingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareBookingApp.swift; sourceTree = "<group>"; };
 		4FC90410B92A471FBE8CFBBB /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		5233FEB2A55E4F9BA9124241 /* ProfileDetailEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailEditView.swift; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 		29D66914D4424ABBA27B064C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				30D1503C76AA4E0198DB2D93 /* CareBooking.app */,
+				30D1503C76AA4E0198DB2D93 /* EmBeLife.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -252,21 +252,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2A670C8A357F48409C55703E /* CareBooking */ = {
+		2A670C8A357F48409C55703E /* EmBeLife */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6076E6E48B4C431F8BA3470B /* Build configuration list for PBXNativeTarget "CareBooking" */;
+			buildConfigurationList = 6076E6E48B4C431F8BA3470B /* Build configuration list for PBXNativeTarget "EmBeLife" */;
 			buildPhases = (
 				26026A611EF9481AA138B994 /* Sources */,
 				A88ED09B15244B1AA106BA7C /* Frameworks */,
 				57B644EAB93D4C2F9C376C35 /* Resources */,
+				A1ICONCOPY234567890ABCDE /* Copy App Icon PNGs */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = CareBooking;
+			name = EmBeLife;
 			productName = CareBooking;
-			productReference = 30D1503C76AA4E0198DB2D93 /* CareBooking.app */;
+			productReference = 30D1503C76AA4E0198DB2D93 /* EmBeLife.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -292,7 +293,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2A670C8A357F48409C55703E /* CareBooking */,
+				2A670C8A357F48409C55703E /* EmBeLife */,
 			);
 		};
 /* End PBXProject section */
@@ -307,6 +308,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A1ICONCOPY234567890ABCDE /* Copy App Icon PNGs */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/CareBooking/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@2x.png",
+				"$(SRCROOT)/CareBooking/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@3x.png",
+			);
+			name = "Copy App Icon PNGs";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/AppIcon60x60@2x.png",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/AppIcon60x60@3x.png",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ICON_DIR=\"${SRCROOT}/CareBooking/Assets.xcassets/AppIcon.appiconset\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\ncp \"${ICON_DIR}/AppIcon60x60@2x.png\" \"${DEST}/AppIcon60x60@2x.png\"\ncp \"${ICON_DIR}/AppIcon60x60@3x.png\" \"${DEST}/AppIcon60x60@3x.png\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		26026A611EF9481AA138B994 /* Sources */ = {
@@ -353,11 +380,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = P3FZF6PS58;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CareBooking;
+				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -472,11 +501,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = P3FZF6PS58;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CareBooking;
+				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -498,7 +529,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6076E6E48B4C431F8BA3470B /* Build configuration list for PBXNativeTarget "CareBooking" */ = {
+		6076E6E48B4C431F8BA3470B /* Build configuration list for PBXNativeTarget "EmBeLife" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9CA6850E377C43D282E433D0 /* Debug */,

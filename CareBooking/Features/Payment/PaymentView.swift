@@ -74,7 +74,7 @@ struct PaymentView: View {
             .alert("Bookings Completed", isPresented: $showBookingsInfo) {
                 Button("OK", role: .cancel) {}
             } message: {
-                Text("Counts care visits you have completed through CareBooking.")
+                Text("Counts care visits you have completed through EmBeLife.")
             }
             .alert("Send Gift", isPresented: Binding(
                 get: { giftActionMessage != nil },
