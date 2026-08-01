@@ -15,7 +15,7 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
         switch self {
         case .home: "Home"
         case .messages: "Messages"
-        case .notes: "Hands Free"
+        case .notes: "Hands-free"
         case .notification: "Notification"
         case .payment: "Payment"
         case .profile: "Profile"
