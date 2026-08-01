@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04BA17E838DF4F2FA2B63A71 /* CareBookingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B75D03AEEC4CF6974167B0 /* CareBookingApp.swift */; };
+		04BA17E838DF4F2FA2B63A71 /* EmBeLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */; };
 		08F72FE0F2824771ABB5D4AD /* OnboardingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD210CCE9E0D4C98B78955DC /* OnboardingViews.swift */; };
 		34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3BA9C6496A444DABE40EFF /* RootView.swift */; };
 		3DDB0209F71D4590A2F3B444 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A63E30AE5A4896B294A751 /* HomeView.swift */; };
@@ -43,7 +43,7 @@
 		18D4A1803BAD494E9EA0297C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1F1050CDF517458A8ACD1927 /* AuthViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViews.swift; sourceTree = "<group>"; };
 		30D1503C76AA4E0198DB2D93 /* EmBeLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmBeLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		45B75D03AEEC4CF6974167B0 /* CareBookingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareBookingApp.swift; sourceTree = "<group>"; };
+		45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmBeLifeApp.swift; sourceTree = "<group>"; };
 		4FC90410B92A471FBE8CFBBB /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		5233FEB2A55E4F9BA9124241 /* ProfileDetailEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailEditView.swift; sourceTree = "<group>"; };
 		811085CE35FB4C15896EFEA8 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 		975762BA5F3B428EBB49B60D /* App */ = {
 			isa = PBXGroup;
 			children = (
-				45B75D03AEEC4CF6974167B0 /* CareBookingApp.swift */,
+				45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */,
 				9E3BA9C6496A444DABE40EFF /* RootView.swift */,
 			);
 			path = App;
@@ -169,7 +169,7 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		B483B194B1A34F5198C76293 /* CareBooking */ = {
+		B483B194B1A34F5198C76293 /* EmBeLife */ = {
 			isa = PBXGroup;
 			children = (
 				975762BA5F3B428EBB49B60D /* App */,
@@ -178,7 +178,7 @@
 				FA738B42FB1D438ABECB5BC8 /* Theme */,
 				D6AE23790F13461B911BAD1F /* Assets.xcassets */,
 			);
-			path = CareBooking;
+			path = EmBeLife;
 			sourceTree = "<group>";
 		};
 		C0F53E804D6F4C3B1E9A7F42 /* Settings */ = {
@@ -195,7 +195,7 @@
 		CA599A8374B74EC7B74B1372 = {
 			isa = PBXGroup;
 			children = (
-				B483B194B1A34F5198C76293 /* CareBooking */,
+				B483B194B1A34F5198C76293 /* EmBeLife */,
 				29D66914D4424ABBA27B064C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 			dependencies = (
 			);
 			name = EmBeLife;
-			productName = CareBooking;
+			productName = EmBeLife;
 			productReference = 30D1503C76AA4E0198DB2D93 /* EmBeLife.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -280,7 +280,7 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 2660;
 			};
-			buildConfigurationList = 7A2896E82E0E4FEC94F75613 /* Build configuration list for PBXProject "CareBooking" */;
+			buildConfigurationList = 7A2896E82E0E4FEC94F75613 /* Build configuration list for PBXProject "EmBeLife" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -319,8 +319,8 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/CareBooking/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@2x.png",
-				"$(SRCROOT)/CareBooking/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@3x.png",
+				"$(SRCROOT)/EmBeLife/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@2x.png",
+				"$(SRCROOT)/EmBeLife/Assets.xcassets/AppIcon.appiconset/AppIcon60x60@3x.png",
 			);
 			name = "Copy App Icon PNGs";
 			outputFileListPaths = (
@@ -331,7 +331,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "ICON_DIR=\"${SRCROOT}/CareBooking/Assets.xcassets/AppIcon.appiconset\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\ncp \"${ICON_DIR}/AppIcon60x60@2x.png\" \"${DEST}/AppIcon60x60@2x.png\"\ncp \"${ICON_DIR}/AppIcon60x60@3x.png\" \"${DEST}/AppIcon60x60@3x.png\"\n";
+			shellScript = "ICON_DIR=\"${SRCROOT}/EmBeLife/Assets.xcassets/AppIcon.appiconset\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\ncp \"${ICON_DIR}/AppIcon60x60@2x.png\" \"${DEST}/AppIcon60x60@2x.png\"\ncp \"${ICON_DIR}/AppIcon60x60@3x.png\" \"${DEST}/AppIcon60x60@3x.png\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -340,7 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BA17E838DF4F2FA2B63A71 /* CareBookingApp.swift in Sources */,
+				04BA17E838DF4F2FA2B63A71 /* EmBeLifeApp.swift in Sources */,
 				34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */,
 				B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */,
 				8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */,
@@ -395,7 +395,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.carebooking.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.embelife.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -516,7 +516,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.carebooking.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.embelife.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -538,7 +538,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7A2896E82E0E4FEC94F75613 /* Build configuration list for PBXProject "CareBooking" */ = {
+		7A2896E82E0E4FEC94F75613 /* Build configuration list for PBXProject "EmBeLife" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4B962B41A8F44E049E31B16E /* Debug */,

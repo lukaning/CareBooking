@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2A670C8A357F48409C55703E"
                BuildableName = "EmBeLife.app"
                BlueprintName = "EmBeLife"
-               ReferencedContainer = "container:CareBooking.xcodeproj">
+               ReferencedContainer = "container:EmBeLife.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2A670C8A357F48409C55703E"
             BuildableName = "EmBeLife.app"
             BlueprintName = "EmBeLife"
-            ReferencedContainer = "container:CareBooking.xcodeproj">
+            ReferencedContainer = "container:EmBeLife.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,7 +63,7 @@
             BlueprintIdentifier = "2A670C8A357F48409C55703E"
             BuildableName = "EmBeLife.app"
             BlueprintName = "EmBeLife"
-            ReferencedContainer = "container:CareBooking.xcodeproj">
+            ReferencedContainer = "container:EmBeLife.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

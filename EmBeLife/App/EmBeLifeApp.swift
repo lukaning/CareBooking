@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct CareBookingApp: App {
+struct EmBeLifeApp: App {
     @State private var appModel = AppModel()
 
     var body: some Scene {

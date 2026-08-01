@@ -1,6 +1,6 @@
-# CareBooking
+# EmBeLife
 
-Native iOS (SwiftUI) MVP of the Figma care-booking design system.
+Native iOS (SwiftUI) MVP of the EmBeLife care-booking design system.
 
 ## Scope
 
@@ -13,7 +13,7 @@ Native iOS (SwiftUI) MVP of the Figma care-booking design system.
 
 ## Open in Xcode
 
-1. Open `CareBooking.xcodeproj`
+1. Open `EmBeLife.xcodeproj`
 2. Select an iPhone simulator
 3. Run (⌘R)
 
