@@ -158,14 +158,16 @@ struct RoleLanguageStep: View {
                         role: .client,
                         title: "I'm looking for help or support",
                         subtitle: "Those are usually the Individuals who need help",
-                        image: "roleClient"
+                        image: "roleClient",
+                        selectedImage: "roleClientSelected"
                     )
 
                     roleCard(
                         role: .provider,
                         title: "I'm a Provider",
                         subtitle: "Those are usually professionals",
-                        image: "roleProvider"
+                        image: "roleProvider",
+                        selectedImage: "roleProviderSelected"
                     )
                 }
                 .padding(.horizontal, 20)
@@ -176,9 +178,14 @@ struct RoleLanguageStep: View {
         }
     }
 
-    private func roleCard(role: UserRole, title: String, subtitle: String, image: String) -> some View {
+    private func roleCard(
+        role: UserRole,
+        title: String,
+        subtitle: String,
+        image: String,
+        selectedImage: String
+    ) -> some View {
         let selected = appModel.selectedRole == role
-        let mutedIcon = Color(red: 0.769, green: 0.776, blue: 0.843) // #C4C6D7
         let unselectedBorder = Color(red: 0.886, green: 0.886, blue: 0.902) // #E2E2E6
 
         return Button {
@@ -187,12 +194,11 @@ struct RoleLanguageStep: View {
             }
         } label: {
             HStack(alignment: .top, spacing: 16) {
-                Image(image)
+                Image(selected ? selectedImage : image)
                     .resizable()
-                    .renderingMode(.template)
+                    .renderingMode(.original)
                     .scaledToFit()
                     .frame(width: 40, height: 40)
-                    .foregroundStyle(selected ? Theme.brandOrange : mutedIcon)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(title)
