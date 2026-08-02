@@ -285,11 +285,7 @@ struct ServiceNeedsStep: View {
                 selectCategory(service.id)
             } label: {
                 HStack(alignment: .center, spacing: 14) {
-                    Image(isSelected ? "radioFilled" : "radioEmpty")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 26, height: 26)
-                        .scaleEffect(isSelected ? 1.06 : 1)
+                    OnboardingRadioControl(isSelected: isSelected)
 
                     Image(service.imageName)
                         .resizable()
@@ -604,10 +600,7 @@ struct LocationStep: View {
             }
         } label: {
             HStack(spacing: 14) {
-                Image(selected ? "radioFilled" : "radioEmpty")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 28, height: 28)
+                OnboardingRadioControl(isSelected: selected)
 
                 ZStack {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -634,6 +627,31 @@ struct LocationStep: View {
 }
 
 // MARK: - Shared
+
+/// White radio with light gray ring; selected shows an orange center dot.
+private struct OnboardingRadioControl: View {
+    var isSelected: Bool
+    var size: CGFloat = 26
+
+    private var borderColor: Color { Color(red: 0.820, green: 0.820, blue: 0.835) }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Color.white)
+            Circle()
+                .stroke(borderColor, lineWidth: 1.5)
+            if isSelected {
+                Circle()
+                    .fill(Theme.brandOrange)
+                    .frame(width: size * 0.52, height: size * 0.52)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .frame(width: size, height: size)
+        .animation(.easeInOut(duration: 0.15), value: isSelected)
+    }
+}
 
 private func onboardingBottomBar(title: String, enabled: Bool, action: @escaping () -> Void) -> some View {
     VStack(spacing: 0) {
