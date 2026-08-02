@@ -234,7 +234,6 @@ struct ServiceNeedsStep: View {
 
     @State private var selectedCategoryID: String?
 
-    private let expandAnimation = Animation.spring(response: 0.38, dampingFraction: 0.86)
     private let chipAnimation = Animation.spring(response: 0.28, dampingFraction: 0.72)
 
     private var canContinue: Bool {
@@ -244,32 +243,22 @@ struct ServiceNeedsStep: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("What kind of help or support do you need?")
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(Theme.darkText)
-                            .padding(.top, 20)
-                            .padding(.bottom, 12)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("What kind of help or support do you need?")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                        .padding(.top, 20)
+                        .padding(.bottom, 12)
 
-                        ForEach(ServiceCategory.all) { service in
-                            serviceCategoryRow(service)
-                                .id(service.id)
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 24)
-                }
-                .onChange(of: selectedCategoryID) { _, newValue in
-                    guard let newValue else { return }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        withAnimation(expandAnimation) {
-                            proxy.scrollTo(newValue, anchor: .top)
-                        }
+                    ForEach(ServiceCategory.all) { service in
+                        serviceCategoryRow(service)
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
             }
+            .scrollBounceBehavior(.basedOnSize)
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
@@ -293,7 +282,6 @@ struct ServiceNeedsStep: View {
                         .scaledToFit()
                         .frame(width: 48, height: 48)
                         .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
-                        .scaleEffect(isSelected ? 1.04 : 1)
 
                     Text(service.title)
                         .font(.body.weight(.semibold))
@@ -308,44 +296,35 @@ struct ServiceNeedsStep: View {
 
             if isSelected {
                 FlowLayout(spacing: 10) {
-                    ForEach(Array(subOptions.enumerated()), id: \.element.id) { index, option in
+                    ForEach(subOptions) { option in
                         subServiceChip(
                             option,
                             categoryID: service.id,
                             isSelected: selectedSubs.contains(option.id)
                         )
-                        .transition(
-                            .asymmetric(
-                                insertion: .opacity
-                                    .combined(with: .scale(scale: 0.92, anchor: .topLeading))
-                                    .combined(with: .offset(y: -6)),
-                                removal: .opacity.combined(with: .scale(scale: 0.96))
-                            )
-                        )
-                        .animation(chipAnimation.delay(Double(index) * 0.03), value: isSelected)
                     }
                 }
                 .padding(.leading, 40)
                 .padding(.top, 4)
                 .padding(.bottom, 12)
-                .transition(
-                    .asymmetric(
-                        insertion: .opacity.combined(with: .move(edge: .top)),
-                        removal: .opacity.combined(with: .scale(scale: 0.98, anchor: .top))
-                    )
-                )
+                .transition(.opacity)
             }
         }
-        .animation(expandAnimation, value: isSelected)
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 
     private func selectCategory(_ id: String) {
-        guard selectedCategoryID != id else { return }
-
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
 
-        withAnimation(expandAnimation) {
-            // Keep only the active category's sub-selections.
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if selectedCategoryID == id {
+                // Re-tap collapses in place without scrolling.
+                selectedCategoryID = nil
+                appModel.selectedServiceIDs = []
+                appModel.selectedSubServiceIDs[id] = []
+                return
+            }
+
             if let previous = selectedCategoryID {
                 appModel.selectedSubServiceIDs[previous] = []
             }
