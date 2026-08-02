@@ -217,7 +217,7 @@ struct RoleLanguageStep: View {
             .background(Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(selected ? Theme.brandOrange : unselectedBorder, lineWidth: selected ? 2 : 1)
+                    .stroke(selected ? Theme.brandOrange : unselectedBorder, lineWidth: selected ? 3 : 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
