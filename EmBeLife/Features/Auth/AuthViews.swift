@@ -151,13 +151,14 @@ struct TermsFooter: View {
 
 /// White form sheet that sits under the orange auth header (Figma: white lower half, rounded top).
 private struct AuthFormSheet<Content: View>: View {
+    var topPadding: CGFloat = 28
     @ViewBuilder var content: Content
 
     var body: some View {
         ScrollView {
             content
                 .padding(.horizontal, 24)
-                .padding(.top, 28)
+                .padding(.top, topPadding)
                 .padding(.bottom, 32)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -214,7 +215,7 @@ struct SignInView: View {
                 showsBackControl: true
             )
 
-            AuthFormSheet {
+            AuthFormSheet(topPadding: 52) {
                 VStack(alignment: .leading, spacing: 20) {
                     AuthTextField(title: "Email Address", placeholder: "Enter your email address", text: $email)
                     AuthTextField(title: "Password", placeholder: "Enter your password", text: $password, isSecure: true)
