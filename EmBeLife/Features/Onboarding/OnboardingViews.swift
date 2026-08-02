@@ -178,14 +178,21 @@ struct RoleLanguageStep: View {
 
     private func roleCard(role: UserRole, title: String, subtitle: String, image: String) -> some View {
         let selected = appModel.selectedRole == role
+        let mutedIcon = Color(red: 0.769, green: 0.776, blue: 0.843) // #C4C6D7
+        let unselectedBorder = Color(red: 0.886, green: 0.886, blue: 0.902) // #E2E2E6
+
         return Button {
-            appModel.selectedRole = role
+            withAnimation(.easeInOut(duration: 0.18)) {
+                appModel.selectedRole = role
+            }
         } label: {
             HStack(alignment: .top, spacing: 16) {
                 Image(image)
                     .resizable()
+                    .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: 40, height: 40)
+                    .foregroundStyle(selected ? Theme.brandOrange : mutedIcon)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(title)
@@ -201,14 +208,15 @@ struct RoleLanguageStep: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(red: 0.988, green: 0.988, blue: 0.988))
+            .background(Color.white)
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(selected ? Theme.brandOrange : Color(red: 0.925, green: 0.925, blue: 0.953), lineWidth: selected ? 2.5 : 2)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(selected ? Theme.brandOrange : unselectedBorder, lineWidth: selected ? 2 : 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(.plain)
+        .animation(.easeInOut(duration: 0.18), value: selected)
     }
 }
 
