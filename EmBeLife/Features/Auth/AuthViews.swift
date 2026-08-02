@@ -36,9 +36,11 @@ struct AuthHeader: View {
     let headline: String
     let subtitle: String
     var onBack: (() -> Void)?
+    /// When true, shows the circular back control even if `onBack` is nil (visual match for root Sign In).
+    var showsBackControl = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             ZStack {
                 Text(title)
                     .font(.title3.weight(.bold))
@@ -46,25 +48,28 @@ struct AuthHeader: View {
                     .frame(maxWidth: .infinity)
 
                 HStack {
-                    AuthBackButton(action: onBack)
+                    if showsBackControl || onBack != nil {
+                        AuthBackButton(action: onBack ?? {})
+                    }
                     Spacer()
                 }
             }
-            .padding(.top, 8)
+            .padding(.top, 4)
 
             Text(headline)
-                .font(.largeTitle.weight(.bold))
+                .font(.system(size: 32, weight: .bold))
                 .foregroundStyle(.white)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(subtitle)
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(Color(red: 0.89, green: 0.91, blue: 0.93))
+                .foregroundStyle(.white.opacity(0.92))
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 28)
+        .padding(.bottom, 36)
         .padding(.top, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Theme.brandOrange)
+        .background(Theme.brandOrange.ignoresSafeArea(edges: .top))
     }
 }
 
@@ -144,17 +149,24 @@ struct TermsFooter: View {
     }
 }
 
-private struct AuthFormCard<Content: View>: View {
+/// White form sheet that sits under the orange auth header (Figma: white lower half, rounded top).
+private struct AuthFormSheet<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        content
-            .padding(24)
-            .background(
-                Color(.systemBackground)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
-            )
-            .offset(y: -16)
+        ScrollView {
+            content
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
+                .padding(.bottom, 32)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .scrollIndicators(.hidden)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white)
+        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28, style: .continuous))
+        .offset(y: -20)
+        .background(Color.white.ignoresSafeArea(edges: .bottom))
     }
 }
 
@@ -194,74 +206,72 @@ struct SignInView: View {
     @State private var rememberMe = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                AuthHeader(
-                    title: "Sign In",
-                    headline: "Hi, Welcome Back! 👋",
-                    subtitle: "Lorem ipsum dolor sit amet, consectetur"
-                )
+        VStack(spacing: 0) {
+            AuthHeader(
+                title: "Sign In",
+                headline: "Hi, Welcome Back! 👋",
+                subtitle: "Lorem ipsum dolor sit amet, consectetur",
+                showsBackControl: true
+            )
 
-                AuthFormCard {
-                    VStack(alignment: .leading, spacing: 20) {
-                        AuthTextField(title: "Email Address", placeholder: "Enter your email address", text: $email)
-                        AuthTextField(title: "Password", placeholder: "Enter your password", text: $password, isSecure: true)
+            AuthFormSheet {
+                VStack(alignment: .leading, spacing: 20) {
+                    AuthTextField(title: "Email Address", placeholder: "Enter your email address", text: $email)
+                    AuthTextField(title: "Password", placeholder: "Enter your password", text: $password, isSecure: true)
 
-                        HStack {
-                            Button {
-                                rememberMe.toggle()
-                            } label: {
-                                HStack(spacing: 10) {
-                                    Image(systemName: rememberMe ? "checkmark.circle.fill" : "circle")
-                                        .foregroundStyle(rememberMe ? Theme.brandOrange : Theme.grayscale60)
-                                        .font(.title3)
-                                    Text("Remember Me")
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(Theme.grayscale70)
-                                }
+                    HStack {
+                        Button {
+                            rememberMe.toggle()
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: rememberMe ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(rememberMe ? Theme.brandOrange : Theme.grayscale60)
+                                    .font(.title3)
+                                Text("Remember Me")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Theme.grayscale70)
                             }
-                            .buttonStyle(.plain)
-
-                            Spacer()
-
-                            Button("Forgot Password") {
-                                path.append(.forgotPassword)
-                            }
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.errorCoral)
                         }
+                        .buttonStyle(.plain)
 
-                        Button("Sign In") {
-                            appModel.completeSignIn(email: email.isEmpty ? "user@example.com" : email)
-                        }
-                        .buttonStyle(PrimaryOrangeButtonStyle())
-                        .padding(.top, 4)
+                        Spacer()
 
-                        HStack(spacing: 4) {
-                            Text("Don't have an account?")
-                                .foregroundStyle(Theme.grayscale70)
-                            Button("Sign Up") {
-                                path.append(.signUp)
-                            }
-                            .foregroundStyle(Theme.linkBlue)
+                        Button("Forgot Password") {
+                            path.append(.forgotPassword)
                         }
                         .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-
-                        SocialSignInRow()
-                            .padding(.top, 8)
-
-                        TermsFooter()
-                            .font(.footnote.weight(.semibold))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
-                            .padding(.top, 8)
+                        .foregroundStyle(Theme.errorCoral)
                     }
+
+                    Button("Sign In") {
+                        appModel.completeSignIn(email: email.isEmpty ? "user@example.com" : email)
+                    }
+                    .buttonStyle(PrimaryOrangeButtonStyle())
+                    .padding(.top, 4)
+
+                    HStack(spacing: 4) {
+                        Text("Don't have an account?")
+                            .foregroundStyle(Theme.grayscale70)
+                        Button("Sign Up") {
+                            path.append(.signUp)
+                        }
+                        .foregroundStyle(Theme.linkBlue)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+
+                    SocialSignInRow()
+                        .padding(.top, 8)
+
+                    TermsFooter()
+                        .font(.footnote.weight(.semibold))
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 8)
                 }
             }
         }
-        .background(Theme.brandOrange.ignoresSafeArea(edges: .top))
-        .scrollIndicators(.hidden)
+        .background(Color.white.ignoresSafeArea())
         .navigationBarHidden(true)
     }
 }
@@ -276,47 +286,44 @@ struct SignUpView: View {
     @State private var password = ""
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                AuthHeader(
-                    title: "Sign Up",
-                    headline: "Create Account",
-                    subtitle: "Lorem ipsum dolor sit amet, consectetur",
-                    onBack: { path.removeLast() }
-                )
+        VStack(spacing: 0) {
+            AuthHeader(
+                title: "Sign Up",
+                headline: "Create Account",
+                subtitle: "Lorem ipsum dolor sit amet, consectetur",
+                onBack: { path.removeLast() }
+            )
 
-                AuthFormCard {
-                    VStack(alignment: .leading, spacing: 18) {
-                        AuthTextField(title: "Full Name", placeholder: "Enter your name", text: $fullName)
-                        AuthTextField(title: "E-mail", placeholder: "Enter your email", text: $email)
-                        AuthTextField(title: "Password", placeholder: "Enter your password", text: $password, isSecure: true)
+            AuthFormSheet {
+                VStack(alignment: .leading, spacing: 18) {
+                    AuthTextField(title: "Full Name", placeholder: "Enter your name", text: $fullName)
+                    AuthTextField(title: "E-mail", placeholder: "Enter your email", text: $email)
+                    AuthTextField(title: "Password", placeholder: "Enter your password", text: $password, isSecure: true)
 
-                        Button("Create An Account") {
-                            let resolvedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let resolvedName = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
-                            path.append(
-                                .enterCode(
-                                    email: resolvedEmail.isEmpty ? "example@gmail.com" : resolvedEmail,
-                                    name: resolvedName.isEmpty ? "Alex" : resolvedName
-                                )
+                    Button("Create An Account") {
+                        let resolvedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let resolvedName = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        path.append(
+                            .enterCode(
+                                email: resolvedEmail.isEmpty ? "example@gmail.com" : resolvedEmail,
+                                name: resolvedName.isEmpty ? "Alex" : resolvedName
                             )
-                        }
-                        .buttonStyle(PrimaryOrangeButtonStyle())
-                        .padding(.top, 8)
-
-                        SocialSignInRow()
-                            .padding(.top, 12)
-
-                        TermsFooter()
-                            .font(.footnote.weight(.semibold))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
+                        )
                     }
+                    .buttonStyle(PrimaryOrangeButtonStyle())
+                    .padding(.top, 8)
+
+                    SocialSignInRow()
+                        .padding(.top, 12)
+
+                    TermsFooter()
+                        .font(.footnote.weight(.semibold))
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
                 }
             }
         }
-        .background(Theme.brandOrange.ignoresSafeArea(edges: .top))
-        .scrollIndicators(.hidden)
+        .background(Color.white.ignoresSafeArea())
         .navigationBarHidden(true)
     }
 }
