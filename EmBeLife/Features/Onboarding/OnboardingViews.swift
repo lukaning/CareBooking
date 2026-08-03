@@ -368,9 +368,11 @@ struct ServiceNeedsStep: View {
                     .foregroundStyle(isSelected ? .white : Theme.darkText)
                     .lineLimit(1)
 
-                Image(systemName: isSelected ? "xmark.circle.fill" : "plus.circle")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(isSelected ? .white.opacity(0.95) : Theme.grayscale60)
+                if isSelected {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.95))
+                }
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
