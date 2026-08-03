@@ -56,9 +56,15 @@ struct ServiceCategory: Identifiable, Hashable {
     let id: String
     let title: String
     let imageName: String
+    var selectedImageName: String? = nil
 
     static let all: [ServiceCategory] = [
-        .init(id: "personal", title: "Personal Care/ Activities of Daily Living", imageName: "svcPersonalCare"),
+        .init(
+            id: "personal",
+            title: "Personal Care/ Activities of Daily Living",
+            imageName: "svcPersonalCare",
+            selectedImageName: "svcPersonalCareSelected"
+        ),
         .init(id: "birth", title: "Birth/ Postpartum Services", imageName: "svcBirth"),
         .init(id: "acupuncture", title: "Acupuncture", imageName: "svcAcupuncture"),
         .init(id: "bereavement", title: "Bereavement/ Loss", imageName: "svcBereavement"),

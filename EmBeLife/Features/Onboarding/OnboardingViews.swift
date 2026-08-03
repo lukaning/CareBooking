@@ -276,12 +276,7 @@ struct ServiceNeedsStep: View {
                 HStack(alignment: .center, spacing: 14) {
                     OnboardingRadioControl(isSelected: isSelected)
 
-                    Image(service.imageName)
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                        .frame(width: 48, height: 48)
-                        .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
+                    serviceCategoryIcon(service, isSelected: isSelected)
 
                     Text(service.title)
                         .font(.body.weight(.semibold))
@@ -311,6 +306,24 @@ struct ServiceNeedsStep: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isSelected)
+    }
+
+    @ViewBuilder
+    private func serviceCategoryIcon(_ service: ServiceCategory, isSelected: Bool) -> some View {
+        if let selectedImageName = service.selectedImageName {
+            Image(isSelected ? selectedImageName : service.imageName)
+                .resizable()
+                .renderingMode(.original)
+                .scaledToFit()
+                .frame(width: 48, height: 48)
+        } else {
+            Image(service.imageName)
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: 48, height: 48)
+                .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
+        }
     }
 
     private func selectCategory(_ id: String) {
