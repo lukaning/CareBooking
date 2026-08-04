@@ -55,7 +55,9 @@ final class AppModel {
     var customAddress = ""
     var customZipcode = ""
     var searchRadiusMiles: Double = 25
-    var customLocationConfirmed = false
+    /// Confirmed via the in-panel Confirm button (current or custom).
+    var locationConfirmed = false
+    var resolvedCurrentAddress = ""
 
     var profile = UserProfile()
     var bookings: [Booking] = []
@@ -83,7 +85,9 @@ final class AppModel {
         if profile.address.isEmpty {
             switch locationChoice {
             case .current:
-                profile.address = "Current location"
+                profile.address = resolvedCurrentAddress.isEmpty
+                    ? "Current location"
+                    : resolvedCurrentAddress
             case .custom:
                 if !customAddress.isEmpty {
                     profile.address = [customAddress, customZipcode]
@@ -125,7 +129,8 @@ final class AppModel {
         customLocation = ""
         customAddress = ""
         customZipcode = ""
-        customLocationConfirmed = false
+        locationConfirmed = false
+        resolvedCurrentAddress = ""
         profile = UserProfile()
         bookings = []
         flow = .auth

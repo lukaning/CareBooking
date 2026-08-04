@@ -1,3 +1,5 @@
+import CoreLocation
+import MapKit
 import SwiftUI
 
 struct OnboardingFlowView: View {
@@ -419,73 +421,151 @@ struct LocationStep: View {
     @Environment(AppModel.self) private var appModel
     var onContinue: () -> Void
 
-    @State private var showLocationPermission = false
+    @State private var locationManager = LocationManager()
+    @State private var mapCoordinate = LocationManager.sampleCoordinate
+
+    private let titleBlue = Color(red: 0.114, green: 0.631, blue: 0.949)
+    private let expandAnimation = Animation.easeInOut(duration: 0.2)
 
     private var canContinue: Bool {
-        switch appModel.locationChoice {
-        case .current:
-            return true
-        case .custom:
-            return appModel.customLocationConfirmed
-        case .none:
-            return false
-        }
+        appModel.locationChoice != nil && appModel.locationConfirmed
     }
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 16) {
                     Text("Where do you need help?")
                         .font(.title.weight(.semibold))
                         .foregroundStyle(Theme.darkText)
                         .padding(.top, 28)
 
-                    locationRow(
-                        choice: .current,
-                        title: "Use current location",
-                        titleColor: Color(red: 0.114, green: 0.631, blue: 0.949)
-                    )
-
-                    VStack(alignment: .leading, spacing: 14) {
-                        locationRow(
-                            choice: .custom,
-                            title: "Customize location",
-                            titleColor: Color.black.opacity(0.75)
-                        )
-
-                        if appModel.locationChoice == .custom {
-                            customizeLocationForm
-                                .transition(.opacity.combined(with: .move(edge: .top)))
-                        }
-                    }
+                    currentLocationSection
+                    customizeLocationSection
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
+                .animation(expandAnimation, value: appModel.locationChoice)
             }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.interactively)
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
-        .alert("Allow EmBeLife to use your location?", isPresented: $showLocationPermission) {
-            Button("Allow While Using the App") {
-                appModel.locationChoice = .current
+        .onChange(of: locationManager.authorizationStatus) { _, status in
+            handleAuthorizationChange(status)
+        }
+        .onChange(of: locationManager.addressLine) { _, address in
+            guard let address, appModel.locationChoice == .current else { return }
+            appModel.resolvedCurrentAddress = address
+        }
+        .onChange(of: locationManager.coordinate?.latitude) { _, _ in
+            if let coordinate = locationManager.coordinate {
+                mapCoordinate = coordinate
             }
-            Button("Allow Once") {
-                appModel.locationChoice = .current
-            }
-            Button("Don't Allow", role: .cancel) {}
-        } message: {
-            Text("Your location is used to find nearby care providers and will not be shared with third parties.")
         }
     }
 
-    private var customizeLocationForm: some View {
+    // MARK: Sections
+
+    private var currentLocationSection: some View {
+        let selected = appModel.locationChoice == .current
+
+        return VStack(alignment: .leading, spacing: 12) {
+            locationHeader(
+                title: "Use current location",
+                titleColor: titleBlue,
+                isSelected: selected,
+                showPin: !selected
+            ) {
+                selectLocation(.current)
+            }
+
+            if selected {
+                currentLocationPanel
+                    .transition(.opacity)
+            }
+        }
+    }
+
+    private var customizeLocationSection: some View {
+        let selected = appModel.locationChoice == .custom
+
+        return VStack(alignment: .leading, spacing: 12) {
+            locationHeader(
+                title: "Customize location",
+                titleColor: Color.black.opacity(0.75),
+                isSelected: selected,
+                showPin: !selected
+            ) {
+                selectLocation(.custom)
+            }
+
+            if selected {
+                customizeLocationPanel
+                    .transition(.opacity)
+            }
+        }
+    }
+
+    private func locationHeader(
+        title: String,
+        titleColor: Color,
+        isSelected: Bool,
+        showPin: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                OnboardingRadioControl(isSelected: isSelected)
+
+                if showPin {
+                    Image("pinIcon")
+                        .resizable()
+                        .renderingMode(.original)
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                }
+
+                Text(title)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(titleColor)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.vertical, 4)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(ServiceRowButtonStyle())
+    }
+
+    private var currentLocationPanel: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(currentAddressText)
+                .font(.subheadline)
+                .foregroundStyle(Theme.darkText)
+                .fixedSize(horizontal: false, vertical: true)
+
+            locationMapPreview(coordinate: mapCoordinate)
+
+            distanceSelector
+
+            confirmButton(enabled: true) {
+                appModel.resolvedCurrentAddress = currentAddressText
+                appModel.locationConfirmed = true
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+        }
+        .padding(.leading, 40)
+    }
+
+    private var customizeLocationPanel: some View {
         VStack(alignment: .leading, spacing: 16) {
             TextField("Address", text: Binding(
                 get: { appModel.customAddress },
                 set: {
                     appModel.customAddress = $0
-                    appModel.customLocationConfirmed = false
+                    appModel.locationConfirmed = false
                 }
             ))
             .padding(14)
@@ -500,7 +580,7 @@ struct LocationStep: View {
                 get: { appModel.customZipcode },
                 set: {
                     appModel.customZipcode = $0
-                    appModel.customLocationConfirmed = false
+                    appModel.locationConfirmed = false
                 }
             ))
             .keyboardType(.numberPad)
@@ -517,108 +597,194 @@ struct LocationStep: View {
                 .foregroundStyle(Theme.grayscale70)
                 .fixedSize(horizontal: false, vertical: true)
 
-            mapPreview
+            locationMapPreview(coordinate: mapCoordinate)
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Select Distance")
-                    .font(.subheadline.weight(.bold))
+            distanceSelector
 
-                Slider(
-                    value: Binding(
-                        get: { appModel.searchRadiusMiles },
-                        set: {
-                            appModel.searchRadiusMiles = $0
-                            appModel.customLocationConfirmed = false
-                        }
-                    ),
-                    in: 1...250,
-                    step: 1
-                )
-                .tint(Theme.brandOrange)
-
-                HStack {
-                    Text("1 mile")
-                    Spacer()
-                    Text("250 miles")
-                }
-                .font(.caption.weight(.semibold))
-            }
-
-            Button("Confirm") {
+            confirmButton(enabled: !appModel.customAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
                 appModel.customLocation = [appModel.customAddress, appModel.customZipcode]
                     .filter { !$0.isEmpty }
                     .joined(separator: ", ")
-                appModel.customLocationConfirmed = !appModel.customAddress.isEmpty
+                appModel.locationConfirmed = true
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
+        }
+        .padding(16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .shadow(color: Color(red: 0.8, green: 0.73, blue: 0.73).opacity(0.25), radius: 8, y: 4)
+        .padding(.leading, 40)
+    }
+
+    private var currentAddressText: String {
+        if !appModel.resolvedCurrentAddress.isEmpty {
+            return appModel.resolvedCurrentAddress
+        }
+        return locationManager.addressLine ?? LocationManager.sampleAddress
+    }
+
+    private var distanceSelector: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Select Distance")
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(Theme.darkText)
+
+            Slider(
+                value: Binding(
+                    get: { appModel.searchRadiusMiles },
+                    set: {
+                        appModel.searchRadiusMiles = $0
+                        appModel.locationConfirmed = false
+                    }
+                ),
+                in: 1...250,
+                step: 1
+            )
+            .tint(Theme.brandOrange)
+
+            HStack {
+                Text("1 mile")
+                Spacer()
+                Text("250 miles")
+            }
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Theme.darkText)
+        }
+    }
+
+    private func confirmButton(enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button("Confirm", action: action)
             .font(.headline)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
             .background(Theme.brandOrange)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .disabled(appModel.customAddress.isEmpty)
-            .opacity(appModel.customAddress.isEmpty ? 0.5 : 1)
-        }
-        .padding(16)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .shadow(color: Color(red: 0.8, green: 0.73, blue: 0.73).opacity(0.25), radius: 8, y: 4)
+            .disabled(!enabled)
+            .opacity(enabled ? 1 : 0.5)
     }
 
-    private var mapPreview: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(red: 0.91, green: 0.93, blue: 0.95))
-                .frame(height: 180)
+    private func locationMapPreview(coordinate: CLLocationCoordinate2D) -> some View {
+        LocationMapPreview(
+            coordinate: coordinate,
+            radiusMiles: appModel.searchRadiusMiles
+        )
+        .frame(height: 180)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
 
-            Circle()
-                .fill(Theme.brandOrange.opacity(0.15))
-                .frame(width: 120, height: 120)
+    // MARK: Actions
 
-            Image(systemName: "mappin.circle.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(Theme.brandOrange)
+    private func selectLocation(_ choice: LocationChoice) {
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+
+        // Re-tap collapses in place without scrolling.
+        if appModel.locationChoice == choice {
+            withAnimation(expandAnimation) {
+                appModel.locationChoice = nil
+                appModel.locationConfirmed = false
+            }
+            return
+        }
+
+        if choice == .current {
+            beginCurrentLocationFlow()
+            return
+        }
+
+        withAnimation(expandAnimation) {
+            appModel.locationChoice = .custom
+            appModel.locationConfirmed = false
         }
     }
 
-    private func locationRow(choice: LocationChoice, title: String, titleColor: Color) -> some View {
-        let selected = appModel.locationChoice == choice
-        return Button {
-            withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
-                if choice == .current {
-                    showLocationPermission = true
-                } else {
-                    appModel.locationChoice = choice
-                    appModel.customLocationConfirmed = false
-                }
-            }
-        } label: {
-            HStack(spacing: 14) {
-                OnboardingRadioControl(isSelected: selected)
-
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Theme.brandOrange)
-                        .frame(width: 40, height: 40)
-                    Image("pinIcon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 22, height: 22)
-                }
-
-                Text(title)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(titleColor)
-
-                Spacer()
-            }
-            .padding(16)
-            .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    private func beginCurrentLocationFlow() {
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            locationManager.requestWhenInUse()
+        case .authorizedAlways, .authorizedWhenInUse:
+            expandCurrentLocation()
+            locationManager.refreshIfAuthorized()
+        case .denied, .restricted:
+            // Fall back so the panel still matches the design in simulator / denied states.
+            locationManager.useSampleLocation()
+            expandCurrentLocation()
+        @unknown default:
+            locationManager.requestWhenInUse()
         }
-        .buttonStyle(.plain)
+    }
+
+    private func handleAuthorizationChange(_ status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            expandCurrentLocation()
+            locationManager.refreshIfAuthorized()
+        case .denied, .restricted:
+            // User dismissed system prompt with Don't Allow — stay collapsed.
+            break
+        default:
+            break
+        }
+    }
+
+    private func expandCurrentLocation() {
+        withAnimation(expandAnimation) {
+            appModel.locationChoice = .current
+            appModel.locationConfirmed = false
+            if let address = locationManager.addressLine {
+                appModel.resolvedCurrentAddress = address
+            }
+            if locationManager.coordinate == nil {
+                locationManager.useSampleLocation()
+            }
+            if let coordinate = locationManager.coordinate {
+                mapCoordinate = coordinate
+            }
+        }
     }
 }
+
+// MARK: - Map preview
+
+private struct LocationMapPreview: View {
+    let coordinate: CLLocationCoordinate2D
+    let radiusMiles: Double
+
+    private var radiusMeters: CLLocationDistance {
+        max(radiusMiles, 1) * 1609.34
+    }
+
+    private var regionSpanMeters: CLLocationDistance {
+        max(radiusMeters * 2.5, 1_200)
+    }
+
+    var body: some View {
+        Map(initialPosition: .region(
+            MKCoordinateRegion(
+                center: coordinate,
+                latitudinalMeters: regionSpanMeters,
+                longitudinalMeters: regionSpanMeters
+            )
+        )) {
+            MapCircle(center: coordinate, radius: radiusMeters)
+                .foregroundStyle(Color(red: 0.45, green: 0.72, blue: 0.95).opacity(0.28))
+                .stroke(Color(red: 0.35, green: 0.62, blue: 0.90).opacity(0.55), lineWidth: 1)
+
+            Annotation("", coordinate: coordinate, anchor: .bottom) {
+                Image("pinIcon")
+                    .resizable()
+                    .renderingMode(.original)
+                    .scaledToFit()
+                    .frame(width: 36, height: 36)
+            }
+        }
+        .mapStyle(.standard(elevation: .flat))
+        .mapControlVisibility(.hidden)
+        .disabled(true)
+        .allowsHitTesting(false)
+    }
+}
+
 
 // MARK: - Shared
 
