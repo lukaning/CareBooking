@@ -2,10 +2,13 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppModel.self) private var appModel
-    @State private var showFilters = false
+    @State private var filtersExpanded = false
+    @State private var activeFilter: HomeFilterCriterion?
     @State private var showSettings = false
     @State private var bookingProvider: Provider?
     @State private var sortNewest = true
+
+    private let expandAnimation = Animation.easeInOut(duration: 0.22)
 
     private var providers: [Provider] {
         sortNewest ? appModel.providers : appModel.providers.reversed()
@@ -37,41 +40,10 @@ struct HomeView: View {
                 }
             }
             .safeAreaInset(edge: .top, spacing: 0) {
-                HStack {
-                    Menu {
-                        Button(sortNewest ? "Newest first ✓" : "Newest first") {
-                            sortNewest = true
-                        }
-                        Button(!sortNewest ? "Highest rated ✓" : "Highest rated") {
-                            sortNewest = false
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text("Your Matches")
-                                .font(.title3.weight(.semibold))
-                                .foregroundStyle(Theme.darkText)
-                            Image(systemName: "chevron.down")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(Theme.darkText)
-                        }
-                    }
-
-                    Spacer()
-
-                    Button {
-                        showFilters = true
-                    } label: {
-                        Image(systemName: "slider.horizontal.3")
-                            .font(.title3)
-                            .foregroundStyle(Theme.darkText)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color(.systemBackground))
+                matchesHeader
             }
-            .sheet(isPresented: $showFilters) {
-                FilterSheet()
+            .sheet(item: $activeFilter) { criterion in
+                FilterSheet(criterion: criterion)
                     .presentationDetents([.medium, .large])
             }
             .sheet(isPresented: $showSettings) {
@@ -82,7 +54,164 @@ struct HomeView: View {
             }
         }
     }
+
+    private var matchesHeader: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 12) {
+                Menu {
+                    Button(sortNewest ? "Newest first ✓" : "Newest first") {
+                        sortNewest = true
+                    }
+                    Button(!sortNewest ? "Highest rated ✓" : "Highest rated") {
+                        sortNewest = false
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text("Your Matches")
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                        Image(systemName: "chevron.down")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                    }
+                }
+
+                Spacer(minLength: 0)
+
+                Button {
+                    UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                    withAnimation(expandAnimation) {
+                        filtersExpanded.toggle()
+                    }
+                } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(filtersExpanded ? Theme.brandOrange : Theme.darkText)
+                        .frame(width: 40, height: 40)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(filtersExpanded ? Theme.brandOrange.opacity(0.12) : Color.clear)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .stroke(
+                                    filtersExpanded
+                                        ? Theme.brandOrange.opacity(0.45)
+                                        : Color(red: 0.88, green: 0.88, blue: 0.90),
+                                    lineWidth: 1
+                                )
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(filtersExpanded ? "Hide filters" : "Show filters")
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .padding(.bottom, filtersExpanded ? 10 : 12)
+
+            if filtersExpanded {
+                filterCriteriaBar
+                    .transition(.opacity)
+                    .padding(.bottom, 12)
+            }
+        }
+        .background(Color(.systemBackground))
+        .animation(expandAnimation, value: filtersExpanded)
+    }
+
+    private var filterCriteriaBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(HomeFilterCriterion.allCases) { criterion in
+                    Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        activeFilter = criterion
+                    } label: {
+                        FilterCriterionChip(criterion: criterion)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+    }
 }
+
+// MARK: - Filter criteria
+
+enum HomeFilterCriterion: String, CaseIterable, Identifiable {
+    case location
+    case service
+    case rating
+    case price
+    case availability
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .location: "Location: in California; Bay Area"
+        case .service: "Service"
+        case .rating: "Rating"
+        case .price: "Price"
+        case .availability: "Availability"
+        }
+    }
+
+    var shortTitle: String {
+        switch self {
+        case .location: "Location"
+        case .service: "Service"
+        case .rating: "Rating"
+        case .price: "Price"
+        case .availability: "Availability"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .location: "mappin"
+        case .service: "archivebox"
+        case .rating: "star"
+        case .price: "dollarsign.circle"
+        case .availability: "calendar"
+        }
+    }
+
+    /// Only Location shows trailing chevron in the design.
+    var showsChevron: Bool {
+        self == .location
+    }
+}
+
+private struct FilterCriterionChip: View {
+    let criterion: HomeFilterCriterion
+
+    private let fill = Color(red: 0.82, green: 0.84, blue: 0.91)
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: criterion.systemImage)
+                .font(.subheadline.weight(.semibold))
+
+            Text(criterion.title)
+                .font(.subheadline.weight(.semibold))
+                .lineLimit(1)
+
+            if criterion.showsChevron {
+                Image(systemName: "chevron.down")
+                    .font(.caption.weight(.semibold))
+            }
+        }
+        .foregroundStyle(Theme.darkText)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(fill)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+// MARK: - Provider card
 
 struct ProviderCard: View {
     let provider: Provider
@@ -178,43 +307,74 @@ struct ProviderCard: View {
     }
 }
 
+// MARK: - Filter screens
+
 struct FilterSheet: View {
     @Environment(\.dismiss) private var dismiss
+    var criterion: HomeFilterCriterion = .location
+
+    @State private var location = "California; Bay Area"
+    @State private var service = "All"
     @State private var maxRate = 50.0
     @State private var minRating = 4.0
-    @State private var specialty = "All"
+    @State private var availability = "Any day"
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Rate") {
-                    Slider(value: $maxRate, in: 15...100, step: 5) {
-                        Text("Max rate")
-                    } minimumValueLabel: {
-                        Text("$15")
-                    } maximumValueLabel: {
-                        Text("$100")
+                switch criterion {
+                case .location:
+                    Section("Location") {
+                        Picker("Area", selection: $location) {
+                            Text("California; Bay Area").tag("California; Bay Area")
+                            Text("California; Los Angeles").tag("California; Los Angeles")
+                            Text("New York; NYC").tag("New York; NYC")
+                            Text("Texas; Austin").tag("Texas; Austin")
+                            Text("Remote only").tag("Remote only")
+                        }
                     }
-                    Text("Up to $\(Int(maxRate))/hour")
-                        .foregroundStyle(.secondary)
-                }
-
-                Section("Minimum rating") {
-                    Stepper(value: $minRating, in: 1...5, step: 0.5) {
-                        Text(String(format: "%.1f+", minRating))
+                case .service:
+                    Section("Service") {
+                        Picker("Service type", selection: $service) {
+                            Text("All").tag("All")
+                            Text("Personal Care").tag("Personal Care")
+                            Text("Postpartum").tag("Postpartum")
+                            Text("Companionship").tag("Companionship")
+                            Text("Special Needs").tag("Special Needs")
+                        }
+                        .pickerStyle(.inline)
                     }
-                }
-
-                Section("Specialty") {
-                    Picker("Specialty", selection: $specialty) {
-                        Text("All").tag("All")
-                        Text("Personal Care").tag("Personal Care")
-                        Text("Postpartum").tag("Postpartum")
-                        Text("Companionship").tag("Companionship")
+                case .rating:
+                    Section("Minimum rating") {
+                        Stepper(value: $minRating, in: 1...5, step: 0.5) {
+                            Text(String(format: "%.1f+", minRating))
+                        }
+                    }
+                case .price:
+                    Section("Rate") {
+                        Slider(value: $maxRate, in: 15...100, step: 5) {
+                            Text("Max rate")
+                        } minimumValueLabel: {
+                            Text("$15")
+                        } maximumValueLabel: {
+                            Text("$100")
+                        }
+                        Text("Up to $\(Int(maxRate))/hour")
+                            .foregroundStyle(.secondary)
+                    }
+                case .availability:
+                    Section("Availability") {
+                        Picker("When", selection: $availability) {
+                            Text("Any day").tag("Any day")
+                            Text("Weekdays").tag("Weekdays")
+                            Text("Weekends").tag("Weekends")
+                            Text("Evenings").tag("Evenings")
+                        }
+                        .pickerStyle(.inline)
                     }
                 }
             }
-            .navigationTitle("Filters")
+            .navigationTitle(criterion.shortTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
