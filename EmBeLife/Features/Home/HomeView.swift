@@ -6,7 +6,7 @@ struct HomeView: View {
     @State private var activeFilter: HomeFilterCriterion?
     @State private var filterState = HomeFilterState()
     @State private var showSettings = false
-    @State private var pendingBookProvider: Provider?
+    @State private var bookingMenuProviderID: String?
     @State private var bookRequest: BookProviderRequest?
     @State private var sortNewest = true
     @State private var showBooked = false
@@ -21,112 +21,112 @@ struct HomeView: View {
         appModel.bookings.filter { $0.status == .booked }.count
     }
 
-    private var showBookingTypeSheet: Binding<Bool> {
-        Binding(
-            get: { pendingBookProvider != nil },
-            set: { if !$0 { pendingBookProvider = nil } }
-        )
-    }
-
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    ForEach(providers) { provider in
-                        ProviderCard(provider: provider) {
-                            pendingBookProvider = provider
+            providerList
+                .background(Color(.systemGroupedBackground))
+                .navigationTitle("Home")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { homeToolbar }
+                .navigationDestination(isPresented: $showBooked) {
+                    BookingsView(initialTab: .booked)
+                }
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    matchesHeader
+                }
+                .sheet(item: $activeFilter) { criterion in
+                    FilterSheet(criterion: criterion, filterState: $filterState)
+                        .presentationDetents([.medium, .large])
+                }
+                .sheet(isPresented: $showSettings) {
+                    SettingsView()
+                }
+                .sheet(item: $bookRequest) { request in
+                    BookProviderSheet(
+                        provider: request.provider,
+                        appointmentType: request.appointmentType
+                    )
+                }
+                .onAppear {
+                    appModel.seedBookingsIfNeeded()
+                }
+        }
+    }
+
+    private var homeToolbar: some ToolbarContent {
+        Group {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                }
+                .accessibilityLabel("Settings")
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showBooked = true
+                } label: {
+                    ZStack(alignment: .topTrailing) {
+                        Image(systemName: "calendar")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+
+                        if bookedCount > 0 {
+                            Text(bookedCount > 9 ? "9+" : "\(bookedCount)")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, bookedCount > 9 ? 3 : 4)
+                                .padding(.vertical, 1)
+                                .background(Theme.brandOrange)
+                                .clipShape(Capsule())
+                                .offset(x: 8, y: -6)
                         }
                     }
+                    .frame(width: 32, height: 28)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-            }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Home")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "line.3.horizontal")
-                    }
-                    .accessibilityLabel("Settings")
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showBooked = true
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "calendar")
-                                .font(.body.weight(.semibold))
-                                .foregroundStyle(Theme.darkText)
-
-                            if bookedCount > 0 {
-                                Text(bookedCount > 9 ? "9+" : "\(bookedCount)")
-                                    .font(.system(size: 9, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .padding(.horizontal, bookedCount > 9 ? 3 : 4)
-                                    .padding(.vertical, 1)
-                                    .background(Theme.brandOrange)
-                                    .clipShape(Capsule())
-                                    .offset(x: 8, y: -6)
-                            }
-                        }
-                        .frame(width: 32, height: 28)
-                    }
-                    .accessibilityLabel("Booked")
-                    .accessibilityHint("View booked appointments")
-                }
-            }
-            .navigationDestination(isPresented: $showBooked) {
-                BookingsView(initialTab: .booked)
-            }
-            .safeAreaInset(edge: .top, spacing: 0) {
-                matchesHeader
-            }
-            .sheet(item: $activeFilter) { criterion in
-                FilterSheet(criterion: criterion, filterState: $filterState)
-                    .presentationDetents([.medium, .large])
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
-            }
-            .confirmationDialog(
-                "",
-                isPresented: showBookingTypeSheet,
-                titleVisibility: .hidden
-            ) {
-                Button("Book an in-person Appointment") {
-                    openBooking(type: .inPerson)
-                }
-                Button("Book a Video Appointment") {
-                    openBooking(type: .video)
-                }
-                Button("Cancel", role: .cancel) {
-                    pendingBookProvider = nil
-                }
-            }
-            .sheet(item: $bookRequest) { request in
-                BookProviderSheet(
-                    provider: request.provider,
-                    appointmentType: request.appointmentType
-                )
-            }
-            .onAppear {
-                appModel.seedBookingsIfNeeded()
+                .accessibilityLabel("Booked")
+                .accessibilityHint("View booked appointments")
             }
         }
     }
 
-    private func openBooking(type: BookingAppointmentType) {
-        guard let provider = pendingBookProvider else { return }
-        pendingBookProvider = nil
-        // Let the action sheet finish dismissing before presenting the sheet.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            bookRequest = BookProviderRequest(provider: provider, appointmentType: type)
+    private var providerList: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(providers) { provider in
+                    providerCard(for: provider)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
+    }
+
+    private func providerCard(for provider: Provider) -> some View {
+        ProviderCard(
+            provider: provider,
+            isBookingMenuExpanded: bookingMenuProviderID == provider.id,
+            onToggleBookingMenu: {
+                withAnimation(expandAnimation) {
+                    if bookingMenuProviderID == provider.id {
+                        bookingMenuProviderID = nil
+                    } else {
+                        bookingMenuProviderID = provider.id
+                    }
+                }
+            },
+            onSelectAppointmentType: { type in
+                withAnimation(expandAnimation) {
+                    bookingMenuProviderID = nil
+                }
+                bookRequest = BookProviderRequest(
+                    provider: provider,
+                    appointmentType: type
+                )
+            }
+        )
     }
 
     private var matchesHeader: some View {
@@ -353,7 +353,12 @@ struct BookProviderRequest: Identifiable {
 
 struct ProviderCard: View {
     let provider: Provider
-    var onBook: () -> Void
+    var isBookingMenuExpanded: Bool
+    var onToggleBookingMenu: () -> Void
+    var onSelectAppointmentType: (BookingAppointmentType) -> Void
+
+    private let menuBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
+    private let menuDivider = Color(red: 0.93, green: 0.93, blue: 0.94)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -401,17 +406,29 @@ struct ProviderCard: View {
                 .foregroundStyle(Theme.mutedText)
                 .lineLimit(1)
 
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 iconButton(systemName: "ellipsis")
                 iconButton(systemName: "play.rectangle.fill", tint: .red)
 
-                Button("Book Now", action: onBook)
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Theme.brandOrange)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                VStack(alignment: .leading, spacing: 8) {
+                    Button(action: onToggleBookingMenu) {
+                        Text("Book Now")
+                            .font(.headline.weight(.bold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Theme.brandOrange)
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Book Now")
+                    .accessibilityHint(isBookingMenuExpanded ? "Hide booking options" : "Show booking options")
+
+                    if isBookingMenuExpanded {
+                        bookingTypeMenu
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+                }
             }
 
             Divider()
@@ -429,6 +446,48 @@ struct ProviderCard: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: .black.opacity(0.04), radius: 10, y: 4)
+        .zIndex(isBookingMenuExpanded ? 1 : 0)
+    }
+
+    private var bookingTypeMenu: some View {
+        VStack(spacing: 0) {
+            bookingTypeButton(
+                title: "Book an in-person Appointment",
+                type: .inPerson
+            )
+
+            Rectangle()
+                .fill(menuDivider)
+                .frame(height: 1)
+
+            bookingTypeButton(
+                title: "Book a Video Appointment",
+                type: .video
+            )
+        }
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(menuBorder, lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
+    }
+
+    private func bookingTypeButton(title: String, type: BookingAppointmentType) -> some View {
+        Button {
+            onSelectAppointmentType(type)
+        } label: {
+            Text(title)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(Theme.darkText)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 16)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private func iconButton(systemName: String, tint: Color = Theme.darkText) -> some View {
