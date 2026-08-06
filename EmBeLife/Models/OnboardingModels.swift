@@ -25,30 +25,23 @@ enum OnboardingServiceCatalog {
             .init(id: "parenting", title: "Parenting education"),
             .init(id: "multiples", title: "Multiples education")
         ],
-        "acupuncture": [
+        "therapeutic": [
+            .init(id: "occupational", title: "Occupational therapy"),
+            .init(id: "physical", title: "Physical therapy"),
+            .init(id: "speech", title: "Speech therapy"),
             .init(id: "pain", title: "Pain management"),
-            .init(id: "wellness", title: "General wellness"),
-            .init(id: "fertility", title: "Fertility support")
+            .init(id: "wellness", title: "General wellness")
         ],
-        "bereavement": [
-            .init(id: "grief", title: "Grief counseling"),
-            .init(id: "memorial", title: "Memorial planning"),
-            .init(id: "family", title: "Family support")
-        ],
-        "dietary": [
+        "nutrition": [
             .init(id: "meal-plan", title: "Meal planning"),
             .init(id: "nutrition", title: "Nutrition counseling"),
             .init(id: "dietary-mgmt", title: "Dietary management")
         ],
-        "rehab": [
-            .init(id: "occupational", title: "Occupational therapy"),
-            .init(id: "physical", title: "Physical therapy"),
-            .init(id: "speech", title: "Speech therapy")
-        ],
-        "special": [
-            .init(id: "special-needs", title: "Special needs support"),
-            .init(id: "developmental", title: "Developmental assistance"),
-            .init(id: "behavioral", title: "Behavioral support")
+        "bereavement": [
+            .init(id: "grief", title: "Grief counseling"),
+            .init(id: "memorial", title: "Memorial planning"),
+            .init(id: "family", title: "Family support"),
+            .init(id: "end-of-life", title: "End of life support")
         ]
     ]
 

@@ -61,16 +61,30 @@ struct ServiceCategory: Identifiable, Hashable {
     static let all: [ServiceCategory] = [
         .init(
             id: "personal",
-            title: "Personal Care/ Activities of Daily Living",
+            title: "Personal Care/Activities of Daily Living Services",
             imageName: "svcPersonalCare",
             selectedImageName: "svcPersonalCareSelected"
         ),
-        .init(id: "birth", title: "Birth/ Postpartum Services", imageName: "svcBirth"),
-        .init(id: "acupuncture", title: "Acupuncture", imageName: "svcAcupuncture"),
-        .init(id: "bereavement", title: "Bereavement/ Loss", imageName: "svcBereavement"),
-        .init(id: "dietary", title: "Dietary/ Nutrition Counseling & Services", imageName: "svcDietary"),
-        .init(id: "rehab", title: "Rehabilitative Therapies (Occupational, Physical, Speech)", imageName: "svcRehab"),
-        .init(id: "special", title: "Special Needs Assistance/ Specialized Care", imageName: "svcSpecial")
+        .init(
+            id: "birth",
+            title: "Birth, Newborn & Postpartum Services",
+            imageName: "svcBirth"
+        ),
+        .init(
+            id: "therapeutic",
+            title: "Therapeutic and Rehabilitation Services",
+            imageName: "svcRehab"
+        ),
+        .init(
+            id: "nutrition",
+            title: "Nutrition & Dietary Services",
+            imageName: "svcDietary"
+        ),
+        .init(
+            id: "bereavement",
+            title: "Loss, Bereavement & End of Life Services",
+            imageName: "svcBereavement"
+        )
     ]
 }
 
