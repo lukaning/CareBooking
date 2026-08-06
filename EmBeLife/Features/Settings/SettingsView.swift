@@ -1,9 +1,9 @@
 import SwiftUI
 
 enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
+    case profile
     case dashboard
     case userManagement
-    case account
     case bookings
     case giftFund
     case language
@@ -14,9 +14,9 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
+        case .profile: "Profile"
         case .dashboard: "Dashboard"
         case .userManagement: "User management"
-        case .account: "Account"
         case .bookings: "Bookings"
         case .giftFund: "Gift Fund"
         case .language: "Language Setting"
@@ -27,9 +27,9 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
 
     var systemImage: String {
         switch self {
+        case .profile: "person.crop.circle"
         case .dashboard: "square.grid.2x2"
         case .userManagement: "person.crop.rectangle.stack"
-        case .account: "person.crop.circle"
         case .bookings: "diamond"
         case .giftFund: "wallet.pass"
         case .language: "character.bubble"
@@ -81,6 +81,7 @@ struct SettingsView: View {
                 .padding(.bottom, 24)
             }
             .background(Color(.systemBackground))
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -90,29 +91,18 @@ struct SettingsView: View {
                         Image(systemName: "xmark")
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.darkText)
+                            .frame(width: 36, height: 36)
+                            .contentShape(Rectangle())
                     }
                     .accessibilityLabel("Close")
                 }
-
-                ToolbarItem(placement: .principal) {
-                    Text("Settings")
-                        .font(.title3.weight(.medium))
-                        .foregroundStyle(Theme.darkText)
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        path.append(.account)
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.darkText)
-                    }
-                    .accessibilityLabel("Edit profile")
-                }
             }
+            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .navigationDestination(for: SettingsDestination.self) { destination in
                 switch destination {
+                case .profile:
+                    ProfileView(embedsNavigation: false)
                 case .userManagement:
                     UserManagementView()
                 default:
@@ -120,6 +110,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .tint(Theme.darkText)
     }
 
     private var searchField: some View {

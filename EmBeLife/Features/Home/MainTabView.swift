@@ -7,7 +7,6 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
     case notes
     case notification
     case payment
-    case profile
 
     var id: Int { rawValue }
 
@@ -18,7 +17,6 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
         case .notes: "Hands-free"
         case .notification: "Notification"
         case .payment: "Payment"
-        case .profile: "Profile"
         }
     }
 
@@ -30,7 +28,6 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
         case .notes: "bookmark"
         case .notification: "bell"
         case .payment: "briefcase"
-        case .profile: "person"
         }
     }
 
@@ -42,7 +39,6 @@ enum AppTab: Int, CaseIterable, Identifiable, Hashable {
         case .notes: "bookmark.fill"
         case .notification: "bell.fill"
         case .payment: "briefcase.fill"
-        case .profile: "person.fill"
         }
     }
 }
@@ -81,12 +77,6 @@ struct MainTabView: View {
                     tabLabel(.payment)
                 }
                 .tag(AppTab.payment)
-
-            ProfileView()
-                .tabItem {
-                    tabLabel(.profile)
-                }
-                .tag(AppTab.profile)
         }
         .tint(Theme.brandOrange)
         .onAppear(perform: configureTabBarAppearance)

@@ -2,6 +2,9 @@ import SwiftUI
 
 struct ProfileView: View {
     @Environment(AppModel.self) private var appModel
+    /// When false, content is pushed inside an existing NavigationStack (e.g. Settings).
+    var embedsNavigation: Bool = true
+
     @State private var bookingTab: BookingTab = .requested
     @State private var showEdit = false
     @State private var expandedBookingID: UUID?
@@ -16,39 +19,49 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                Group {
-                    if profile.isFilled {
-                        filledContent
-                    } else {
-                        emptyContent
-                    }
+        Group {
+            if embedsNavigation {
+                NavigationStack {
+                    profileRoot
                 }
-                .padding(20)
-                .animation(.easeInOut(duration: 0.25), value: profile.isFilled)
+            } else {
+                profileRoot
             }
-            .background(Color(.systemBackground))
-            .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showEdit = true
-                    } label: {
-                        Image(systemName: "pencil")
-                    }
+        }
+    }
+
+    private var profileRoot: some View {
+        ScrollView {
+            Group {
+                if profile.isFilled {
+                    filledContent
+                } else {
+                    emptyContent
                 }
             }
-            .navigationDestination(isPresented: $showEdit) {
-                ProfileDetailEditView(profile: editingSeed)
+            .padding(20)
+            .animation(.easeInOut(duration: 0.25), value: profile.isFilled)
+        }
+        .background(Color(.systemBackground))
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showEdit = true
+                } label: {
+                    Image(systemName: "pencil")
+                }
             }
-            .navigationDestination(item: $bookingRoute) { route in
-                EditBookingView(bookingID: route.id)
-            }
-            .sheet(item: $bookingToReschedule) { booking in
-                RescheduleBookingSheet(booking: booking)
-            }
+        }
+        .navigationDestination(isPresented: $showEdit) {
+            ProfileDetailEditView(profile: editingSeed)
+        }
+        .navigationDestination(item: $bookingRoute) { route in
+            EditBookingView(bookingID: route.id)
+        }
+        .sheet(item: $bookingToReschedule) { booking in
+            RescheduleBookingSheet(booking: booking)
         }
     }
 
