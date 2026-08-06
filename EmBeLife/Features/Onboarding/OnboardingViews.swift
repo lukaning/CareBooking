@@ -342,40 +342,41 @@ struct ServiceNeedsStep: View {
         let selectedGroups = appModel.selectedServiceGroupIDs[categoryID] ?? []
         let selectedLeaves = appModel.selectedSubServiceIDs[categoryID] ?? []
 
-        return VStack(alignment: .leading, spacing: 14) {
-            FlowLayout(spacing: 10) {
-                ForEach(groups) { group in
+        // Level 2 list first; Level 3 only expands under each selected Level 2.
+        return VStack(alignment: .leading, spacing: 12) {
+            ForEach(groups) { group in
+                let groupSelected = selectedGroups.contains(group.id)
+
+                VStack(alignment: .leading, spacing: 10) {
                     groupChip(
                         group,
                         categoryID: categoryID,
-                        isSelected: selectedGroups.contains(group.id)
+                        isSelected: groupSelected
                     )
-                }
-            }
 
-            ForEach(groups.filter { selectedGroups.contains($0.id) }) { group in
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(group.title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
+                    if groupSelected {
+                        VStack(alignment: .leading, spacing: 10) {
+                            FlowLayout(spacing: 10) {
+                                ForEach(group.children) { option in
+                                    subServiceChip(
+                                        option,
+                                        categoryID: categoryID,
+                                        isSelected: selectedLeaves.contains(option.id)
+                                    )
+                                }
+                            }
 
-                    FlowLayout(spacing: 10) {
-                        ForEach(group.children) { option in
-                            subServiceChip(
-                                option,
-                                categoryID: categoryID,
-                                isSelected: selectedLeaves.contains(option.id)
-                            )
+                            ForEach(group.children.filter {
+                                selectedLeaves.contains($0.id) && ($0.allowsNotes || $0.requiresDescription)
+                            }) { option in
+                                notesField(for: option)
+                            }
                         }
-                    }
-
-                    ForEach(group.children.filter {
-                        selectedLeaves.contains($0.id) && ($0.allowsNotes || $0.requiresDescription)
-                    }) { option in
-                        notesField(for: option)
+                        .padding(.leading, 8)
+                        .transition(.opacity)
                     }
                 }
-                .transition(.opacity)
+                .animation(expandAnimation, value: groupSelected)
             }
         }
     }
@@ -475,14 +476,15 @@ struct ServiceNeedsStep: View {
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
 
-                if isSelected {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.95))
-                }
+                Spacer(minLength: 8)
+
+                Image(systemName: isSelected ? "chevron.up" : "chevron.down")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(isSelected ? .white.opacity(0.95) : Theme.grayscale60)
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 11)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(isSelected ? Theme.brandOrange : Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
