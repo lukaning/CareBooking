@@ -9,12 +9,14 @@ enum OnboardingServiceCatalog {
     static let subOptions: [String: [ServiceSubOption]] = [
         "personal": [
             .init(id: "meals", title: "Meals & Groceries"),
-            .init(id: "medication", title: "Medication assistance"),
-            .init(id: "hygiene", title: "Personal care/ hygiene"),
+            .init(id: "medications", title: "Medications"),
+            .init(id: "hygiene", title: "Personal hygiene"),
             .init(id: "mobility", title: "Mobility assistance"),
             .init(id: "housekeeping", title: "Light housekeeping"),
-            .init(id: "transport", title: "Transportation/ appointments"),
-            .init(id: "errands", title: "Errands")
+            .init(id: "transport", title: "Transportation/ medical and other appointments"),
+            .init(id: "errands", title: "Running errands"),
+            .init(id: "companionship", title: "Companionship/ emotional support"),
+            .init(id: "pet-care", title: "Pet care (feed/ walk)")
         ],
         "birth": [
             .init(id: "birth-ed", title: "Birth education"),
