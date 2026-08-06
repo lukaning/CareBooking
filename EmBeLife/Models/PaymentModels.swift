@@ -48,6 +48,41 @@ enum PaymentMethodKind: String, CaseIterable, Identifiable, Hashable {
     }
 }
 
+struct BankAccountDetails: Hashable {
+    var accountHolderName: String
+    var accountNumber: String
+    var abaRoutingNumber: String
+
+    static let sample = BankAccountDetails(
+        accountHolderName: "Robbi Darwis",
+        accountNumber: "8888 - 8888 - 8888 - 8888",
+        abaRoutingNumber: "8888999"
+    )
+}
+
+struct ContactPaymentDetails: Hashable {
+    /// Email, mobile, or username used by Zelle / Venmo / PayPal.
+    var contact: String
+
+    static let zelleSample = ContactPaymentDetails(contact: "4158888888")
+    static let venmoSample = ContactPaymentDetails(contact: "@robbidarwis")
+    static let paypalSample = ContactPaymentDetails(contact: "robbi@email.com")
+}
+
+struct CreditCardDetails: Hashable {
+    var cardholderName: String
+    var cardNumber: String
+    var expiry: String
+    var cvc: String
+
+    static let sample = CreditCardDetails(
+        cardholderName: "Robbi Darwis",
+        cardNumber: "4242 4242 4242 4242",
+        expiry: "12/28",
+        cvc: "123"
+    )
+}
+
 enum SendGiftAction: String, CaseIterable, Identifiable {
     case giftAmount = "Gift $ Amount"
     case giftService = "Gift Service"

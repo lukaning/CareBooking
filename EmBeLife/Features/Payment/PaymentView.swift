@@ -3,12 +3,19 @@ import SwiftUI
 struct PaymentView: View {
     @State private var segment: PaymentSegment = .paymentMethod
     @State private var selectedMethod: PaymentMethodKind = .defaultMethod
+    @State private var bankDetails = BankAccountDetails.sample
+    @State private var zelleDetails = ContactPaymentDetails.zelleSample
+    @State private var venmoDetails = ContactPaymentDetails.venmoSample
+    @State private var paypalDetails = ContactPaymentDetails.paypalSample
+    @State private var creditCardDetails = CreditCardDetails.sample
     @State private var showSendGiftMenu = false
     @State private var showGiftInfo = false
     @State private var showBookingsInfo = false
     @State private var giftActionMessage: String?
+    @State private var confirmMessage: String?
 
     private let giftBalance = 240
+    private let giftOutTotal = 24
     private let completedBookings = 5
     private let transactions = PaymentTransaction.samples
     private let defaultMethod = PaymentMethodKind.defaultMethod
@@ -28,6 +35,9 @@ struct PaymentView: View {
     private let rowBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
     private let radioRing = Color(red: 0.70, green: 0.72, blue: 0.76)
     private let linkGray = Color(red: 0.45, green: 0.48, blue: 0.55)
+    private let selectedMethodFill = Color(red: 1.0, green: 0.847, blue: 0.796)
+    private let fieldLabel = Color(red: 0.10, green: 0.20, blue: 0.45)
+    private let giftSummaryBar = Color(red: 0.93, green: 0.94, blue: 0.96)
 
     var body: some View {
         NavigationStack {
@@ -45,26 +55,21 @@ struct PaymentView: View {
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 8)
+                .padding(.top, 20)
                 .padding(.bottom, 28)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(Color.white)
             .navigationTitle("Payment")
             .navigationBarTitleDisplayMode(.inline)
-            .overlay(alignment: .topTrailing) {
+            .background {
                 if showSendGiftMenu {
-                    sendGiftMenu
-                        .padding(.trailing, 28)
-                        .padding(.top, 150)
-                        .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topTrailing)))
-                        .zIndex(2)
-                }
-            }
-            .onTapGesture {
-                if showSendGiftMenu {
-                    withAnimation(.easeInOut(duration: 0.15)) {
-                        showSendGiftMenu = false
-                    }
+                    Color.black.opacity(0.001)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                showSendGiftMenu = false
+                            }
+                        }
                 }
             }
             .alert("Gift Balance", isPresented: $showGiftInfo) {
@@ -84,6 +89,14 @@ struct PaymentView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(giftActionMessage ?? "")
+            }
+            .alert("Payment Method", isPresented: Binding(
+                get: { confirmMessage != nil },
+                set: { if !$0 { confirmMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(confirmMessage ?? "")
             }
         }
     }
@@ -123,24 +136,8 @@ struct PaymentView: View {
 
                 Spacer(minLength: 8)
 
-                Button {
-                    withAnimation(.easeInOut(duration: 0.15)) {
-                        showSendGiftMenu.toggle()
-                    }
-                } label: {
-                    VStack(spacing: 6) {
-                        Image(systemName: "arrow.right")
-                            .font(.body.weight(.bold))
-                            .foregroundStyle(sendGiftArrow)
-                            .frame(width: 40, height: 40)
-                            .background(sendGiftTint)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        Text("Send Gift")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color(red: 0.212, green: 0.247, blue: 0.349))
-                    }
-                }
-                .buttonStyle(.plain)
+                sendGiftButton
+                    .zIndex(2)
             }
 
             Rectangle()
@@ -181,9 +178,43 @@ struct PaymentView: View {
             }
         }
         .padding(16)
-        .background(summaryCardBG)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 10, y: 2)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(summaryCardBG)
+                .shadow(color: .black.opacity(0.04), radius: 10, y: 2)
+        )
+        // Avoid clipping the anchored Send Gift menu that hangs below the button.
+        .zIndex(showSendGiftMenu ? 1 : 0)
+    }
+
+    private var sendGiftButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.15)) {
+                showSendGiftMenu.toggle()
+            }
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: "arrow.right")
+                    .font(.body.weight(.bold))
+                    .foregroundStyle(sendGiftArrow)
+                    .frame(width: 40, height: 40)
+                    .background(sendGiftTint)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                Text("Send Gift")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.212, green: 0.247, blue: 0.349))
+            }
+        }
+        .buttonStyle(.plain)
+        .overlay(alignment: .topTrailing) {
+            if showSendGiftMenu {
+                sendGiftMenu
+                    // Sit just under the action control (arrow + label).
+                    .padding(.top, 58)
+                    .fixedSize()
+                    .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topTrailing)))
+            }
+        }
     }
 
     private var sendGiftMenu: some View {
@@ -264,55 +295,153 @@ struct PaymentView: View {
 
             VStack(spacing: 10) {
                 ForEach(PaymentMethodKind.allCases) { method in
-                    paymentMethodRow(method)
+                    paymentMethodCard(method)
                 }
             }
+            .animation(.easeInOut(duration: 0.22), value: selectedMethod)
 
             poweredByFooter
                 .padding(.top, 4)
         }
     }
 
-    private func paymentMethodRow(_ method: PaymentMethodKind) -> some View {
+    private func paymentMethodCard(_ method: PaymentMethodKind) -> some View {
         let isSelected = selectedMethod == method
         let isDefault = method == defaultMethod
 
-        return Button {
-            withAnimation(.easeInOut(duration: 0.18)) {
-                selectedMethod = method
-            }
-        } label: {
-            HStack(spacing: 12) {
-                selectionRadio(isSelected: isSelected)
-
-                HStack(spacing: 8) {
-                    Text(method.title)
-                        .font(.body.weight(.medium))
-                        .foregroundStyle(rowTitle)
-                        .multilineTextAlignment(.leading)
-
-                    if isDefault {
-                        defaultBadge
-                    }
+        return VStack(alignment: .leading, spacing: 14) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.22)) {
+                    selectedMethod = method
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+            } label: {
+                HStack(spacing: 12) {
+                    selectionRadio(isSelected: isSelected)
 
-                trailingAccessory(for: method)
+                    HStack(spacing: 8) {
+                        Text(method.title)
+                            .font(.body.weight(.medium))
+                            .foregroundStyle(isSelected ? brandBlue : rowTitle)
+                            .multilineTextAlignment(.leading)
+
+                        if isDefault {
+                            defaultBadge
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    trailingAccessory(for: method)
+                }
+                .contentShape(Rectangle())
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 16)
-            .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(isSelected ? Theme.brandOrange.opacity(0.55) : rowBorder, lineWidth: isSelected ? 1.5 : 1)
-            )
-            .shadow(color: .black.opacity(0.03), radius: 6, y: 2)
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+
+            if isSelected {
+                expandedDetails(for: method)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .padding(14)
+        .background(isSelected ? selectedMethodFill : Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(isSelected ? Theme.brandOrange : rowBorder, lineWidth: isSelected ? 1.5 : 1)
+        )
+        .shadow(color: .black.opacity(0.03), radius: 6, y: 2)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(accessibilityLabel(for: method, isSelected: isSelected, isDefault: isDefault))
+    }
+
+    @ViewBuilder
+    private func expandedDetails(for method: PaymentMethodKind) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            switch method {
+            case .bankAccount:
+                paymentTextField(title: "Account Holder Name", text: $bankDetails.accountHolderName)
+                paymentTextField(title: "Account Number", text: $bankDetails.accountNumber)
+                paymentTextField(title: "ABA Routing Number", text: $bankDetails.abaRoutingNumber)
+                confirmButton(for: method)
+
+            case .zelle:
+                paymentTextField(title: "Email or Mobile phone number", text: $zelleDetails.contact)
+                confirmButton(for: method)
+
+            case .venmo:
+                paymentTextField(title: "Venmo username or phone", text: $venmoDetails.contact)
+                confirmButton(for: method)
+
+            case .paypal:
+                paymentTextField(title: "PayPal email", text: $paypalDetails.contact)
+                confirmButton(for: method)
+
+            case .giftFund:
+                giftFundDetails
+                confirmButton(for: method)
+
+            case .creditCard:
+                paymentTextField(title: "Cardholder Name", text: $creditCardDetails.cardholderName)
+                paymentTextField(title: "Card Number", text: $creditCardDetails.cardNumber)
+                HStack(spacing: 12) {
+                    paymentTextField(title: "Expiry", text: $creditCardDetails.expiry)
+                    paymentTextField(title: "CVC", text: $creditCardDetails.cvc)
+                }
+                confirmButton(for: method)
+            }
+        }
+    }
+
+    private var giftFundDetails: some View {
+        VStack(spacing: 14) {
+            Text("$\(giftBalance)")
+                .font(.system(size: 36, weight: .bold))
+                .foregroundStyle(Theme.darkText)
+                .frame(maxWidth: .infinity)
+
+            Text("Gift out total amount: $\(giftOutTotal)")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(rowTitle)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(giftSummaryBar)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+    }
+
+    private func paymentTextField(title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(fieldLabel)
+
+            TextField(title, text: text)
+                .font(.body)
+                .foregroundStyle(Theme.darkText)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 14)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(rowBorder, lineWidth: 1)
+                )
+        }
+    }
+
+    private func confirmButton(for method: PaymentMethodKind) -> some View {
+        Button {
+            confirmMessage = "\(method.title) confirmed."
+        } label: {
+            Text("Confirm")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Theme.brandOrange)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(accessibilityLabel(for: method, isSelected: isSelected, isDefault: isDefault))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .padding(.top, 2)
     }
 
     private func selectionRadio(isSelected: Bool) -> some View {
