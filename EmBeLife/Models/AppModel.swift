@@ -49,7 +49,12 @@ final class AppModel {
     var preferredLanguage = "English"
     var selectedRole: UserRole?
     var selectedServiceIDs: Set<String> = []
+    /// Flat chip selections, or Level 3 leaf selections for nested categories.
     var selectedSubServiceIDs: [String: Set<String>] = [:]
+    /// Level 2 group selections for nested categories (e.g. Acupuncture under Therapeutic).
+    var selectedServiceGroupIDs: [String: Set<String>] = [:]
+    /// Optional notes / descriptions keyed by Level 3 option id.
+    var serviceOptionNotes: [String: String] = [:]
     var locationChoice: LocationChoice?
     var customLocation = ""
     var customAddress = ""
@@ -113,10 +118,19 @@ final class AppModel {
 
     var selectedSubServiceLabels: [String] {
         selectedSubServiceIDs.flatMap { categoryID, ids in
-            OnboardingServiceCatalog.subOptions(for: categoryID)
+            OnboardingServiceCatalog.allLeafOptions(for: categoryID)
                 .filter { ids.contains($0.id) }
                 .map(\.title)
         }
+    }
+
+    func clearServiceSelections(for categoryID: String) {
+        let leafIDs = selectedSubServiceIDs[categoryID] ?? []
+        for leafID in leafIDs {
+            serviceOptionNotes.removeValue(forKey: leafID)
+        }
+        selectedSubServiceIDs[categoryID] = []
+        selectedServiceGroupIDs[categoryID] = []
     }
 
     func signOut() {
@@ -125,6 +139,8 @@ final class AppModel {
         selectedRole = nil
         selectedServiceIDs = []
         selectedSubServiceIDs = [:]
+        selectedServiceGroupIDs = [:]
+        serviceOptionNotes = [:]
         locationChoice = nil
         customLocation = ""
         customAddress = ""

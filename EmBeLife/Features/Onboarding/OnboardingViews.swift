@@ -237,10 +237,23 @@ struct ServiceNeedsStep: View {
     @State private var selectedCategoryID: String?
 
     private let chipAnimation = Animation.spring(response: 0.28, dampingFraction: 0.72)
+    private let expandAnimation = Animation.easeInOut(duration: 0.2)
 
     private var canContinue: Bool {
         guard let categoryID = selectedCategoryID else { return false }
-        return !(appModel.selectedSubServiceIDs[categoryID] ?? []).isEmpty
+        let selectedLeaves = appModel.selectedSubServiceIDs[categoryID] ?? []
+        guard !selectedLeaves.isEmpty else { return false }
+
+        // "Other (describe)" requires text.
+        return selectedLeaves.allSatisfy { leafID in
+            guard let option = OnboardingServiceCatalog.option(id: leafID, in: categoryID) else {
+                return true
+            }
+            guard option.requiresDescription else { return true }
+            let note = appModel.serviceOptionNotes[leafID]?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            return !note.isEmpty
+        }
     }
 
     var body: some View {
@@ -261,6 +274,7 @@ struct ServiceNeedsStep: View {
                 .padding(.bottom, 24)
             }
             .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.interactively)
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
@@ -268,8 +282,8 @@ struct ServiceNeedsStep: View {
 
     private func serviceCategoryRow(_ service: ServiceCategory) -> some View {
         let isSelected = selectedCategoryID == service.id
-        let subOptions = OnboardingServiceCatalog.subOptions(for: service.id)
-        let selectedSubs = appModel.selectedSubServiceIDs[service.id] ?? []
+        let groups = OnboardingServiceCatalog.optionGroups(for: service.id)
+        let isNested = !groups.isEmpty
 
         return VStack(alignment: .leading, spacing: 0) {
             Button {
@@ -292,13 +306,11 @@ struct ServiceNeedsStep: View {
             .buttonStyle(ServiceRowButtonStyle())
 
             if isSelected {
-                FlowLayout(spacing: 10) {
-                    ForEach(subOptions) { option in
-                        subServiceChip(
-                            option,
-                            categoryID: service.id,
-                            isSelected: selectedSubs.contains(option.id)
-                        )
+                Group {
+                    if isNested {
+                        nestedOptionsContent(categoryID: service.id, groups: groups)
+                    } else {
+                        flatOptionsContent(categoryID: service.id)
                     }
                 }
                 .padding(.leading, 40)
@@ -307,7 +319,91 @@ struct ServiceNeedsStep: View {
                 .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .animation(expandAnimation, value: isSelected)
+        .animation(expandAnimation, value: appModel.selectedServiceGroupIDs[service.id] ?? [])
+    }
+
+    private func flatOptionsContent(categoryID: String) -> some View {
+        let subOptions = OnboardingServiceCatalog.subOptions(for: categoryID)
+        let selectedSubs = appModel.selectedSubServiceIDs[categoryID] ?? []
+
+        return FlowLayout(spacing: 10) {
+            ForEach(subOptions) { option in
+                subServiceChip(
+                    option,
+                    categoryID: categoryID,
+                    isSelected: selectedSubs.contains(option.id)
+                )
+            }
+        }
+    }
+
+    private func nestedOptionsContent(categoryID: String, groups: [ServiceOptionGroup]) -> some View {
+        let selectedGroups = appModel.selectedServiceGroupIDs[categoryID] ?? []
+        let selectedLeaves = appModel.selectedSubServiceIDs[categoryID] ?? []
+
+        return VStack(alignment: .leading, spacing: 14) {
+            FlowLayout(spacing: 10) {
+                ForEach(groups) { group in
+                    groupChip(
+                        group,
+                        categoryID: categoryID,
+                        isSelected: selectedGroups.contains(group.id)
+                    )
+                }
+            }
+
+            ForEach(groups.filter { selectedGroups.contains($0.id) }) { group in
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(group.title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+
+                    FlowLayout(spacing: 10) {
+                        ForEach(group.children) { option in
+                            subServiceChip(
+                                option,
+                                categoryID: categoryID,
+                                isSelected: selectedLeaves.contains(option.id)
+                            )
+                        }
+                    }
+
+                    ForEach(group.children.filter {
+                        selectedLeaves.contains($0.id) && ($0.allowsNotes || $0.requiresDescription)
+                    }) { option in
+                        notesField(for: option)
+                    }
+                }
+                .transition(.opacity)
+            }
+        }
+    }
+
+    private func notesField(for option: ServiceSubOption) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(option.requiresDescription ? "Describe: \(option.title)" : "Notes: \(option.title)")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.grayscale70)
+
+            TextField(
+                option.requiresDescription ? "Describe your needs…" : "Add specific instructions or notes…",
+                text: Binding(
+                    get: { appModel.serviceOptionNotes[option.id] ?? "" },
+                    set: { appModel.serviceOptionNotes[option.id] = $0 }
+                ),
+                axis: .vertical
+            )
+            .lineLimit(2...4)
+            .font(.subheadline)
+            .padding(12)
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(Color.black.opacity(0.12), lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
     }
 
     @ViewBuilder
@@ -331,24 +427,78 @@ struct ServiceNeedsStep: View {
     private func selectCategory(_ id: String) {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
 
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(expandAnimation) {
             if selectedCategoryID == id {
-                // Re-tap collapses in place without scrolling.
                 selectedCategoryID = nil
                 appModel.selectedServiceIDs = []
-                appModel.selectedSubServiceIDs[id] = []
+                appModel.clearServiceSelections(for: id)
                 return
             }
 
             if let previous = selectedCategoryID {
-                appModel.selectedSubServiceIDs[previous] = []
+                appModel.clearServiceSelections(for: previous)
             }
             selectedCategoryID = id
             appModel.selectedServiceIDs = [id]
             if appModel.selectedSubServiceIDs[id] == nil {
                 appModel.selectedSubServiceIDs[id] = []
             }
+            if appModel.selectedServiceGroupIDs[id] == nil {
+                appModel.selectedServiceGroupIDs[id] = []
+            }
         }
+    }
+
+    private func groupChip(_ group: ServiceOptionGroup, categoryID: String, isSelected: Bool) -> some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            withAnimation(chipAnimation) {
+                var groups = appModel.selectedServiceGroupIDs[categoryID] ?? []
+                var leaves = appModel.selectedSubServiceIDs[categoryID] ?? []
+                if isSelected {
+                    groups.remove(group.id)
+                    for child in group.children {
+                        leaves.remove(child.id)
+                        appModel.serviceOptionNotes.removeValue(forKey: child.id)
+                    }
+                } else {
+                    groups.insert(group.id)
+                }
+                appModel.selectedServiceGroupIDs[categoryID] = groups
+                appModel.selectedSubServiceIDs[categoryID] = leaves
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Text(group.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(isSelected ? .white : Theme.darkText)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+
+                if isSelected {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.95))
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+            .background(isSelected ? Theme.brandOrange : Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(
+                        isSelected ? Theme.brandOrange : Color(red: 0.933, green: 0.933, blue: 0.933),
+                        lineWidth: 1
+                    )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .shadow(
+                color: isSelected ? Theme.brandOrange.opacity(0.22) : .clear,
+                radius: isSelected ? 6 : 0,
+                y: isSelected ? 2 : 0
+            )
+        }
+        .buttonStyle(ChipPressButtonStyle())
     }
 
     private func subServiceChip(_ option: ServiceSubOption, categoryID: String, isSelected: Bool) -> some View {
@@ -358,6 +508,7 @@ struct ServiceNeedsStep: View {
                 var set = appModel.selectedSubServiceIDs[categoryID] ?? []
                 if isSelected {
                     set.remove(option.id)
+                    appModel.serviceOptionNotes.removeValue(forKey: option.id)
                 } else {
                     set.insert(option.id)
                 }
@@ -368,7 +519,8 @@ struct ServiceNeedsStep: View {
                 Text(option.title)
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(isSelected ? .white : Theme.darkText)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
 
                 if isSelected {
                     Image(systemName: "xmark.circle.fill")
