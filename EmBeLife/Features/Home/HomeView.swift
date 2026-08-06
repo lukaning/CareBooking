@@ -353,9 +353,15 @@ struct FilterSheet: View {
 
     @State private var location = "California; Bay Area"
     @State private var service = "All"
-    @State private var maxRate = 50.0
+    @State private var minRate = 20.0
+    @State private var maxRate = 60.0
+    @State private var minRateText = "20"
+    @State private var maxRateText = "60"
     @State private var minRating = 4.0
     @State private var availability = "Any day"
+
+    private let priceBounds: ClosedRange<Double> = 15...150
+    private let priceStep: Double = 1
 
     var body: some View {
         NavigationStack {
@@ -389,17 +395,7 @@ struct FilterSheet: View {
                         }
                     }
                 case .price:
-                    Section("Rate") {
-                        Slider(value: $maxRate, in: 15...100, step: 5) {
-                            Text("Max rate")
-                        } minimumValueLabel: {
-                            Text("$15")
-                        } maximumValueLabel: {
-                            Text("$100")
-                        }
-                        Text("Up to $\(Int(maxRate))/hour")
-                            .foregroundStyle(.secondary)
-                    }
+                    priceFilterSection
                 case .availability:
                     Section("Availability") {
                         Picker("When", selection: $availability) {
@@ -419,10 +415,223 @@ struct FilterSheet: View {
                     Button("Close", systemImage: "xmark") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Apply") { dismiss() }
+                    Button("Apply") {
+                        if criterion == .price {
+                            commitMinRateText()
+                            commitMaxRateText()
+                        }
+                        dismiss()
+                    }
+                    .fontWeight(.semibold)
+                }
+                if criterion == .price {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            commitMinRateText()
+                            commitMaxRateText()
+                            hideKeyboard()
+                        }
                         .fontWeight(.semibold)
+                    }
                 }
             }
         }
+    }
+
+    private var priceFilterSection: some View {
+        Section {
+            DualRangeSlider(
+                minValue: $minRate,
+                maxValue: $maxRate,
+                bounds: priceBounds,
+                step: priceStep
+            )
+            .padding(.vertical, 8)
+            .onChange(of: minRate) { _, value in
+                minRateText = String(Int(value.rounded()))
+            }
+            .onChange(of: maxRate) { _, value in
+                maxRateText = String(Int(value.rounded()))
+            }
+
+            HStack(alignment: .top, spacing: 12) {
+                priceNumberField(
+                    title: "Min ($/hr)",
+                    text: $minRateText,
+                    onCommit: commitMinRateText
+                )
+                priceNumberField(
+                    title: "Max ($/hr)",
+                    text: $maxRateText,
+                    onCommit: commitMaxRateText
+                )
+            }
+
+            Text("Showing $\(Int(minRate)) – $\(Int(maxRate))/hour")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Theme.brandOrange)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.top, 2)
+        } header: {
+            Text("Hourly rate")
+        } footer: {
+            Text("Drag either handle to set a range, or type an exact min and max rate.")
+        }
+    }
+
+    private func priceNumberField(
+        title: String,
+        text: Binding<String>,
+        onCommit: @escaping () -> Void
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.mutedText)
+
+            HStack(spacing: 4) {
+                Text("$")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.darkText)
+                TextField("0", text: text)
+                    .keyboardType(.numberPad)
+                    .font(.body.weight(.medium))
+                    .multilineTextAlignment(.leading)
+                    .onChange(of: text.wrappedValue) { _, newValue in
+                        let filtered = newValue.filter(\.isNumber)
+                        if filtered != newValue {
+                            text.wrappedValue = filtered
+                        }
+                    }
+                    .onSubmit(onCommit)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func commitMinRateText() {
+        let parsed = Double(minRateText) ?? minRate
+        let clamped = min(max(parsed, priceBounds.lowerBound), maxRate)
+        minRate = clamped
+        minRateText = String(Int(clamped.rounded()))
+    }
+
+    private func commitMaxRateText() {
+        let parsed = Double(maxRateText) ?? maxRate
+        let clamped = max(min(parsed, priceBounds.upperBound), minRate)
+        maxRate = clamped
+        maxRateText = String(Int(clamped.rounded()))
+    }
+
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
+    }
+}
+
+// MARK: - Dual range slider
+
+private struct DualRangeSlider: View {
+    @Binding var minValue: Double
+    @Binding var maxValue: Double
+    let bounds: ClosedRange<Double>
+    var step: Double = 1
+
+    private let trackHeight: CGFloat = 4
+    private let thumbSize: CGFloat = 28
+    private let activeTrack = Theme.brandOrange
+    private let inactiveTrack = Color(red: 0.88, green: 0.89, blue: 0.91)
+
+    var body: some View {
+        VStack(spacing: 10) {
+            GeometryReader { geo in
+                let width = max(geo.size.width, 1)
+                let minX = xPosition(for: minValue, width: width)
+                let maxX = xPosition(for: maxValue, width: width)
+
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(inactiveTrack)
+                        .frame(height: trackHeight)
+
+                    Capsule()
+                        .fill(activeTrack)
+                        .frame(width: max(maxX - minX, 0), height: trackHeight)
+                        .offset(x: minX)
+
+                    thumb(isMin: true, x: minX, width: width)
+                    thumb(isMin: false, x: maxX, width: width)
+                }
+                .frame(height: thumbSize)
+                .contentShape(Rectangle())
+            }
+            .frame(height: thumbSize)
+
+            HStack {
+                Text("$\(Int(bounds.lowerBound))")
+                Spacer()
+                Text("$\(Int(bounds.upperBound))")
+            }
+            .font(.caption.weight(.medium))
+            .foregroundStyle(Theme.mutedText)
+        }
+    }
+
+    private func thumb(isMin: Bool, x: CGFloat, width: CGFloat) -> some View {
+        Circle()
+            .fill(Color.white)
+            .frame(width: thumbSize, height: thumbSize)
+            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+            .overlay(
+                Circle()
+                    .stroke(activeTrack, lineWidth: 2)
+            )
+            .overlay(
+                Circle()
+                    .fill(activeTrack.opacity(0.15))
+                    .frame(width: 10, height: 10)
+            )
+            .offset(x: x - thumbSize / 2)
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { drag in
+                        let raw = value(for: drag.location.x, width: width)
+                        if isMin {
+                            minValue = min(snap(raw), maxValue)
+                        } else {
+                            maxValue = max(snap(raw), minValue)
+                        }
+                    }
+            )
+            .accessibilityLabel(isMin ? "Minimum rate" : "Maximum rate")
+            .accessibilityValue("$\(Int(isMin ? minValue : maxValue)) per hour")
+    }
+
+    private func xPosition(for value: Double, width: CGFloat) -> CGFloat {
+        let span = bounds.upperBound - bounds.lowerBound
+        guard span > 0 else { return 0 }
+        let ratio = (value - bounds.lowerBound) / span
+        return CGFloat(ratio) * width
+    }
+
+    private func value(for x: CGFloat, width: CGFloat) -> Double {
+        let clampedX = min(max(x, 0), width)
+        let ratio = Double(clampedX / width)
+        let span = bounds.upperBound - bounds.lowerBound
+        return bounds.lowerBound + ratio * span
+    }
+
+    private func snap(_ value: Double) -> Double {
+        let stepped = (value / step).rounded() * step
+        return min(max(stepped, bounds.lowerBound), bounds.upperBound)
     }
 }
