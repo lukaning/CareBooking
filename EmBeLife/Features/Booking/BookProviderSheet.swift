@@ -5,6 +5,7 @@ struct BookProviderSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     let provider: Provider
+    var appointmentType: BookingAppointmentType = .inPerson
 
     enum Field: Hashable {
         case date, start, duration
@@ -109,6 +110,9 @@ struct BookProviderSheet: View {
                 Text(provider.name)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                Text(appointmentType.title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.brandOrange)
             }
             Spacer()
         }
