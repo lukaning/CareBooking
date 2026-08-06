@@ -17,6 +17,9 @@ enum PaymentMethodKind: String, CaseIterable, Identifiable, Hashable {
 
     var id: String { rawValue }
 
+    /// Bank account is presented first and is the default payment method.
+    static var defaultMethod: PaymentMethodKind { .bankAccount }
+
     var title: String {
         switch self {
         case .bankAccount: "Pay by Bank Account"
@@ -26,6 +29,22 @@ enum PaymentMethodKind: String, CaseIterable, Identifiable, Hashable {
         case .giftFund: "Pay by Gift Fund"
         case .creditCard: "Pay by Credit Card"
         }
+    }
+
+    /// Asset catalog logo name(s) shown on the right of the row.
+    var logoAssetNames: [String] {
+        switch self {
+        case .bankAccount: []
+        case .zelle: ["payZelle"]
+        case .venmo: ["payVenmo"]
+        case .paypal: ["payPayPal"]
+        case .giftFund: []
+        case .creditCard: ["payVisa", "payMastercard"]
+        }
+    }
+
+    var isDefault: Bool {
+        self == Self.defaultMethod
     }
 }
 
@@ -47,13 +66,6 @@ enum SendGiftAction: String, CaseIterable, Identifiable {
 enum PaymentTransactionType: String, Hashable {
     case typeA = "Type A"
     case typeB = "Type B"
-
-    var badgeFill: String {
-        switch self {
-        case .typeA: "TypeABadge"
-        case .typeB: "TypeBBadge"
-        }
-    }
 }
 
 struct PaymentTransaction: Identifiable, Hashable {
@@ -98,16 +110,4 @@ struct PaymentTransaction: Identifiable, Hashable {
             type: .typeB
         )
     ]
-}
-
-struct BankAccountDetails: Hashable {
-    var accountHolderName: String
-    var accountNumber: String
-    var abaRoutingNumber: String
-
-    static let sample = BankAccountDetails(
-        accountHolderName: "Robbi Darwis",
-        accountNumber: "8888 - 8888 - 8888 - 8888",
-        abaRoutingNumber: "8888999"
-    )
 }

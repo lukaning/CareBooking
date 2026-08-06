@@ -2,8 +2,7 @@ import SwiftUI
 
 struct PaymentView: View {
     @State private var segment: PaymentSegment = .paymentMethod
-    @State private var selectedMethod: PaymentMethodKind = .bankAccount
-    @State private var bankDetails = BankAccountDetails.sample
+    @State private var selectedMethod: PaymentMethodKind = .defaultMethod
     @State private var showSendGiftMenu = false
     @State private var showGiftInfo = false
     @State private var showBookingsInfo = false
@@ -12,21 +11,23 @@ struct PaymentView: View {
     private let giftBalance = 240
     private let completedBookings = 5
     private let transactions = PaymentTransaction.samples
+    private let defaultMethod = PaymentMethodKind.defaultMethod
 
-    private let summaryCardBG = Color(red: 0.988, green: 0.988, blue: 0.988) // #FCFCFC
-    private let segmentTrack = Color(red: 0.941, green: 0.957, blue: 0.976) // #F0F4F9
-    private let giftIconBG = Color(red: 0.941, green: 0.361, blue: 0.267) // #F05C44
-    private let serviceIconBG = Color(red: 0.969, green: 0.698, blue: 0.420) // #F7B26B
+    private let summaryCardBG = Color(red: 0.988, green: 0.988, blue: 0.988)
+    private let segmentTrack = Color(red: 0.941, green: 0.957, blue: 0.976)
+    private let giftIconBG = Color(red: 0.941, green: 0.361, blue: 0.267)
+    private let serviceIconBG = Color(red: 0.969, green: 0.698, blue: 0.420)
     private let sendGiftTint = Color(red: 0.141, green: 0.420, blue: 0.992).opacity(0.08)
     private let sendGiftArrow = Color(red: 0.141, green: 0.420, blue: 0.992)
-    private let selectedMethodFill = Color(red: 1.0, green: 0.847, blue: 0.796) // #FFD8CB
-    private let selectedMethodStroke = Color(red: 0.941, green: 0.361, blue: 0.267)
-    private let typeABadge = Color(red: 0.710, green: 0.894, blue: 0.792) // #B5E4CA
-    private let typeBBadge = Color(red: 1.0, green: 0.737, blue: 0.600) // #FFBC99
-    private let mutedLabel = Color(red: 0.435, green: 0.463, blue: 0.494) // #6F767E
-    private let rowTitle = Color(red: 0.200, green: 0.220, blue: 0.247) // #33383F
+    private let typeABadge = Color(red: 0.710, green: 0.894, blue: 0.792)
+    private let typeBBadge = Color(red: 1.0, green: 0.737, blue: 0.600)
+    private let mutedLabel = Color(red: 0.435, green: 0.463, blue: 0.494)
+    private let rowTitle = Color(red: 0.200, green: 0.220, blue: 0.247)
     private let cardFill = Color(red: 0.957, green: 0.957, blue: 0.957).opacity(0.5)
     private let brandBlue = Color(red: 0.141, green: 0.420, blue: 0.992)
+    private let rowBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
+    private let radioRing = Color(red: 0.70, green: 0.72, blue: 0.76)
+    private let linkGray = Color(red: 0.45, green: 0.48, blue: 0.55)
 
     var body: some View {
         NavigationStack {
@@ -37,7 +38,7 @@ struct PaymentView: View {
                     Group {
                         switch segment {
                         case .paymentMethod:
-                            paymentMethodsCard
+                            paymentMethodsSection
                         case .transactions:
                             transactionsList
                         }
@@ -47,7 +48,7 @@ struct PaymentView: View {
                 .padding(.top, 8)
                 .padding(.bottom, 28)
             }
-            .background(Color(.systemBackground))
+            .background(Color(.systemGroupedBackground))
             .navigationTitle("Payment")
             .navigationBarTitleDisplayMode(.inline)
             .overlay(alignment: .topTrailing) {
@@ -255,61 +256,87 @@ struct PaymentView: View {
 
     // MARK: - Payment methods
 
-    private var paymentMethodsCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
+    private var paymentMethodsSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Payment Method")
                 .font(.title3.weight(.bold))
                 .foregroundStyle(Theme.darkText)
 
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 ForEach(PaymentMethodKind.allCases) { method in
                     paymentMethodRow(method)
                 }
             }
+
+            poweredByFooter
+                .padding(.top, 4)
         }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
     }
 
-    @ViewBuilder
     private func paymentMethodRow(_ method: PaymentMethodKind) -> some View {
         let isSelected = selectedMethod == method
+        let isDefault = method == defaultMethod
 
-        VStack(alignment: .leading, spacing: 12) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    selectedMethod = method
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: isSelected ? "largecircle.fill.circle" : "circle")
-                        .font(.title3)
-                        .foregroundStyle(isSelected ? selectedMethodStroke : mutedLabel)
+        return Button {
+            withAnimation(.easeInOut(duration: 0.18)) {
+                selectedMethod = method
+            }
+        } label: {
+            HStack(spacing: 12) {
+                selectionRadio(isSelected: isSelected)
 
+                HStack(spacing: 8) {
                     Text(method.title)
                         .font(.body.weight(.medium))
-                        .foregroundStyle(Theme.darkText)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(rowTitle)
+                        .multilineTextAlignment(.leading)
 
-                    trailingAccessory(for: method)
+                    if isDefault {
+                        defaultBadge
+                    }
                 }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            if isSelected, method == .bankAccount {
-                bankAccountFields
+                trailingAccessory(for: method)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 16)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(isSelected ? Theme.brandOrange.opacity(0.55) : rowBorder, lineWidth: isSelected ? 1.5 : 1)
+            )
+            .shadow(color: .black.opacity(0.03), radius: 6, y: 2)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel(for: method, isSelected: isSelected, isDefault: isDefault))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func selectionRadio(isSelected: Bool) -> some View {
+        ZStack {
+            Circle()
+                .strokeBorder(isSelected ? Theme.brandOrange : radioRing, lineWidth: 1.5)
+                .frame(width: 22, height: 22)
+            if isSelected {
+                Circle()
+                    .fill(Theme.brandOrange)
+                    .frame(width: 12, height: 12)
             }
         }
-        .padding(14)
-        .background(isSelected && method == .bankAccount ? selectedMethodFill : Color.clear)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(isSelected && method == .bankAccount ? selectedMethodStroke : Color.clear, lineWidth: 1.5)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .frame(width: 24, height: 24)
+    }
+
+    private var defaultBadge: some View {
+        Text("Default")
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(Theme.brandOrange)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Theme.brandOrange.opacity(0.12))
+            .clipShape(Capsule())
     }
 
     @ViewBuilder
@@ -317,55 +344,81 @@ struct PaymentView: View {
         switch method {
         case .bankAccount:
             EmptyView()
-        case .zelle:
-            brandPill("Zelle", fill: Color(red: 0.42, green: 0.20, blue: 0.70), text: .white)
-        case .venmo:
-            brandPill("Venmo", fill: Color(red: 0.20, green: 0.55, blue: 0.86), text: .white)
-        case .paypal:
-            brandPill("PayPal", fill: Color(red: 0.05, green: 0.20, blue: 0.55), text: .white)
         case .giftFund:
             Text("$\(giftBalance)")
                 .font(.body.weight(.semibold))
                 .foregroundStyle(brandBlue)
-        case .creditCard:
+        case .zelle, .venmo, .paypal, .creditCard:
             HStack(spacing: 6) {
-                brandPill("VISA", fill: Color(red: 0.10, green: 0.25, blue: 0.60), text: .white)
-                brandPill("MC", fill: Color(red: 0.85, green: 0.25, blue: 0.20), text: .white)
+                ForEach(method.logoAssetNames, id: \.self) { name in
+                    paymentLogo(name)
+                }
             }
         }
     }
 
-    private func brandPill(_ title: String, fill: Color, text: Color) -> some View {
-        Text(title)
-            .font(.caption2.weight(.bold))
-            .foregroundStyle(text)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(fill)
-            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+    private func paymentLogo(_ assetName: String) -> some View {
+        Image(assetName)
+            .resizable()
+            .scaledToFit()
+            .frame(height: logoHeight(for: assetName))
+            .frame(maxWidth: logoMaxWidth(for: assetName))
+            .accessibilityHidden(true)
     }
 
-    private var bankAccountFields: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            paymentTextField(title: "Account Holder Name", text: $bankDetails.accountHolderName)
-            paymentTextField(title: "Account Number", text: $bankDetails.accountNumber)
-            paymentTextField(title: "ABA Routing Number", text: $bankDetails.abaRoutingNumber)
+    private func logoHeight(for assetName: String) -> CGFloat {
+        switch assetName {
+        case "payVisa", "payMastercard": 28
+        case "payZelle": 26
+        case "payVenmo": 16
+        case "payPayPal": 20
+        default: 22
         }
     }
 
-    private func paymentTextField(title: String, text: Binding<String>) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(.caption.weight(.medium))
-                .foregroundStyle(mutedLabel)
-            TextField(title, text: text)
-                .font(.body)
-                .foregroundStyle(Theme.darkText)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 12)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    private func logoMaxWidth(for assetName: String) -> CGFloat {
+        switch assetName {
+        case "payVisa", "payMastercard": 48
+        case "payZelle": 72
+        case "payVenmo": 70
+        case "payPayPal": 86
+        default: 70
         }
+    }
+
+    private func accessibilityLabel(
+        for method: PaymentMethodKind,
+        isSelected: Bool,
+        isDefault: Bool
+    ) -> String {
+        var parts = [method.title]
+        if isDefault { parts.append("default") }
+        if isSelected { parts.append("selected") }
+        return parts.joined(separator: ", ")
+    }
+
+    private var poweredByFooter: some View {
+        HStack {
+            HStack(spacing: 4) {
+                Text("Powered by")
+                    .font(.footnote)
+                    .foregroundStyle(linkGray)
+                Text("Stripe")
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(Theme.darkText)
+            }
+            Spacer()
+            HStack(spacing: 16) {
+                Button("Terms") {}
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(linkGray)
+                Button("Privacy") {}
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(linkGray)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.top, 4)
     }
 
     // MARK: - Transactions
