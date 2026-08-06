@@ -175,6 +175,52 @@ final class AppModel {
         bookings.first { $0.id == id }
     }
 
+    /// Seeds sample Requested / Booked / Completed items when the list is empty.
+    func seedBookingsIfNeeded() {
+        guard bookings.isEmpty else { return }
+        guard providers.count >= 2 else { return }
+
+        let calendar = Calendar.current
+        let today = Date()
+
+        func dayOffset(_ days: Int, hour: Int, minute: Int = 0) -> (date: Date, start: Date) {
+            let date = calendar.date(byAdding: .day, value: days, to: today) ?? today
+            let start = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: date) ?? date
+            return (date, start)
+        }
+
+        let booked = dayOffset(3, hour: 10)
+        let requested = dayOffset(7, hour: 15)
+        let completed = dayOffset(-5, hour: 14)
+
+        bookings = [
+            Booking(
+                provider: providers[0],
+                date: booked.date,
+                startTime: booked.start,
+                durationMinutes: 120,
+                status: .booked,
+                serviceProvidedTo: "Parent"
+            ),
+            Booking(
+                provider: providers[1],
+                date: requested.date,
+                startTime: requested.start,
+                durationMinutes: 90,
+                status: .requested,
+                serviceProvidedTo: "Family"
+            ),
+            Booking(
+                provider: providers[0],
+                date: completed.date,
+                startTime: completed.start,
+                durationMinutes: 120,
+                status: .completed,
+                serviceProvidedTo: "Parent"
+            )
+        ]
+    }
+
     func inviteManagedUser(
         firstName: String,
         lastName: String,

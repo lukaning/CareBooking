@@ -7,11 +7,16 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var bookingProvider: Provider?
     @State private var sortNewest = true
+    @State private var showBooked = false
 
     private let expandAnimation = Animation.easeInOut(duration: 0.22)
 
     private var providers: [Provider] {
         sortNewest ? appModel.providers : appModel.providers.reversed()
+    }
+
+    private var bookedCount: Int {
+        appModel.bookings.filter { $0.status == .booked }.count
     }
 
     var body: some View {
@@ -37,7 +42,37 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: "line.3.horizontal")
                     }
+                    .accessibilityLabel("Settings")
                 }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showBooked = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "calendar")
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(Theme.darkText)
+
+                            if bookedCount > 0 {
+                                Text(bookedCount > 9 ? "9+" : "\(bookedCount)")
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, bookedCount > 9 ? 3 : 4)
+                                    .padding(.vertical, 1)
+                                    .background(Theme.brandOrange)
+                                    .clipShape(Capsule())
+                                    .offset(x: 8, y: -6)
+                            }
+                        }
+                        .frame(width: 32, height: 28)
+                    }
+                    .accessibilityLabel("Booked")
+                    .accessibilityHint("View booked appointments")
+                }
+            }
+            .navigationDestination(isPresented: $showBooked) {
+                BookingsView(initialTab: .booked)
             }
             .safeAreaInset(edge: .top, spacing: 0) {
                 matchesHeader
@@ -51,6 +86,9 @@ struct HomeView: View {
             }
             .sheet(item: $bookingProvider) { provider in
                 BookProviderSheet(provider: provider)
+            }
+            .onAppear {
+                appModel.seedBookingsIfNeeded()
             }
         }
     }

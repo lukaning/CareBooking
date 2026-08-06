@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PaymentView: View {
     @State private var segment: PaymentSegment = .paymentMethod
-    @State private var selectedMethod: PaymentMethodKind = .defaultMethod
+    @State private var selectedMethod: PaymentMethodKind? = .defaultMethod
     @State private var bankDetails = BankAccountDetails.sample
     @State private var zelleDetails = ContactPaymentDetails.zelleSample
     @State private var venmoDetails = ContactPaymentDetails.venmoSample
@@ -38,6 +38,7 @@ struct PaymentView: View {
     private let selectedMethodFill = Color(red: 1.0, green: 0.847, blue: 0.796)
     private let fieldLabel = Color(red: 0.10, green: 0.20, blue: 0.45)
     private let giftSummaryBar = Color(red: 0.93, green: 0.94, blue: 0.96)
+    private let selectionAnimation = Animation.easeInOut(duration: 0.28)
 
     var body: some View {
         NavigationStack {
@@ -137,12 +138,13 @@ struct PaymentView: View {
                 Spacer(minLength: 8)
 
                 sendGiftButton
-                    .zIndex(2)
             }
+            .zIndex(2)
 
             Rectangle()
                 .fill(Color(red: 0.937, green: 0.937, blue: 0.937))
                 .frame(height: 1)
+                .zIndex(0)
 
             HStack(alignment: .center, spacing: 14) {
                 Circle()
@@ -176,6 +178,7 @@ struct PaymentView: View {
 
                 Spacer(minLength: 0)
             }
+            .zIndex(0)
         }
         .padding(16)
         .background(
@@ -183,8 +186,8 @@ struct PaymentView: View {
                 .fill(summaryCardBG)
                 .shadow(color: .black.opacity(0.04), radius: 10, y: 2)
         )
-        // Avoid clipping the anchored Send Gift menu that hangs below the button.
-        .zIndex(showSendGiftMenu ? 1 : 0)
+        // Keep the Send Gift menu above neighboring content.
+        .zIndex(showSendGiftMenu ? 2 : 0)
     }
 
     private var sendGiftButton: some View {
@@ -206,10 +209,10 @@ struct PaymentView: View {
             }
         }
         .buttonStyle(.plain)
-        .overlay(alignment: .topTrailing) {
+        .background(alignment: .topTrailing) {
             if showSendGiftMenu {
                 sendGiftMenu
-                    // Sit just under the action control (arrow + label).
+                    // Anchor trailing edge to the action control; keep under the button.
                     .padding(.top, 58)
                     .fixedSize()
                     .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topTrailing)))
@@ -226,31 +229,42 @@ struct PaymentView: View {
                     }
                     giftActionMessage = "\(action.rawValue) flow coming soon."
                 } label: {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 10) {
                         Image(systemName: action.systemImage)
                             .font(.body)
                             .foregroundStyle(Theme.darkText)
-                            .frame(width: 22)
+                            .frame(width: 20)
                         Text(action.rawValue)
-                            .font(.body.weight(.medium))
+                            .font(.subheadline.weight(.medium))
                             .foregroundStyle(Theme.darkText)
-                        Spacer(minLength: 0)
+                            .lineLimit(1)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 14)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
 
                 if action != SendGiftAction.allCases.last {
-                    Divider().padding(.leading, 50)
+                    Divider()
+                        .background(Color(red: 0.90, green: 0.91, blue: 0.93))
+                        .padding(.leading, 44)
                 }
             }
         }
-        .frame(width: 200)
-        .background(Color(.systemBackground))
+        .frame(width: 168)
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color.white)
+        }
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color(red: 0.90, green: 0.91, blue: 0.93), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.14), radius: 14, y: 6)
+        .compositingGroup()
     }
 
     // MARK: - Segment
@@ -298,7 +312,6 @@ struct PaymentView: View {
                     paymentMethodCard(method)
                 }
             }
-            .animation(.easeInOut(duration: 0.22), value: selectedMethod)
 
             poweredByFooter
                 .padding(.top, 4)
@@ -311,8 +324,13 @@ struct PaymentView: View {
 
         return VStack(alignment: .leading, spacing: 14) {
             Button {
-                withAnimation(.easeInOut(duration: 0.22)) {
-                    selectedMethod = method
+                // Single animation drives radio, colors, and expand/collapse together.
+                withAnimation(selectionAnimation) {
+                    if selectedMethod == method {
+                        selectedMethod = nil
+                    } else {
+                        selectedMethod = method
+                    }
                 }
             } label: {
                 HStack(spacing: 12) {
@@ -337,8 +355,8 @@ struct PaymentView: View {
             .buttonStyle(.plain)
 
             if isSelected {
+                // No custom transition — height layout + radio share one animation.
                 expandedDetails(for: method)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
         .padding(14)
@@ -449,11 +467,14 @@ struct PaymentView: View {
             Circle()
                 .strokeBorder(isSelected ? Theme.brandOrange : radioRing, lineWidth: 1.5)
                 .frame(width: 22, height: 22)
-            if isSelected {
-                Circle()
-                    .fill(Theme.brandOrange)
-                    .frame(width: 12, height: 12)
-            }
+
+            Circle()
+                .fill(Theme.brandOrange)
+                .frame(width: 12, height: 12)
+                // Keep the fill in the hierarchy so it interpolates with the same
+                // card expand/collapse animation instead of insert/remove snaps.
+                .scaleEffect(isSelected ? 1 : 0.001)
+                .opacity(isSelected ? 1 : 0)
         }
         .frame(width: 24, height: 24)
     }
