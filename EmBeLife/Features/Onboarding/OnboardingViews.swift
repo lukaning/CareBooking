@@ -629,8 +629,7 @@ struct LocationStep: View {
             locationHeader(
                 title: "Use current location",
                 titleColor: titleBlue,
-                isSelected: selected,
-                showPin: !selected
+                isSelected: selected
             ) {
                 selectLocation(.current)
             }
@@ -649,8 +648,7 @@ struct LocationStep: View {
             locationHeader(
                 title: "Customize location",
                 titleColor: Color.black.opacity(0.75),
-                isSelected: selected,
-                showPin: !selected
+                isSelected: selected
             ) {
                 selectLocation(.custom)
             }
@@ -666,20 +664,17 @@ struct LocationStep: View {
         title: String,
         titleColor: Color,
         isSelected: Bool,
-        showPin: Bool,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
             HStack(spacing: 14) {
                 OnboardingRadioControl(isSelected: isSelected)
 
-                if showPin {
-                    Image("pinIcon")
-                        .resizable()
-                        .renderingMode(.original)
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                }
+                Image("pinIcon")
+                    .resizable()
+                    .renderingMode(.original)
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
 
                 Text(title)
                     .font(.body.weight(.semibold))
@@ -704,9 +699,14 @@ struct LocationStep: View {
 
             distanceSelector
 
-            confirmButton(enabled: true) {
+            confirmButton(
+                enabled: true,
+                isConfirmed: appModel.locationConfirmed && appModel.locationChoice == .current
+            ) {
                 appModel.resolvedCurrentAddress = currentAddressText
-                appModel.locationConfirmed = true
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    appModel.locationConfirmed = true
+                }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
         }
@@ -755,11 +755,16 @@ struct LocationStep: View {
 
             distanceSelector
 
-            confirmButton(enabled: !appModel.customAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+            confirmButton(
+                enabled: !appModel.customAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                isConfirmed: appModel.locationConfirmed && appModel.locationChoice == .custom
+            ) {
                 appModel.customLocation = [appModel.customAddress, appModel.customZipcode]
                     .filter { !$0.isEmpty }
                     .joined(separator: ", ")
-                appModel.locationConfirmed = true
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    appModel.locationConfirmed = true
+                }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
         }
@@ -806,16 +811,26 @@ struct LocationStep: View {
         }
     }
 
-    private func confirmButton(enabled: Bool, action: @escaping () -> Void) -> some View {
-        Button("Confirm", action: action)
-            .font(.headline)
+    private func confirmButton(enabled: Bool, isConfirmed: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                if isConfirmed {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.headline)
+                        .symbolEffect(.bounce, value: isConfirmed)
+                }
+                Text(isConfirmed ? "Confirmed" : "Confirm")
+                    .font(.headline)
+            }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(Theme.brandOrange)
+            .background(isConfirmed ? Color(red: 0.20, green: 0.68, blue: 0.38) : Theme.brandOrange)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .disabled(!enabled)
-            .opacity(enabled ? 1 : 0.5)
+            .animation(.easeInOut(duration: 0.2), value: isConfirmed)
+        }
+        .disabled(!enabled && !isConfirmed)
+        .opacity(enabled || isConfirmed ? 1 : 0.5)
     }
 
     private func locationMapPreview(coordinate: CLLocationCoordinate2D) -> some View {
