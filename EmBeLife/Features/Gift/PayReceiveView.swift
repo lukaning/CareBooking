@@ -23,6 +23,9 @@ struct PayReceiveView: View {
     @State private var selectedTab: PayReceiveTab = .scanCode
     @State private var giftAlert: String?
     @State private var copied = false
+    @State private var showReceiverFlow = false
+    @State private var giftPath: [GiftExperienceRoute] = []
+    @State private var giftDraft = GiftDraft()
 
     private let segmentTrack = Color(red: 0.94, green: 0.945, blue: 0.96)
     private let linkPurple = Color(red: 0.45, green: 0.35, blue: 0.85)
@@ -74,6 +77,17 @@ struct PayReceiveView: View {
         .background(Color(.systemBackground))
         .navigationTitle("Pay / Receive")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showReceiverFlow) {
+            NavigationStack(path: $giftPath) {
+                GiftReceivedView(draft: giftDraft, path: $giftPath) {
+                    showReceiverFlow = false
+                    giftPath = []
+                }
+                .navigationDestination(for: GiftExperienceRoute.self) { route in
+                    GiftExperienceDestination(route: route, draft: giftDraft, path: $giftPath)
+                }
+            }
+        }
         .alert("Gift", isPresented: Binding(
             get: { giftAlert != nil },
             set: { if !$0 { giftAlert = nil } }
@@ -114,7 +128,9 @@ struct PayReceiveView: View {
 
     private func handleGiftScan(_ payload: String) {
         if isGiftPayload(payload) {
-            giftAlert = "Gift link received.\n\n\(payload)\n\nYou can apply this gift to care services on Payment."
+            giftDraft = GiftDraft()
+            giftPath = []
+            showReceiverFlow = true
         } else {
             giftAlert = "Scanned: \(payload)"
         }

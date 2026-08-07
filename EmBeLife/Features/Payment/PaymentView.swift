@@ -13,6 +13,8 @@ struct PaymentView: View {
     @State private var showBookingsInfo = false
     @State private var giftActionMessage: String?
     @State private var confirmMessage: String?
+    @State private var giftPath: [GiftExperienceRoute] = []
+    @State private var giftDraft = GiftDraft()
 
     private let giftBalance = 240
     private let giftOutTotal = 24
@@ -41,7 +43,7 @@ struct PaymentView: View {
     private let selectionAnimation = Animation.easeInOut(duration: 0.28)
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $giftPath) {
             ScrollView {
                 VStack(spacing: 20) {
                     summaryCard
@@ -98,6 +100,9 @@ struct PaymentView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(confirmMessage ?? "")
+            }
+            .navigationDestination(for: GiftExperienceRoute.self) { route in
+                GiftExperienceDestination(route: route, draft: giftDraft, path: $giftPath)
             }
         }
     }
@@ -227,7 +232,7 @@ struct PaymentView: View {
                     withAnimation(.easeInOut(duration: 0.15)) {
                         showSendGiftMenu = false
                     }
-                    giftActionMessage = "\(action.rawValue) flow coming soon."
+                    handleSendGiftAction(action)
                 } label: {
                     HStack(spacing: 10) {
                         sendGiftActionIcon(action)
@@ -278,6 +283,19 @@ struct PaymentView: View {
             Image(systemName: system)
                 .font(.body)
                 .foregroundStyle(Theme.darkText)
+        }
+    }
+
+    private func handleSendGiftAction(_ action: SendGiftAction) {
+        switch action {
+        case .giftAmount:
+            giftDraft = GiftDraft()
+            giftPath = [.confirm]
+        case .receiveGift:
+            giftDraft = GiftDraft()
+            giftPath = [.received]
+        case .giftService:
+            giftActionMessage = "\(action.rawValue) flow coming soon."
         }
     }
 

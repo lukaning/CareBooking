@@ -25,6 +25,8 @@
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 		B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */; };
 		A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5PAYRECV234567890ABCDE /* PayReceiveView.swift */; };
+		A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */; };
+		A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTMDL234567890ABCDE /* GiftModels.swift */; };
 		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
 		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
 		A4DASHVW234567890ABCDEF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DASHVW234567890ABCDEF /* DashboardView.swift */; };
@@ -62,6 +64,8 @@
 		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B5PAYRECV234567890ABCDE /* PayReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayReceiveView.swift; sourceTree = "<group>"; };
+		B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftExperienceViews.swift; sourceTree = "<group>"; };
+		B5GIFTMDL234567890ABCDE /* GiftModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftModels.swift; sourceTree = "<group>"; };
 		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
 		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				B5PAYRECV234567890ABCDE /* PayReceiveView.swift */,
+				B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */,
 			);
 			path = Gift;
 			sourceTree = "<group>";
@@ -183,6 +188,7 @@
 				C3NOTMDL234567890ABCDE /* NotificationModels.swift */,
 				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
 				A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */,
+				B5GIFTMDL234567890ABCDE /* GiftModels.swift */,
 				D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */,
 				811085CE35FB4C15896EFEA8 /* AppModel.swift */,
 				B4LOCMGR234567890ABCDEF /* LocationManager.swift */,
@@ -379,6 +385,8 @@
 				4B6EC2DD3715474E9D5F87FA /* ProfileDetailEditView.swift in Sources */,
 				9DE90EA2C0D54B59AF6B0C95 /* ProfileView.swift in Sources */,
 				A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */,
+				A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */,
+				A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */,
 				B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */,
 				A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */,
 				A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */,
