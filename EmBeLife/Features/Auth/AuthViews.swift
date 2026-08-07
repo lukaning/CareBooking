@@ -212,6 +212,7 @@ struct SignInView: View {
                 title: "Sign In",
                 headline: "Hi, Welcome Back! 👋",
                 subtitle: "Lorem ipsum dolor sit amet, consectetur",
+                onBack: { appModel.showWelcome() },
                 showsBackControl: true
             )
 

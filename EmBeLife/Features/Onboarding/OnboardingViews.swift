@@ -12,7 +12,7 @@ struct OnboardingFlowView: View {
             case 0:
                 WelcomeStep(
                     onContinue: { step = 1 },
-                    onSkip: { appModel.finishOnboarding() }
+                    onSignUpIn: { appModel.showAuth() }
                 )
             case 1:
                 OnboardingStepContainer {
@@ -29,6 +29,14 @@ struct OnboardingFlowView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: step)
+        .onAppear {
+            if appModel.skipWelcomeStep {
+                appModel.skipWelcomeStep = false
+                if step == 0 {
+                    step = 1
+                }
+            }
+        }
     }
 }
 
@@ -55,54 +63,77 @@ struct OnboardingHero: View {
 
 struct WelcomeStep: View {
     var onContinue: () -> Void
-    var onSkip: () -> Void
+    var onSignUpIn: () -> Void
+
+    private let pageBG = Color(red: 0.99, green: 0.99, blue: 0.995)
+    private let tagline = Color(red: 0.48, green: 0.50, blue: 0.54)
 
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                HeroHeaderImage()
+                GeometryReader { geo in
+                    Image("onboardingHero")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                }
+                .frame(height: welcomeHeroHeight)
+                .frame(maxWidth: .infinity)
+                .ignoresSafeArea(edges: .top)
 
-                Button("Skip", action: onSkip)
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .padding(.top, 8)
-                    .padding(.trailing, 12)
+                Button(action: onSignUpIn) {
+                    Text("Sign up/in")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(Color.black.opacity(0.28))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 8)
+                .padding(.trailing, 16)
+                .accessibilityLabel("Sign up or sign in")
             }
 
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Hi, 👋")
-                        .font(.system(size: 34, weight: .bold))
-                    Text("Welcome to")
-                        .font(.system(size: 34, weight: .bold))
-                }
-                .foregroundStyle(Theme.darkText)
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Hi, 👋")
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundStyle(Color.black)
+                    .padding(.top, 28)
 
-                EmBeLifeLogo()
+                Text("Welcome to")
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundStyle(Color.black)
+                    .padding(.top, 2)
+
+                EmBeLifeLogo(markSize: 48, wordSize: 30)
+                    .padding(.top, 18)
 
                 Text("Find trustworthy help and support...")
-                    .font(.body)
-                    .foregroundStyle(Theme.grayscale70)
-                    .padding(.top, 8)
+                    .font(.system(size: 15, weight: .regular))
+                    .foregroundStyle(tagline)
+                    .padding(.top, 16)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 24)
-            .padding(.top, 28)
 
-            Spacer(minLength: 0)
+            Spacer(minLength: 24)
 
             Button("Next", action: onContinue)
+                .font(.system(size: 17, weight: .semibold))
                 .buttonStyle(PrimaryOrangeButtonStyle())
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-                .background(
-                    Color(.systemBackground)
-                        .shadow(color: .black.opacity(0.08), radius: 24, y: -8)
-                )
+                .padding(.top, 12)
+                .padding(.bottom, 20)
         }
-        .background(Color(red: 0.965, green: 0.973, blue: 0.996))
+        .background(pageBG.ignoresSafeArea())
+    }
+
+    private var welcomeHeroHeight: CGFloat {
+        // ~40% of a typical phone content area; keeps full-bleed top photo presence.
+        min(320, max(240, UIScreen.main.bounds.height * 0.38))
     }
 }
 

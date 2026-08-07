@@ -40,9 +40,11 @@ enum BookingTab: String, CaseIterable, Identifiable {
 
 @Observable
 final class AppModel {
-    var flow: AppFlow = .auth
+    var flow: AppFlow = .onboarding
     var isSignedIn = false
     var hasCompletedOnboarding = false
+    /// When true, onboarding skips the welcome step (e.g. after sign-in/sign-up).
+    var skipWelcomeStep = false
 
     var userName = ""
     var userEmail = ""
@@ -132,7 +134,12 @@ final class AppModel {
         if !name.isEmpty { userName = name }
         isSignedIn = true
         syncProfileBasics()
-        flow = hasCompletedOnboarding ? .main : .onboarding
+        if hasCompletedOnboarding {
+            flow = .main
+        } else {
+            skipWelcomeStep = true
+            flow = .onboarding
+        }
     }
 
     func completeSignUp(name: String, email: String) {
@@ -140,6 +147,16 @@ final class AppModel {
         userEmail = email
         isSignedIn = true
         syncProfileBasics()
+        skipWelcomeStep = true
+        flow = .onboarding
+    }
+
+    func showAuth() {
+        flow = .auth
+    }
+
+    func showWelcome() {
+        skipWelcomeStep = false
         flow = .onboarding
     }
 
@@ -207,7 +224,8 @@ final class AppModel {
         resolvedCurrentAddress = ""
         profile = UserProfile()
         bookings = []
-        flow = .auth
+        skipWelcomeStep = false
+        flow = .onboarding
     }
 
     func addBooking(_ booking: Booking) {

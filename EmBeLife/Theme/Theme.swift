@@ -56,26 +56,28 @@ struct PrimaryBlackButtonStyle: ButtonStyle {
 }
 
 struct EmBeLifeLogo: View {
+    var markSize: CGFloat = 44
+    var wordSize: CGFloat = 28
+
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(alignment: .center, spacing: 6) {
             Text("Em")
-                .font(.title.weight(.bold))
+                .font(.system(size: markSize * 0.38, weight: .bold))
                 .foregroundStyle(.white)
-                .frame(width: 44, height: 44)
+                .frame(width: markSize, height: markSize)
                 .background(Theme.brandOrange)
                 .clipShape(Circle())
 
-            HStack(spacing: 0) {
-                Text("Be")
-                Text("Life")
-            }
-            .font(.system(size: 28, weight: .bold))
-            .foregroundStyle(Theme.brandOrange)
+            HStack(alignment: .top, spacing: 0) {
+                Text("BeLife")
+                    .font(.system(size: wordSize, weight: .semibold))
+                    .foregroundStyle(Theme.brandOrange)
 
-            Text("™")
-                .font(.caption)
-                .foregroundStyle(Theme.brandOrange)
-                .offset(y: -8)
+                Text("™")
+                    .font(.system(size: wordSize * 0.38, weight: .medium))
+                    .foregroundStyle(Theme.brandOrange)
+                    .padding(.top, 2)
+            }
         }
     }
 }
