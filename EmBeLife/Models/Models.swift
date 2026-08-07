@@ -107,13 +107,44 @@ enum BookingStatus: String, CaseIterable, Identifiable {
 struct BookingChecklistTask: Identifiable, Hashable {
     let id: UUID
     var title: String
+    /// Top-level service category label (e.g. Personal Care).
     var category: String
+    /// Leaf / subcategory label when selected from catalog.
+    var subcategory: String
+    var priority: BookingTaskPriority
+    var deadline: Date?
+    var detailDescription: String
 
-    init(id: UUID = UUID(), title: String, category: String) {
+    init(
+        id: UUID = UUID(),
+        title: String,
+        category: String,
+        subcategory: String = "",
+        priority: BookingTaskPriority = .medium,
+        deadline: Date? = nil,
+        detailDescription: String = ""
+    ) {
         self.id = id
         self.title = title
         self.category = category
+        self.subcategory = subcategory
+        self.priority = priority
+        self.deadline = deadline
+        self.detailDescription = detailDescription
     }
+
+    var categoryPathLabel: String {
+        if subcategory.isEmpty { return category }
+        return "\(category) · \(subcategory)"
+    }
+}
+
+enum BookingTaskPriority: String, CaseIterable, Identifiable, Hashable {
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+
+    var id: String { rawValue }
 }
 
 struct Booking: Identifiable, Hashable {
@@ -195,10 +226,38 @@ struct Booking: Identifiable, Hashable {
     }
 
     static let defaultChecklist: [BookingChecklistTask] = [
-        BookingChecklistTask(title: "Position changes/ transfers", category: "Category 1"),
-        BookingChecklistTask(title: "Assistance with waking/ tucking in", category: "Category 1"),
-        BookingChecklistTask(title: "Medication Routine", category: "Category 2"),
-        BookingChecklistTask(title: "Bathing/ dressing", category: "Category 2"),
-        BookingChecklistTask(title: "Grooming and personal hygiene", category: "Category 1")
+        BookingChecklistTask(
+            title: "Position changes/ transfers",
+            category: "Personal Care/Activities of Daily Living Services",
+            subcategory: "Mobility assistance",
+            priority: .high,
+            detailDescription: "Assist with safe transfers and position changes during the visit."
+        ),
+        BookingChecklistTask(
+            title: "Assistance with waking/ tucking in",
+            category: "Personal Care/Activities of Daily Living Services",
+            subcategory: "Personal hygiene",
+            priority: .medium,
+            detailDescription: "Support morning and evening rest routines."
+        ),
+        BookingChecklistTask(
+            title: "Medication Routine",
+            category: "Personal Care/Activities of Daily Living Services",
+            subcategory: "Medications",
+            priority: .high,
+            detailDescription: "Remind and assist with scheduled medications only as directed."
+        ),
+        BookingChecklistTask(
+            title: "Bathing/ dressing",
+            category: "Personal Care/Activities of Daily Living Services",
+            subcategory: "Personal hygiene",
+            priority: .medium
+        ),
+        BookingChecklistTask(
+            title: "Grooming and personal hygiene",
+            category: "Personal Care/Activities of Daily Living Services",
+            subcategory: "Personal hygiene",
+            priority: .low
+        )
     ]
 }

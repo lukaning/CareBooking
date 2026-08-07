@@ -20,6 +20,11 @@ struct EditBookingView: View {
     @State private var draftDurationMinutes = 120
     @State private var draftTasks: [BookingChecklistTask] = []
     @State private var newTaskTitle = ""
+    @State private var newTaskPriority: BookingTaskPriority = .medium
+    @State private var newTaskDescription = ""
+    @State private var newTaskHasDeadline = false
+    @State private var newTaskDeadline = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
+    @State private var isAddingTaskDetail = false
 
     private let bodyDark = Color(red: 0.12, green: 0.14, blue: 0.18)
     private let labelMuted = Color(red: 0.45, green: 0.48, blue: 0.56)
@@ -387,7 +392,7 @@ struct EditBookingView: View {
         .shadow(color: cardShadow, radius: 6, y: 4)
     }
 
-    // MARK: - Checklist
+    // MARK: - Checklist / Task details
 
     private func checklistSection(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -399,7 +404,7 @@ struct EditBookingView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "list.bullet.rectangle")
                         .foregroundStyle(iconMuted)
-                    Text("Tasks Checklist")
+                    Text("Task details")
                         .font(.headline)
                         .foregroundStyle(bodyDark)
                     Spacer()
@@ -413,65 +418,34 @@ struct EditBookingView: View {
 
             if checklistExpanded {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Assist with daily activities, engage in gentle physical therapy exercises as recommended by professionals to promote mobility and strength.")
+                    Text("Tasks and care activities scheduled for this booking.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.grayscale70)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Text("Detailed Checklist below")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(labelMuted)
-
                     let tasks = isEditing ? draftTasks : booking.checklistTasks
                     ForEach(tasks) { task in
-                        HStack(alignment: .top, spacing: 10) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(task.title)
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(bodyDark)
-                                Text(task.category)
-                                    .font(.caption)
-                                    .foregroundStyle(labelMuted)
-                            }
-                            Spacer(minLength: 8)
-                            if isEditing {
-                                Button {
-                                    draftTasks.removeAll { $0.id == task.id }
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(Theme.errorCoral)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(14)
-                        .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        taskDetailCard(task, canDelete: isEditing)
                     }
 
                     if isEditing {
-                        HStack(spacing: 10) {
-                            TextField("New task title", text: $newTaskTitle)
-                                .padding(12)
-                                .background(Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .stroke(softBorder, lineWidth: 1)
-                                )
-                            Button("Add") {
-                                addTask()
+                        if isAddingTaskDetail {
+                            editComposeForm
+                        } else {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    isAddingTaskDetail = true
+                                }
+                            } label: {
+                                Text("Add task details")
+                                    .font(.headline.weight(.bold))
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                                    .background(Theme.brandOrange)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                             }
-                            .font(.subheadline.weight(.bold))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                            .background(Theme.brandOrange)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .disabled(newTaskTitle.trimmingCharacters(in: .whitespaces).isEmpty)
-                            .opacity(newTaskTitle.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -483,6 +457,146 @@ struct EditBookingView: View {
         .background(cardFill)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: cardShadow, radius: 6, y: 4)
+    }
+
+    private func taskDetailCard(_ task: BookingChecklistTask, canDelete: Bool) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(task.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(bodyDark)
+                Text(task.categoryPathLabel)
+                    .font(.caption)
+                    .foregroundStyle(labelMuted)
+                HStack(spacing: 8) {
+                    Text(task.priority.rawValue)
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(priorityColor(task.priority))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(priorityColor(task.priority).opacity(0.12))
+                        .clipShape(Capsule())
+                    if let deadline = task.deadline {
+                        Label(
+                            deadline.formatted(date: .abbreviated, time: .shortened),
+                            systemImage: "calendar"
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(labelMuted)
+                    }
+                }
+                if !task.detailDescription.isEmpty {
+                    Text(task.detailDescription)
+                        .font(.caption)
+                        .foregroundStyle(labelMuted)
+                }
+            }
+            Spacer(minLength: 8)
+            if canDelete {
+                Button {
+                    draftTasks.removeAll { $0.id == task.id }
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.errorCoral)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private var editComposeForm: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Add task details")
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(bodyDark)
+
+            TextField("Title of task", text: $newTaskTitle)
+                .padding(12)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(softBorder, lineWidth: 1)
+                )
+
+            Picker("Priority", selection: $newTaskPriority) {
+                ForEach(BookingTaskPriority.allCases) { priority in
+                    Text(priority.rawValue).tag(priority)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Toggle("Deadline", isOn: $newTaskHasDeadline)
+                .tint(Theme.brandOrange)
+            if newTaskHasDeadline {
+                DatePicker(
+                    "Deadline",
+                    selection: $newTaskDeadline,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .labelsHidden()
+            }
+
+            TextField("Description", text: $newTaskDescription, axis: .vertical)
+                .lineLimit(2...5)
+                .padding(12)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(softBorder, lineWidth: 1)
+                )
+
+            HStack(spacing: 10) {
+                Button("Cancel") {
+                    withAnimation {
+                        isAddingTaskDetail = false
+                        resetNewTaskForm()
+                    }
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(labelMuted)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(Color(red: 0.93, green: 0.94, blue: 0.96))
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+                Button("Add details") {
+                    addTask()
+                }
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(
+                    newTaskTitle.trimmingCharacters(in: .whitespaces).isEmpty
+                        ? Color.black.opacity(0.35)
+                        : Color.black
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .disabled(newTaskTitle.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+        .padding(14)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(softBorder, lineWidth: 1)
+        )
+    }
+
+    private func priorityColor(_ priority: BookingTaskPriority) -> Color {
+        switch priority {
+        case .low: Color(red: 0.35, green: 0.55, blue: 0.95)
+        case .medium: Theme.brandOrange
+        case .high: Theme.errorCoral
+        }
     }
 
     // MARK: - Actions
@@ -544,6 +658,8 @@ struct EditBookingView: View {
         draftLocation = booking.location
         draftDurationMinutes = booking.durationMinutes
         draftTasks = booking.checklistTasks
+        isAddingTaskDetail = false
+        resetNewTaskForm()
     }
 
     private func saveEdits() {
@@ -560,6 +676,7 @@ struct EditBookingView: View {
 
         withAnimation(.easeInOut(duration: 0.2)) {
             isEditing = false
+            isAddingTaskDetail = false
             showSavedBanner = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
@@ -573,9 +690,25 @@ struct EditBookingView: View {
         let title = newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !title.isEmpty else { return }
         draftTasks.append(
-            BookingChecklistTask(title: title, category: "Custom")
+            BookingChecklistTask(
+                title: title,
+                category: "Custom",
+                subcategory: "",
+                priority: newTaskPriority,
+                deadline: newTaskHasDeadline ? newTaskDeadline : nil,
+                detailDescription: newTaskDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+            )
         )
+        isAddingTaskDetail = false
+        resetNewTaskForm()
+    }
+
+    private func resetNewTaskForm() {
         newTaskTitle = ""
+        newTaskPriority = .medium
+        newTaskDescription = ""
+        newTaskHasDeadline = false
+        newTaskDeadline = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
     }
 
     private func formattedDate(_ date: Date) -> String {
