@@ -264,7 +264,7 @@ struct HomeFilterState: Equatable {
     var careRecipientAgeGroup = "3-5"
     var ageRanges: [String] = ["25-30", "30-35"]
     var genderIdentity = "Female"
-    var language = "English"
+    var languages: [String] = ["English"]
     var minPrice = 15.0
     var maxPrice = 30.0
     var specialNeed = "AD&D"
@@ -282,7 +282,7 @@ struct HomeFilterState: Equatable {
         case .genderIdentity:
             return genderIdentity
         case .language:
-            return language
+            return languages.isEmpty ? "Any" : languages.joined(separator: "; ")
         case .priceRange:
             return "$\(Int(minPrice)) - $\(Int(maxPrice))"
         case .specialNeed:
@@ -614,11 +614,27 @@ struct FilterSheet: View {
                         .pickerStyle(.inline)
                     }
                 case .language:
-                    Section("Language") {
-                        Picker("Language", selection: $draft.language) {
-                            ForEach(languageOptions, id: \.self) { Text($0).tag($0) }
+                    Section {
+                        ForEach(languageOptions, id: \.self) { language in
+                            Button {
+                                toggleLanguage(language)
+                            } label: {
+                                HStack {
+                                    Text(language)
+                                        .foregroundStyle(Theme.darkText)
+                                    Spacer()
+                                    if draft.languages.contains(language) {
+                                        Image(systemName: "checkmark")
+                                            .font(.body.weight(.semibold))
+                                            .foregroundStyle(Theme.brandOrange)
+                                    }
+                                }
+                            }
                         }
-                        .pickerStyle(.inline)
+                    } header: {
+                        Text("Languages")
+                    } footer: {
+                        Text("Select one or more languages. Currently selected: \(draft.languages.isEmpty ? "none" : draft.languages.joined(separator: ", ")).")
                     }
                 case .priceRange:
                     priceFilterSection
@@ -645,6 +661,9 @@ struct FilterSheet: View {
                         }
                         if draft.ageRanges.isEmpty {
                             draft.ageRanges = ["25-30"]
+                        }
+                        if draft.languages.isEmpty {
+                            draft.languages = ["English"]
                         }
                         filterState = draft
                         dismiss()
@@ -673,6 +692,17 @@ struct FilterSheet: View {
             draft.ageRanges.append(range)
             draft.ageRanges.sort { lhs, rhs in
                 (ageRangeOptions.firstIndex(of: lhs) ?? 0) < (ageRangeOptions.firstIndex(of: rhs) ?? 0)
+            }
+        }
+    }
+
+    private func toggleLanguage(_ language: String) {
+        if let index = draft.languages.firstIndex(of: language) {
+            draft.languages.remove(at: index)
+        } else {
+            draft.languages.append(language)
+            draft.languages.sort { lhs, rhs in
+                (languageOptions.firstIndex(of: lhs) ?? 0) < (languageOptions.firstIndex(of: rhs) ?? 0)
             }
         }
     }
