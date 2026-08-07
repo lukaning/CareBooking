@@ -27,6 +27,8 @@
 		A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5PAYRECV234567890ABCDE /* PayReceiveView.swift */; };
 		A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */; };
 		A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTMDL234567890ABCDE /* GiftModels.swift */; };
+		A6REVVMDL234567890ABCDE /* ReviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVMDL234567890ABCDE /* ReviewModels.swift */; };
+		A6REVVW234567890ABCDEF /* ReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVW234567890ABCDEF /* ReviewViews.swift */; };
 		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
 		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
 		A4DASHVW234567890ABCDEF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DASHVW234567890ABCDEF /* DashboardView.swift */; };
@@ -66,6 +68,8 @@
 		B5PAYRECV234567890ABCDE /* PayReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayReceiveView.swift; sourceTree = "<group>"; };
 		B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftExperienceViews.swift; sourceTree = "<group>"; };
 		B5GIFTMDL234567890ABCDE /* GiftModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftModels.swift; sourceTree = "<group>"; };
+		B6REVVMDL234567890ABCDE /* ReviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModels.swift; sourceTree = "<group>"; };
+		B6REVVW234567890ABCDEF /* ReviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViews.swift; sourceTree = "<group>"; };
 		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
 		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -140,10 +144,19 @@
 				92337F985607488E9AFC0A96 /* Onboarding */,
 				F1A2B3C4D5E6478910E4F201 /* Payment */,
 				G1PAYRECVGRP234567890AB /* Gift */,
+				G6REVIEWGRP234567890ABCD /* Review */,
 				E26F03889FA94E0789722FD0 /* Profile */,
 				C0F53E804D6F4C3B1E9A7F42 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		G6REVIEWGRP234567890ABCD /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				B6REVVW234567890ABCDEF /* ReviewViews.swift */,
+			);
+			path = Review;
 			sourceTree = "<group>";
 		};
 		G1PAYRECVGRP234567890AB /* Gift */ = {
@@ -189,6 +202,7 @@
 				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
 				A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */,
 				B5GIFTMDL234567890ABCDE /* GiftModels.swift */,
+				B6REVVMDL234567890ABCDE /* ReviewModels.swift */,
 				D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */,
 				811085CE35FB4C15896EFEA8 /* AppModel.swift */,
 				B4LOCMGR234567890ABCDEF /* LocationManager.swift */,
@@ -387,6 +401,8 @@
 				A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */,
 				A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */,
 				A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */,
+				A6REVVMDL234567890ABCDE /* ReviewModels.swift in Sources */,
+				A6REVVW234567890ABCDEF /* ReviewViews.swift in Sources */,
 				B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */,
 				A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */,
 				A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */,

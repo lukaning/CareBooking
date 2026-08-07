@@ -12,6 +12,10 @@ struct ProfileView: View {
     @State private var bookingToReschedule: Booking?
     @State private var bookingRoute: BookingRoute?
     @State private var showPayReceive = false
+    @State private var reviewProvider: Provider?
+    @State private var reviewingBookingID: UUID?
+    @State private var draftRatings: [UUID: Int] = [:]
+    @State private var draftTexts: [UUID: String] = [:]
 
     private var profile: UserProfile { appModel.profile }
 
@@ -73,6 +77,9 @@ struct ProfileView: View {
         }
         .navigationDestination(isPresented: $showPayReceive) {
             PayReceiveView()
+        }
+        .navigationDestination(item: $reviewProvider) { provider in
+            RateAndReviewView(provider: provider)
         }
         .navigationDestination(item: $bookingRoute) { route in
             EditBookingView(bookingID: route.id)
@@ -537,40 +544,108 @@ struct ProfileView: View {
 
     private func richBookingDetails(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            if booking.status == .completed {
+                completedBookingDetails(booking)
+            } else {
+                activeBookingDetails(booking)
+            }
+        }
+    }
+
+    private func completedBookingDetails(_ booking: Booking) -> some View {
+        let isComposing = reviewingBookingID == booking.id
+
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: "calendar")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.mutedText)
+                Text(booking.date.formatted(.dateTime.day().month(.abbreviated).year()))
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Theme.darkText)
+            }
+
+            if !booking.serviceProvidedTo.isEmpty {
+                HStack(spacing: 8) {
+                    Image(systemName: "person.crop.circle")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.mutedText)
+                    Text("Service provided to \(booking.serviceProvidedTo)")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Theme.darkText)
+                }
+            }
+
+            providerMiniCard(booking, showsRate: true)
+
+            if booking.hasClientReview {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 0.38))
+                    Text("You rated \(booking.clientReviewRating ?? 0) stars")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                    Spacer()
+                    Button("View reviews") {
+                        reviewProvider = booking.provider
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.linkBlue)
+                }
+                .padding(.vertical, 4)
+            } else if isComposing {
+                InlineBookingReviewComposer(
+                    rating: Binding(
+                        get: { draftRatings[booking.id] ?? 0 },
+                        set: { draftRatings[booking.id] = $0 }
+                    ),
+                    text: Binding(
+                        get: { draftTexts[booking.id] ?? "" },
+                        set: { draftTexts[booking.id] = $0 }
+                    ),
+                    onSubmit: {
+                        let rating = draftRatings[booking.id] ?? 0
+                        let text = draftTexts[booking.id] ?? ""
+                        appModel.submitBookingReview(bookingID: booking.id, rating: rating, text: text)
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            reviewingBookingID = nil
+                        }
+                        draftRatings[booking.id] = nil
+                        draftTexts[booking.id] = nil
+                    }
+                )
+            } else {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        reviewingBookingID = booking.id
+                        if draftRatings[booking.id] == nil {
+                            draftRatings[booking.id] = 0
+                        }
+                        if draftTexts[booking.id] == nil {
+                            draftTexts[booking.id] = ""
+                        }
+                    }
+                } label: {
+                    Text("Add review")
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Theme.brandOrange)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private func activeBookingDetails(_ booking: Booking) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Here is your upcoming appointment with \(booking.provider.name).")
                 .font(.subheadline)
                 .foregroundStyle(Theme.grayscale70)
 
-            HStack(spacing: 12) {
-                Image(booking.provider.imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 52, height: 52)
-                    .clipShape(Circle())
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(booking.provider.name).font(.headline)
-                    Text(booking.provider.title).font(.subheadline).foregroundStyle(.secondary)
-                    HStack(spacing: 4) {
-                        Image(systemName: "star.fill").font(.caption).foregroundStyle(Theme.brandOrange)
-                        Text(String(format: "%.1f", booking.provider.rating))
-                            .font(.caption.weight(.semibold))
-                        Text("(\(booking.provider.reviewCount) reviews)")
-                            .font(.caption)
-                            .foregroundStyle(Theme.mutedText)
-                    }
-                }
-                Spacer()
-                Text("$\(booking.provider.ratePerHour)/hour")
-                    .font(.subheadline.weight(.semibold))
-            }
-            .padding(12)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(.separator).opacity(0.5), lineWidth: 1)
-            )
+            providerMiniCard(booking, showsRate: true)
 
             HStack(spacing: 10) {
                 labelCard(icon: "calendar", title: booking.date.formatted(.dateTime.day().month().year()))
@@ -643,6 +718,43 @@ struct ProfileView: View {
             }
             .foregroundStyle(Theme.darkText)
         }
+    }
+
+    private func providerMiniCard(_ booking: Booking, showsRate: Bool) -> some View {
+        HStack(spacing: 12) {
+            Image(booking.provider.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 52, height: 52)
+                .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(booking.provider.name).font(.headline)
+                Text(booking.provider.title).font(.subheadline).foregroundStyle(.secondary)
+                Button {
+                    reviewProvider = booking.provider
+                } label: {
+                    ProviderRatingLabel(
+                        rating: booking.provider.rating,
+                        reviewCount: booking.provider.reviewCount,
+                        compact: true
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+            Spacer()
+            if showsRate {
+                Text("$\(booking.provider.ratePerHour)/hour")
+                    .font(.subheadline.weight(.semibold))
+            }
+        }
+        .padding(12)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(.separator).opacity(0.5), lineWidth: 1)
+        )
     }
 
     private func durationLabel(_ minutes: Int) -> String {

@@ -68,6 +68,64 @@ final class AppModel {
     var bookings: [Booking] = []
     var providers: [Provider] = Provider.samples
     var managedUsers: [ManagedTeamUser] = ManagedTeamUser.samples
+    /// All provider reviews keyed for Rate & Review screens.
+    var providerReviews: [ProviderReview] = ProviderReview.samples(for: "eric")
+        + ProviderReview.samples(for: "maya")
+        + ProviderReview.samples(for: "jordan")
+
+    func reviews(for providerID: String) -> [ProviderReview] {
+        providerReviews.filter { $0.providerID == providerID }
+    }
+
+    func addProviderReview(providerID: String, rating: Int, body: String, authorName: String) {
+        let review = ProviderReview(
+            providerID: providerID,
+            authorName: authorName,
+            avatarRed: 0.35,
+            avatarGreen: 0.55,
+            avatarBlue: 0.95,
+            rating: max(1, min(5, rating)),
+            body: body,
+            relativeTime: "just now"
+        )
+        providerReviews.insert(review, at: 0)
+        if let index = providers.firstIndex(where: { $0.id == providerID }) {
+            // Soft-update displayed count; keep average stable for MVP sample data.
+            let p = providers[index]
+            providers[index] = Provider(
+                id: p.id,
+                name: p.name,
+                title: p.title,
+                ratePerHour: p.ratePerHour,
+                rating: p.rating,
+                reviewCount: p.reviewCount + 1,
+                bio: p.bio,
+                specialties: p.specialties,
+                bookingCount: p.bookingCount,
+                imageName: p.imageName
+            )
+        }
+    }
+
+    func toggleReviewLike(id: UUID) {
+        guard let index = providerReviews.firstIndex(where: { $0.id == id }) else { return }
+        providerReviews[index].liked.toggle()
+    }
+
+    func submitBookingReview(bookingID: UUID, rating: Int, text: String) {
+        guard let index = bookings.firstIndex(where: { $0.id == bookingID }) else { return }
+        let clipped = max(1, min(5, rating))
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        bookings[index].clientReviewRating = clipped
+        bookings[index].clientReviewText = trimmed
+        let providerID = bookings[index].provider.id
+        addProviderReview(
+            providerID: providerID,
+            rating: clipped,
+            body: trimmed,
+            authorName: userName.isEmpty ? "You" : userName
+        )
+    }
 
     func completeSignIn(email: String, name: String = "") {
         userEmail = email
@@ -216,7 +274,7 @@ final class AppModel {
                 startTime: completed.start,
                 durationMinutes: 120,
                 status: .completed,
-                serviceProvidedTo: "Parent"
+                serviceProvidedTo: "S. Roger"
             )
         ]
     }

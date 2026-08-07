@@ -10,6 +10,7 @@ struct HomeView: View {
     @State private var bookRequest: BookProviderRequest?
     @State private var sortNewest = true
     @State private var showBooked = false
+    @State private var reviewProvider: Provider?
 
     private let expandAnimation = Animation.easeInOut(duration: 0.22)
 
@@ -30,6 +31,9 @@ struct HomeView: View {
                 .toolbar { homeToolbar }
                 .navigationDestination(isPresented: $showBooked) {
                     BookingsView(initialTab: .booked)
+                }
+                .navigationDestination(item: $reviewProvider) { provider in
+                    RateAndReviewView(provider: provider)
                 }
                 .safeAreaInset(edge: .top, spacing: 0) {
                     matchesHeader
@@ -136,6 +140,9 @@ struct HomeView: View {
                     provider: provider,
                     appointmentType: type
                 )
+            },
+            onRatingTap: {
+                reviewProvider = provider
             }
         )
     }
@@ -367,6 +374,7 @@ struct ProviderCard: View {
     var isBookingMenuExpanded: Bool
     var onToggleBookingMenu: () -> Void
     var onSelectAppointmentType: (BookingAppointmentType) -> Void
+    var onRatingTap: () -> Void
 
     private let menuBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
     private let toggleAnimation = Animation.easeInOut(duration: 0.15)
@@ -393,16 +401,13 @@ struct ProviderCard: View {
                             .font(.subheadline.weight(.semibold))
                     }
 
-                    HStack(spacing: 4) {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(Theme.brandOrange)
-                            .font(.caption)
-                        Text(String(format: "%.1f", provider.rating))
-                            .font(.subheadline.weight(.semibold))
-                        Text("(\(provider.reviewCount) reviews)")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.mutedText)
+                    Button(action: onRatingTap) {
+                        ProviderRatingLabel(
+                            rating: provider.rating,
+                            reviewCount: provider.reviewCount
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
             }
 

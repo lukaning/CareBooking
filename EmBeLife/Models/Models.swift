@@ -129,6 +129,14 @@ struct Booking: Identifiable, Hashable {
     var location: String
     var dateCreated: Date
     var checklistTasks: [BookingChecklistTask]
+    /// Client star rating left after a completed visit (1…5).
+    var clientReviewRating: Int?
+    /// Optional free-text review left with the rating.
+    var clientReviewText: String?
+
+    var hasClientReview: Bool {
+        (clientReviewRating ?? 0) > 0
+    }
 
     var endTime: Date {
         startTime.addingTimeInterval(TimeInterval(durationMinutes * 60))
@@ -158,7 +166,9 @@ struct Booking: Identifiable, Hashable {
         taskDescription: String = "This task is aimed at taking care of daily chores and some lightweight cooking and taking care of this and that.",
         location: String = "San Francisco, Detailed Location",
         dateCreated: Date = .now,
-        checklistTasks: [BookingChecklistTask] = Booking.defaultChecklist
+        checklistTasks: [BookingChecklistTask] = Booking.defaultChecklist,
+        clientReviewRating: Int? = nil,
+        clientReviewText: String? = nil
     ) {
         self.id = id
         self.provider = provider
@@ -172,6 +182,8 @@ struct Booking: Identifiable, Hashable {
         self.location = location
         self.dateCreated = dateCreated
         self.checklistTasks = checklistTasks
+        self.clientReviewRating = clientReviewRating
+        self.clientReviewText = clientReviewText
     }
 
     static let defaultChecklist: [BookingChecklistTask] = [
