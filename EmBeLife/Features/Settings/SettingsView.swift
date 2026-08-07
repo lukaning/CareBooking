@@ -140,7 +140,10 @@ struct SettingsView: View {
                     PasswordSecurityView()
                 case .activities:
                     ActivitiesView()
-                case .giftFund, .help:
+                case .giftFund:
+                    GiftGiverFlowHost()
+                        .toolbar(.hidden, for: .navigationBar)
+                case .help:
                     SettingsDetailPlaceholder(destination: destination)
                 }
             }

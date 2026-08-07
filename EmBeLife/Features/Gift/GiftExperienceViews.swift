@@ -716,6 +716,22 @@ struct GiftReceivedView: View {
 
 // MARK: - Destination host
 
+/// Host for the gift-giver flow started as the root (e.g. Settings → Gift Fund).
+struct GiftGiverFlowHost: View {
+    @State private var giftPath: [GiftExperienceRoute] = []
+    @State private var giftDraft = GiftDraft()
+
+    var body: some View {
+        // Nested stack so payment method / sent / sign-up can push from confirm.
+        NavigationStack(path: $giftPath) {
+            GiftConfirmView(draft: giftDraft, path: $giftPath)
+                .navigationDestination(for: GiftExperienceRoute.self) { route in
+                    GiftExperienceDestination(route: route, draft: giftDraft, path: $giftPath)
+                }
+        }
+    }
+}
+
 struct GiftExperienceDestination: View {
     let route: GiftExperienceRoute
     @Bindable var draft: GiftDraft

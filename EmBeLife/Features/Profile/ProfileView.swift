@@ -23,7 +23,22 @@ struct ProfileView: View {
         appModel.bookings.filter { $0.status.tab == bookingTab }
     }
 
+    // MARK: - Design tokens (profile filled state)
+
+    private let pageBG = Color.white
+    private let sectionTitle = Color(red: 0.22, green: 0.26, blue: 0.36)
+    private let labelMuted = Color(red: 0.45, green: 0.48, blue: 0.56)
+    private let bodyDark = Color(red: 0.12, green: 0.14, blue: 0.18)
+    private let softCard = Color(red: 0.945, green: 0.952, blue: 0.965)
+    private let softBlueCard = Color(red: 0.93, green: 0.94, blue: 0.97)
+    private let fieldValue = Color(red: 0.15, green: 0.16, blue: 0.20)
     private let giftScanTint = Color(red: 0.62, green: 0.52, blue: 0.88)
+    private let purpleAccent = Color(red: 0.48, green: 0.42, blue: 0.78)
+    private let tabDot = Color(red: 0.35, green: 0.55, blue: 0.95)
+    private let cancelFill = Color(red: 0.93, green: 0.94, blue: 0.96)
+    private let borderLight = Color(red: 0.90, green: 0.91, blue: 0.93)
+    private let pagePadding: CGFloat = 16
+    private let sectionSpacing: CGFloat = 22
 
     var body: some View {
         Group {
@@ -46,28 +61,22 @@ struct ProfileView: View {
                     emptyContent
                 }
             }
-            .padding(20)
+            .padding(.horizontal, pagePadding)
+            .padding(.top, 8)
+            .padding(.bottom, 28)
             .animation(.easeInOut(duration: 0.25), value: profile.isFilled)
         }
-        .background(Color(.systemBackground))
+        .background(pageBG)
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    showPayReceive = true
-                } label: {
-                    Image(systemName: "viewfinder")
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(giftScanTint)
-                }
-                .accessibilityLabel("Pay or receive gifts")
-                .accessibilityHint("Scan a gift code or share your gift receiving link")
-
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showEdit = true
                 } label: {
                     Image(systemName: "pencil")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(bodyDark)
                 }
                 .accessibilityLabel("Edit profile")
             }
@@ -87,23 +96,27 @@ struct ProfileView: View {
         .sheet(item: $bookingToReschedule) { booking in
             RescheduleBookingSheet(booking: booking)
         }
+        .onAppear {
+            appModel.seedBookingsIfNeeded()
+            if expandedMemberID == nil {
+                expandedMemberID = profile.familyMembers.first?.id
+            }
+        }
     }
 
-    /// Seed edit form: empty start, or current draft; first open can start blank / partial.
     private var editingSeed: UserProfile {
         var seed = profile
         if !seed.isPublished && seed.firstName.isEmpty {
-            // Leave empty so user builds from empty → filled (screen sequence)
             seed.languages = []
             seed.familyMembers = []
         }
         return seed
     }
 
-    // MARK: - Empty state (screen 1)
+    // MARK: - Empty state
 
     private var emptyContent: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: sectionSpacing) {
             emptyPhotoSection
             accountPill(title: "Admin Account")
             emptySetupFields
@@ -124,22 +137,23 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Profile Photo")
-                    .font(.headline)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(bodyDark)
                 Text("Min 400x400px, PNG or JPG formats.")
-                    .font(.caption)
-                    .foregroundStyle(Color(red: 0.349, green: 0.255, blue: 0.451))
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color(red: 0.35, green: 0.26, blue: 0.45))
 
                 Button {
                     showEdit = true
                 } label: {
                     Text("Upload Image")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Color(red: 0.349, green: 0.255, blue: 0.451))
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Color(red: 0.35, green: 0.26, blue: 0.45))
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(red: 0.918, green: 0.906, blue: 0.933), lineWidth: 1)
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .stroke(Color(red: 0.92, green: 0.91, blue: 0.93), lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)
@@ -150,27 +164,21 @@ struct ProfileView: View {
 
     private var emptySetupFields: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: 16) {
-                setupField(title: "Location", placeholder: "Set up your Location") {
-                    showEdit = true
-                }
-                setupField(title: "Services Requested for", placeholder: "Set up your preference") {
-                    showEdit = true
-                }
-                setupField(title: "Contact info", placeholder: "Set up your Contact info") {
-                    showEdit = true
-                }
-                setupField(title: "Payment Method", placeholder: "Set up your Payment info") {}
+            HStack(alignment: .top, spacing: 12) {
+                infoField(title: "Location", value: "Set up your Location") { showEdit = true }
+                infoField(title: "Services Requested for", value: "Set up your preference") { showEdit = true }
+                infoField(title: "Contact info", value: "Set up your Contact info") { showEdit = true }
+                infoField(title: "Payment Method", value: "Set up your Payment info") {}
             }
         }
     }
 
-    // MARK: - Filled state (screen 5)
+    // MARK: - Filled state
 
     private var filledContent: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: sectionSpacing) {
             filledHeader
-            accountPill(title: profile.accountType)
+            accountPill(title: profile.accountType.isEmpty ? "Owner Account" : profile.accountType)
             filledInfoRow
             bookingsSection(showRichCards: true)
             filledLanguageSection
@@ -183,44 +191,49 @@ struct ProfileView: View {
             Image("katieAvatar")
                 .resizable()
                 .scaledToFill()
-                .frame(width: 72, height: 72)
+                .frame(width: 76, height: 76)
                 .clipShape(Circle())
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 6) {
-                    Text(profile.displayFirstLast.isEmpty ? "Katie Smith" : profile.displayFirstLast)
-                        .font(.title3.weight(.semibold))
+                    Text(headerDisplayName)
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(bodyDark)
+                        .lineLimit(1)
+
                     Image("verifiedBadge")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 18, height: 18)
                 }
 
-                Text(profile.roleLabel)
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.grayscale70)
+                Text(profile.roleLabel.isEmpty ? "Customer" : profile.roleLabel)
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundStyle(labelMuted)
 
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundStyle(Theme.brandOrange)
                     Text(String(format: "%.1f", profile.rating))
-                        .font(.subheadline.weight(.semibold))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(bodyDark)
                     Text("(\(profile.reviewCount) reviews)")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.mutedText)
+                        .font(.system(size: 14))
+                        .foregroundStyle(labelMuted)
                 }
             }
 
             Spacer(minLength: 8)
 
+            // Gift scan entry (in-page; toolbar only has edit pencil)
             Button {
                 showPayReceive = true
             } label: {
                 Image(systemName: "viewfinder")
-                    .font(.title3.weight(.semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(giftScanTint)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 42, height: 42)
                     .background(giftScanTint.opacity(0.12))
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
@@ -229,22 +242,28 @@ struct ProfileView: View {
         }
     }
 
+    private var headerDisplayName: String {
+        if !profile.firstName.isEmpty { return profile.firstName }
+        if !profile.displayFirstLast.isEmpty { return profile.displayFirstLast }
+        return "Katie"
+    }
+
     private var filledInfoRow: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: 16) {
-                setupField(
+            HStack(alignment: .top, spacing: 12) {
+                infoField(
                     title: "Location",
-                    placeholder: profile.address.isEmpty ? "12345 street, Seattle, WA" : profile.address
+                    value: profile.address.isEmpty ? "12345 street, Seattle, WA" : profile.address
                 ) { showEdit = true }
-                setupField(
+                infoField(
                     title: "Services Requested for",
-                    placeholder: profile.servicesRequestedFor.isEmpty
+                    value: profile.servicesRequestedFor.isEmpty
                         ? "mother, father, aunt, child"
                         : profile.servicesRequestedFor
                 ) { showEdit = true }
-                setupField(
+                infoField(
                     title: "Contact",
-                    placeholder: profile.mobile.isEmpty
+                    value: profile.mobile.isEmpty
                         ? (profile.email.isEmpty ? "Add contact" : profile.email)
                         : profile.mobile
                 ) { showEdit = true }
@@ -253,32 +272,38 @@ struct ProfileView: View {
     }
 
     private var filledLanguageSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Language Preference")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Color(red: 0.224, green: 0.263, blue: 0.369))
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(sectionTitle)
 
             Text("Language")
-                .font(.caption)
-                .foregroundStyle(Theme.grayscale70)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(labelMuted)
 
             HStack(spacing: 8) {
-                ForEach(profile.languages, id: \.self) { language in
-                    Text(language)
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(Theme.brandOrange)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                let languages = profile.languages.isEmpty ? ["English", "Spain"] : profile.languages
+                ForEach(languages, id: \.self) { language in
+                    HStack(spacing: 6) {
+                        Text(language)
+                            .font(.system(size: 13, weight: .bold))
+                        Text("×")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 9)
+                    .background(Theme.brandOrange)
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                 }
 
                 Button { showEdit = true } label: {
                     Image(systemName: "plus")
-                        .foregroundStyle(Theme.grayscale60)
-                        .frame(width: 32, height: 32)
-                        .background(Color(red: 0.941, green: 0.941, blue: 0.941))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(labelMuted)
+                        .frame(width: 34, height: 34)
+                        .background(Color(red: 0.94, green: 0.94, blue: 0.95))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
                 .buttonStyle(.plain)
             }
@@ -288,32 +313,35 @@ struct ProfileView: View {
     private var filledFamilySection: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Family & Friends")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Color(red: 0.224, green: 0.263, blue: 0.369))
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(sectionTitle)
 
             Text("Member List")
-                .font(.subheadline)
-                .foregroundStyle(Theme.grayscale70)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(bodyDark)
 
-            ForEach(profile.familyMembers) { member in
-                filledMemberRow(member)
+            VStack(spacing: 10) {
+                ForEach(profile.familyMembers) { member in
+                    filledMemberRow(member)
+                }
             }
 
             Button { showEdit = true } label: {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     ZStack {
                         Circle()
-                            .stroke(Color(red: 0.902, green: 0.910, blue: 0.925), lineWidth: 1.5)
-                            .frame(width: 36, height: 36)
+                            .stroke(borderLight, lineWidth: 1.5)
+                            .frame(width: 40, height: 40)
                         Text("+")
-                            .font(.title3)
-                            .foregroundStyle(Color(red: 0.412, green: 0.412, blue: 0.455))
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(Color(red: 0.41, green: 0.41, blue: 0.46))
                     }
                     Text("Adding member")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(bodyDark)
                     Spacer()
                 }
+                .padding(.vertical, 4)
             }
             .buttonStyle(.plain)
         }
@@ -321,14 +349,14 @@ struct ProfileView: View {
 
     private func filledMemberRow(_ member: FamilyMember) -> some View {
         let expanded = expandedMemberID == member.id
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 Circle()
                     .fill(member.avatarStyle.color)
-                    .frame(width: 40, height: 40)
+                    .frame(width: 42, height: 42)
                     .overlay {
                         Text(member.monogram)
-                            .font(.headline)
+                            .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(.white)
                     }
 
@@ -339,10 +367,11 @@ struct ProfileView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Text(member.displayName)
-                            .font(.body.weight(.semibold))
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(bodyDark)
                         Image(systemName: expanded ? "chevron.down" : "chevron.right")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.grayscale60)
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(labelMuted)
                     }
                 }
                 .buttonStyle(.plain)
@@ -350,29 +379,41 @@ struct ProfileView: View {
                 Spacer()
 
                 Image(systemName: "trash")
-                    .foregroundStyle(.red)
+                    .font(.system(size: 15))
+                    .foregroundStyle(Color(red: 0.95, green: 0.35, blue: 0.35))
             }
 
             if expanded {
                 HStack(alignment: .top, spacing: 0) {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Preferred Service")
-                            .font(.caption)
-                            .foregroundStyle(Theme.grayscale70)
-                        ForEach(member.preferredServices, id: \.self) { Text($0).font(.subheadline) }
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(labelMuted)
+                        ForEach(member.preferredServices, id: \.self) { service in
+                            Text(service)
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundStyle(bodyDark)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Rectangle().fill(Color(.separator)).frame(width: 1).padding(.horizontal, 10)
+                    Rectangle()
+                        .fill(borderLight)
+                        .frame(width: 1)
+                        .padding(.horizontal, 12)
 
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Preferred time")
-                            .font(.caption)
-                            .foregroundStyle(Theme.grayscale70)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(labelMuted)
                         ForEach(member.preferredTimes, id: \.self) { time in
                             HStack(spacing: 6) {
-                                Image(systemName: "clock").font(.caption).foregroundStyle(Theme.grayscale60)
-                                Text(time).font(.subheadline)
+                                Image(systemName: "calendar")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(labelMuted)
+                                Text(time)
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundStyle(bodyDark)
                             }
                         }
                     }
@@ -380,67 +421,84 @@ struct ProfileView: View {
                 }
                 .padding(14)
                 .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .shadow(color: .black.opacity(0.06), radius: 10, y: 4)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(borderLight, lineWidth: 1)
+                )
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
+        .padding(14)
+        .background(softCard)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
-    // MARK: - Shared
+    // MARK: - Shared chrome
 
     private func accountPill(title: String) -> some View {
-        HStack {
-            Image(systemName: "person.crop.square.fill")
-                .foregroundStyle(.green)
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(red: 0.20, green: 0.72, blue: 0.55).opacity(0.15))
+                .frame(width: 32, height: 32)
+                .overlay {
+                    Image(systemName: "person.text.rectangle.fill")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color(red: 0.15, green: 0.62, blue: 0.48))
+                }
+
             Text(title)
-                .foregroundStyle(Color(red: 0.467, green: 0.494, blue: 0.565))
+                .font(.system(size: 15, weight: .medium))
+                .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.52))
+
             Spacer()
+
             Image(systemName: "info.circle")
-                .foregroundStyle(Color(red: 0.216, green: 0.490, blue: 1.0))
+                .font(.system(size: 16))
+                .foregroundStyle(Color(red: 0.45, green: 0.48, blue: 0.55))
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(Theme.profilePill)
-        .clipShape(Capsule())
+        .background(softCard)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func setupField(title: String, placeholder: String, action: @escaping () -> Void) -> some View {
+    private func infoField(title: String, value: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(title)
-                    .font(.caption)
-                    .foregroundStyle(Color(red: 0.447, green: 0.478, blue: 0.565))
-                Text(placeholder)
-                    .font(.body)
-                    .foregroundStyle(Color(red: 0.349, green: 0.255, blue: 0.451))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(labelMuted)
                     .lineLimit(1)
-                    .frame(width: 180, alignment: .leading)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 14)
+
+                Text(value)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(fieldValue)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .frame(minWidth: 148, alignment: .leading)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
                     .background(Color.white)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(red: 0.941, green: 0.941, blue: 0.941), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(borderLight, lineWidth: 1)
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
         }
         .buttonStyle(.plain)
     }
 
+    // MARK: - Bookings
+
     private func bookingsSection(showRichCards: Bool) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Bookings")
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(Color(red: 0.224, green: 0.263, blue: 0.369))
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(sectionTitle)
 
-            Picker("Bookings", selection: $bookingTab) {
-                ForEach(BookingTab.allCases) { tab in
-                    Text(profile.isFilled ? tab.shortTitle : tab.rawValue).tag(tab)
-                }
-            }
-            .pickerStyle(.segmented)
+            bookingTabControl
 
             if filteredBookings.isEmpty {
                 emptyBookingsState
@@ -456,27 +514,67 @@ struct ProfileView: View {
         }
     }
 
+    private var bookingTabControl: some View {
+        HStack(spacing: 0) {
+            ForEach(BookingTab.allCases) { tab in
+                let selected = bookingTab == tab
+                Button {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        bookingTab = tab
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(profile.isFilled ? tab.shortTitle : tab.rawValue)
+                            .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                            .foregroundStyle(selected ? bodyDark : labelMuted)
+                        if selected {
+                            Circle()
+                                .fill(tabDot)
+                                .frame(width: 6, height: 6)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+                    .background {
+                        if selected {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color.white)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(4)
+        .background(softCard)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
     private var emptyBookingsState: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 16) {
             Image("emptyBookings")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 64, height: 64)
 
             Text("No booking \(bookingTab.rawValue)!")
-                .font(.title3.weight(.bold))
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(bodyDark)
 
             Text(emptySubtitle)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(Color(red: 0.435, green: 0.463, blue: 0.494))
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(labelMuted)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 48)
+        .padding(.vertical, 40)
         .padding(.horizontal, 20)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .shadow(color: Color(red: 0, green: 0.25, blue: 0.5).opacity(0.04), radius: 14, y: 6)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(borderLight, lineWidth: 1)
+        )
     }
 
     private var emptySubtitle: String {
@@ -489,40 +587,51 @@ struct ProfileView: View {
 
     private func simpleBookingRow(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(booking.provider.name).font(.headline)
-            Text(booking.provider.title).font(.subheadline).foregroundStyle(.secondary)
-            Text(booking.date, style: .date).font(.subheadline)
+            Text(booking.provider.name)
+                .font(.system(size: 16, weight: .semibold))
+            Text(booking.provider.title)
+                .font(.system(size: 14))
+                .foregroundStyle(labelMuted)
+            Text(booking.date, style: .date)
+                .font(.system(size: 14))
             Text("\(booking.durationMinutes) min · \(booking.status.rawValue.capitalized)")
-                .font(.caption)
+                .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(Theme.brandOrange)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Color(.secondarySystemBackground))
+        .background(softCard)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     private func richBookingCard(_ booking: Booking) -> some View {
         let isExpanded = expandedBookingID == booking.id
-        return VStack(alignment: .leading, spacing: 12) {
+        return VStack(alignment: .leading, spacing: 14) {
             Button {
                 withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
                     expandedBookingID = isExpanded ? nil : booking.id
                 }
             } label: {
-                HStack {
-                    Image(systemName: "calendar.badge.clock")
-                        .foregroundStyle(Color(red: 0.45, green: 0.40, blue: 0.70))
-                    Text(booking.status.rawValue.capitalized)
-                        .font(.subheadline.weight(.semibold))
-                    Spacer()
+                HStack(spacing: 10) {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(purpleAccent.opacity(0.15))
+                        .frame(width: 32, height: 32)
+                        .overlay {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(purpleAccent)
+                        }
+
+                    Text(statusTitle(for: booking))
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(bodyDark)
+
+                    Spacer(minLength: 8)
+
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.grayscale60)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(labelMuted)
                 }
-                .padding(12)
-                .background(Color(red: 0.93, green: 0.91, blue: 0.98))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
 
@@ -532,13 +641,20 @@ struct ProfileView: View {
             }
         }
         .padding(14)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .shadow(color: .black.opacity(0.05), radius: 12, y: 4)
+        .background(softBlueCard)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .onAppear {
             if expandedBookingID == nil {
                 expandedBookingID = booking.id
             }
+        }
+    }
+
+    private func statusTitle(for booking: Booking) -> String {
+        switch booking.status {
+        case .requested: "Requested"
+        case .booked: "Booked"
+        case .completed: "Completed"
         }
     }
 
@@ -555,44 +671,40 @@ struct ProfileView: View {
     private func completedBookingDetails(_ booking: Booking) -> some View {
         let isComposing = reviewingBookingID == booking.id
 
-        return VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 8) {
-                Image(systemName: "calendar")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.mutedText)
-                Text(booking.date.formatted(.dateTime.day().month(.abbreviated).year()))
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Theme.darkText)
-            }
+        return VStack(alignment: .leading, spacing: 12) {
+            providerMiniCard(booking)
+
+            metaRow(icon: "calendar", text: formattedBookingDate(booking.date))
 
             if !booking.serviceProvidedTo.isEmpty {
-                HStack(spacing: 8) {
-                    Image(systemName: "person.crop.circle")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.mutedText)
-                    Text("Service provided to \(booking.serviceProvidedTo)")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Theme.darkText)
+                whiteInsetCard {
+                    HStack(spacing: 10) {
+                        Image(systemName: "person.crop.circle")
+                            .font(.system(size: 16))
+                            .foregroundStyle(labelMuted)
+                        Text("Service provided to \(booking.serviceProvidedTo)")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(bodyDark)
+                    }
                 }
             }
 
-            providerMiniCard(booking, showsRate: true)
-
             if booking.hasClientReview {
-                HStack(spacing: 8) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 0.38))
-                    Text("You rated \(booking.clientReviewRating ?? 0) stars")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                    Spacer()
-                    Button("View reviews") {
-                        reviewProvider = booking.provider
+                whiteInsetCard {
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 0.38))
+                        Text("You rated \(booking.clientReviewRating ?? 0) stars")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(bodyDark)
+                        Spacer()
+                        Button("View reviews") {
+                            reviewProvider = booking.provider
+                        }
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Theme.linkBlue)
                     }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.linkBlue)
                 }
-                .padding(.vertical, 4)
             } else if isComposing {
                 InlineBookingReviewComposer(
                     rating: Binding(
@@ -618,16 +730,12 @@ struct ProfileView: View {
                 Button {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         reviewingBookingID = booking.id
-                        if draftRatings[booking.id] == nil {
-                            draftRatings[booking.id] = 0
-                        }
-                        if draftTexts[booking.id] == nil {
-                            draftTexts[booking.id] = ""
-                        }
+                        draftRatings[booking.id] = draftRatings[booking.id] ?? 0
+                        draftTexts[booking.id] = draftTexts[booking.id] ?? ""
                     }
                 } label: {
                     Text("Add review")
-                        .font(.headline.weight(.semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -641,96 +749,162 @@ struct ProfileView: View {
 
     private func activeBookingDetails(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Here is your upcoming appointment with \(booking.provider.name).")
-                .font(.subheadline)
-                .foregroundStyle(Theme.grayscale70)
+            Text("Here is your upcoming appointment with \(booking.provider.name)")
+                .font(.system(size: 13))
+                .foregroundStyle(labelMuted)
 
-            providerMiniCard(booking, showsRate: true)
+            providerMiniCard(booking)
 
-            HStack(spacing: 10) {
-                labelCard(icon: "calendar", title: booking.date.formatted(.dateTime.day().month().year()))
-                labelCard(
-                    icon: "clock",
-                    title: durationLabel(booking.durationMinutes),
-                    subtitle: "Start at \(booking.startTime.formatted(date: .omitted, time: .shortened))\nEnd at \(booking.endTime.formatted(date: .omitted, time: .shortened))"
-                )
+            // Date card (full width)
+            whiteInsetCard {
+                HStack(spacing: 12) {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Theme.brandOrange)
+                        .frame(width: 28)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Date")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(labelMuted)
+                        Text(formattedBookingDate(booking.date))
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(bodyDark)
+                    }
+                    Spacer(minLength: 0)
+                }
             }
 
-            HStack(spacing: 12) {
-                Button("Cancel") {
+            // Time card (full width)
+            whiteInsetCard {
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "clock")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Theme.brandOrange)
+                        .frame(width: 28)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Time")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(labelMuted)
+                        Text(durationLabel(booking.durationMinutes))
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(bodyDark)
+                        Text(timeRangeLine(booking))
+                            .font(.system(size: 12))
+                            .foregroundStyle(labelMuted)
+                    }
+                    Spacer(minLength: 0)
+                }
+            }
+
+            // Cancel + Modify (split)
+            HStack(spacing: 10) {
+                Button {
                     appModel.cancelBooking(id: booking.id)
                     if expandedBookingID == booking.id {
                         expandedBookingID = nil
                     }
-                }
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-                Menu {
-                    Button("Reschedule") {
-                        bookingToReschedule = booking
-                    }
-                    Button("Edit booking") {
-                        bookingRoute = BookingRoute(id: booking.id)
-                    }
                 } label: {
-                    HStack {
-                        Text("Modify")
-                        Image(systemName: "chevron.down")
-                            .font(.caption.weight(.bold))
-                    }
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Theme.brandOrange)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    Text("Cancel")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(bodyDark)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(cancelFill)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
+                .buttonStyle(.plain)
+
+                HStack(spacing: 0) {
+                    Button {
+                        bookingToReschedule = booking
+                    } label: {
+                        Text("Modify")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                    }
+                    .buttonStyle(.plain)
+
+                    Menu {
+                        Button("Reschedule") {
+                            bookingToReschedule = booking
+                        }
+                        Button("Edit booking") {
+                            bookingRoute = BookingRoute(id: booking.id)
+                        }
+                    } label: {
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 40)
+                            .padding(.vertical, 14)
+                            .background(Theme.brandOrange.opacity(0.88))
+                    }
+                }
+                .background(Theme.brandOrange)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .frame(maxWidth: .infinity)
             }
 
             if !booking.serviceProvidedTo.isEmpty {
-                HStack {
-                    Image(systemName: "person.crop.circle")
-                        .foregroundStyle(Theme.grayscale60)
-                    Text("Service provided to \(booking.serviceProvidedTo)")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.grayscale70)
+                whiteInsetCard {
+                    HStack(spacing: 10) {
+                        Image(systemName: "person")
+                            .font(.system(size: 15))
+                            .foregroundStyle(labelMuted)
+                        (
+                            Text("Service provided to ")
+                                .font(.system(size: 14))
+                                .foregroundStyle(labelMuted)
+                            + Text(booking.serviceProvidedTo)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(bodyDark)
+                        )
+                        Spacer(minLength: 0)
+                    }
                 }
             }
 
-            HStack {
-                Button {
-                    bookingRoute = BookingRoute(id: booking.id)
-                } label: {
-                    HStack {
+            Button {
+                bookingRoute = BookingRoute(id: booking.id)
+            } label: {
+                whiteInsetCard {
+                    HStack(spacing: 10) {
+                        Image(systemName: "list.bullet.rectangle")
+                            .font(.system(size: 15))
+                            .foregroundStyle(labelMuted)
                         Text("Checklist Details")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(bodyDark)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.grayscale60)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(labelMuted)
                     }
                 }
-                .buttonStyle(.plain)
             }
-            .foregroundStyle(Theme.darkText)
+            .buttonStyle(.plain)
         }
     }
 
-    private func providerMiniCard(_ booking: Booking, showsRate: Bool) -> some View {
+    private func providerMiniCard(_ booking: Booking) -> some View {
         HStack(spacing: 12) {
             Image(booking.provider.imageName)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 52, height: 52)
+                .frame(width: 48, height: 48)
                 .clipShape(Circle())
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(booking.provider.name).font(.headline)
-                Text(booking.provider.title).font(.subheadline).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(booking.provider.name)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(bodyDark)
+                Text(booking.provider.title)
+                    .font(.system(size: 13))
+                    .foregroundStyle(labelMuted)
                 Button {
                     reviewProvider = booking.provider
                 } label: {
@@ -742,19 +916,50 @@ struct ProfileView: View {
                 }
                 .buttonStyle(.plain)
             }
-            Spacer()
-            if showsRate {
-                Text("$\(booking.provider.ratePerHour)/hour")
-                    .font(.subheadline.weight(.semibold))
-            }
+
+            Spacer(minLength: 8)
+
+            Text("$\(booking.provider.ratePerHour)/hour")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(bodyDark)
         }
         .padding(12)
-        .background(Color(.systemBackground))
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(.separator).opacity(0.5), lineWidth: 1)
-        )
+    }
+
+    private func metaRow(icon: String, text: String) -> some View {
+        whiteInsetCard {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.system(size: 15))
+                    .foregroundStyle(labelMuted)
+                Text(text)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(bodyDark)
+                Spacer()
+            }
+        }
+    }
+
+    private func whiteInsetCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private func formattedBookingDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM, yyyy"
+        return formatter.string(from: date)
+    }
+
+    private func timeRangeLine(_ booking: Booking) -> String {
+        let start = booking.startTime.formatted(date: .omitted, time: .shortened)
+        let end = booking.endTime.formatted(date: .omitted, time: .shortened)
+        return "\(start) - \(end)"
     }
 
     private func durationLabel(_ minutes: Int) -> String {
@@ -763,27 +968,6 @@ struct ProfileView: View {
             return hours == 1 ? "1 hour" : "\(hours) hours"
         }
         return "\(minutes) min"
-    }
-
-    private func labelCard(icon: String, title: String, subtitle: String? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .foregroundStyle(Theme.brandOrange)
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-            }
-            if let subtitle {
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(Theme.grayscale70)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 

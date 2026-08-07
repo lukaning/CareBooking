@@ -261,12 +261,12 @@ final class AppModel {
                 serviceProvidedTo: "Parent"
             ),
             Booking(
-                provider: providers[1],
+                provider: providers[0],
                 date: requested.date,
                 startTime: requested.start,
-                durationMinutes: 90,
+                durationMinutes: 120,
                 status: .requested,
-                serviceProvidedTo: "Family"
+                serviceProvidedTo: "S. Roger"
             ),
             Booking(
                 provider: providers[0],
