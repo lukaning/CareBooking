@@ -108,8 +108,13 @@ struct WelcomeStep: View {
                     .foregroundStyle(Color.black)
                     .padding(.top, 2)
 
-                EmBeLifeLogo(markSize: 48, wordSize: 30)
+                Image("embelifeLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 52)
+                    .frame(maxWidth: 200, alignment: .leading)
                     .padding(.top, 18)
+                    .accessibilityLabel("EmBeLife")
 
                 Text("Find trustworthy help and support...")
                     .font(.system(size: 15, weight: .regular))

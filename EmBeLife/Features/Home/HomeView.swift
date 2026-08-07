@@ -8,14 +8,31 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var bookingMenuProviderID: String?
     @State private var bookRequest: BookProviderRequest?
-    @State private var sortNewest = true
+    @State private var listMode: HomeProviderListMode = .yourMatches
+    @State private var showListMenu = false
     @State private var showBooked = false
     @State private var reviewProvider: Provider?
 
     private let expandAnimation = Animation.easeInOut(duration: 0.22)
 
     private var providers: [Provider] {
-        sortNewest ? appModel.providers : appModel.providers.reversed()
+        switch listMode {
+        case .yourMatches:
+            return appModel.providers
+        case .savedProviders:
+            // Demo: first and last as “saved”
+            let all = appModel.providers
+            guard all.count > 1 else { return all }
+            return [all[0], all[all.count - 1]]
+        case .previousProviders:
+            let ids = Set(
+                appModel.bookings
+                    .filter { $0.status == .completed }
+                    .map(\.provider.id)
+            )
+            let previous = appModel.providers.filter { ids.contains($0.id) }
+            return previous.isEmpty ? Array(appModel.providers.prefix(1)) : previous
+        }
     }
 
     private var bookedCount: Int {
@@ -52,12 +69,13 @@ struct HomeView: View {
                     )
                 }
                 .background {
-                    if bookingMenuProviderID != nil {
+                    if bookingMenuProviderID != nil || showListMenu {
                         Color.black.opacity(0.001)
                             .ignoresSafeArea()
                             .onTapGesture {
                                 withAnimation(.easeInOut(duration: 0.15)) {
                                     bookingMenuProviderID = nil
+                                    showListMenu = false
                                 }
                             }
                     }
@@ -150,29 +168,15 @@ struct HomeView: View {
     private var matchesHeader: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 12) {
-                Menu {
-                    Button(sortNewest ? "Newest first ✓" : "Newest first") {
-                        sortNewest = true
-                    }
-                    Button(!sortNewest ? "Highest rated ✓" : "Highest rated") {
-                        sortNewest = false
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Text("Your Matches")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(Theme.darkText)
-                        Image(systemName: "chevron.down")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.darkText)
-                    }
-                }
+                listModePicker
+                    .zIndex(2)
 
                 Spacer(minLength: 0)
 
                 Button {
                     UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                     withAnimation(expandAnimation) {
+                        showListMenu = false
                         filtersExpanded.toggle()
                     }
                 } label: {
@@ -200,6 +204,8 @@ struct HomeView: View {
             .padding(.horizontal, 16)
             .padding(.top, 12)
             .padding(.bottom, filtersExpanded ? 10 : 12)
+            // Allow dropdown to paint over content below the header row.
+            .zIndex(showListMenu ? 3 : 0)
 
             if filtersExpanded {
                 filterCriteriaBar
@@ -209,6 +215,77 @@ struct HomeView: View {
         }
         .background(Color(.systemBackground))
         .animation(expandAnimation, value: filtersExpanded)
+    }
+
+    private var listModePicker: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    showListMenu.toggle()
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Text(listMode.title)
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                        .rotationEffect(.degrees(showListMenu ? 180 : 0))
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(listMode.title)
+            .accessibilityHint("Choose provider list")
+
+            if showListMenu {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(HomeProviderListMode.allCases) { mode in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                listMode = mode
+                                showListMenu = false
+                            }
+                        } label: {
+                            Text(mode.title)
+                                .font(.system(
+                                    size: 15,
+                                    weight: listMode == mode ? .semibold : .regular
+                                ))
+                                .foregroundStyle(
+                                    listMode == mode
+                                        ? Theme.darkText
+                                        : Color(red: 0.45, green: 0.48, blue: 0.55)
+                                )
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 11)
+                                .background {
+                                    if listMode == mode {
+                                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                            .fill(Color(red: 0.94, green: 0.95, blue: 0.96))
+                                    }
+                                }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(6)
+                .frame(width: 188, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white)
+                        .shadow(color: .black.opacity(0.12), radius: 14, y: 6)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color(red: 0.90, green: 0.91, blue: 0.93), lineWidth: 1)
+                )
+                .padding(.top, 8)
+                .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topLeading)))
+            }
+        }
     }
 
     private var filterCriteriaBar: some View {
@@ -233,6 +310,22 @@ struct HomeView: View {
 }
 
 // MARK: - Filter criteria
+
+enum HomeProviderListMode: String, CaseIterable, Identifiable {
+    case yourMatches
+    case savedProviders
+    case previousProviders
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .yourMatches: "Your Matches"
+        case .savedProviders: "Saved Providers"
+        case .previousProviders: "Previous Providers"
+        }
+    }
+}
 
 enum HomeFilterCriterion: String, CaseIterable, Identifiable {
     case location
