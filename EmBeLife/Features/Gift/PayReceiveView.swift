@@ -324,8 +324,12 @@ private struct GiftMeTab: View {
         VStack(spacing: 20) {
             Spacer(minLength: 8)
 
-            GiftIllustration()
-                .frame(height: 160)
+            Image("giftMeIllustration")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 280)
+                .frame(height: 170)
+                .accessibilityHidden(true)
 
             Text("Your gift receiving Link")
                 .font(.title3.weight(.bold))
@@ -384,59 +388,6 @@ private struct GiftMeTab: View {
         if giftLink.count <= 28 { return giftLink }
         let prefix = giftLink.prefix(24)
         return "\(prefix)…"
-    }
-}
-
-// MARK: - Illustration
-
-private struct GiftIllustration: View {
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color(red: 0.96, green: 0.97, blue: 0.99))
-                .frame(width: 200, height: 200)
-
-            HStack(spacing: -8) {
-                characterCircle.offset(y: 12)
-                VStack(spacing: 6) {
-                    giftBox(size: 48)
-                    giftBox(size: 36)
-                }
-                characterCircle.offset(y: -4)
-                characterCircle.offset(y: 16)
-            }
-        }
-    }
-
-    private var characterCircle: some View {
-        ZStack {
-            Circle()
-                .fill(Color(red: 0.18, green: 0.24, blue: 0.42))
-                .frame(width: 44, height: 44)
-            Circle()
-                .fill(Color.white)
-                .frame(width: 10, height: 10)
-                .offset(x: 4, y: -2)
-            Capsule()
-                .fill(Theme.brandOrange)
-                .frame(width: 28, height: 10)
-                .offset(y: -20)
-        }
-    }
-
-    private func giftBox(size: CGFloat) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(Color.white)
-                .frame(width: size, height: size * 0.85)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .stroke(Theme.brandOrange, lineWidth: 2)
-                )
-            Image(systemName: "gift.fill")
-                .font(.system(size: size * 0.4))
-                .foregroundStyle(Theme.brandOrange)
-        }
     }
 }
 
