@@ -74,39 +74,15 @@ private struct GiftWhiteCard<Content: View>: View {
     }
 }
 
-/// Party-popper style celebration for success / received screens.
+/// Party-popper celebration for success / received screens.
 struct GiftCelebrationIllustration: View {
     var body: some View {
-        ZStack {
-            ForEach(0..<10, id: \.self) { i in
-                Capsule()
-                    .fill(confettiColor(i))
-                    .frame(width: 6, height: 14)
-                    .rotationEffect(.degrees(Double(i) * 32))
-                    .offset(x: cos(Double(i)) * 52, y: -48 - sin(Double(i)) * 18)
-            }
-
-            Image(systemName: "party.popper.fill")
-                .font(.system(size: 64))
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(
-                    Color(red: 0.25, green: 0.45, blue: 0.95),
-                    Color(red: 0.55, green: 0.40, blue: 0.95)
-                )
-                .offset(y: 8)
-        }
-        .frame(height: 120)
-        .accessibilityHidden(true)
-    }
-
-    private func confettiColor(_ i: Int) -> Color {
-        let colors: [Color] = [
-            Color(red: 0.45, green: 0.55, blue: 1.0),
-            Color(red: 0.55, green: 0.35, blue: 0.95),
-            Color(red: 0.25, green: 0.55, blue: 0.95),
-            Color(red: 0.65, green: 0.45, blue: 1.0)
-        ]
-        return colors[i % colors.count]
+        Image("giftCelebration")
+            .resizable()
+            .scaledToFit()
+            .frame(maxWidth: 200)
+            .frame(height: 130)
+            .accessibilityHidden(true)
     }
 }
 
@@ -116,6 +92,9 @@ struct GiftConfirmView: View {
     @Bindable var draft: GiftDraft
     @Binding var path: [GiftExperienceRoute]
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var amountFocused: Bool
+
+    private let presets = GiftDraft.amountPresets
 
     var body: some View {
         GiftOrangeScreen(title: "Gift to EmBeLife", onBack: { dismiss() }) {
@@ -144,6 +123,7 @@ struct GiftConfirmView: View {
                                 Text(draft.amountLabel)
                                     .font(.system(size: 28, weight: .bold))
                                     .foregroundStyle(Theme.darkText)
+                                    .contentTransition(.numericText())
                             }
                         }
 
@@ -152,13 +132,9 @@ struct GiftConfirmView: View {
                                 .font(.title3.weight(.bold))
                                 .foregroundStyle(Theme.darkText)
 
-                            Text(draft.amountLabel)
-                                .font(.system(size: 44, weight: .bold))
-                                .foregroundStyle(Theme.darkText)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 20)
-                                .background(Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            amountEditor
+
+                            presetGrid
 
                             Text("Immediately arrive to the embelife account, support ACH, Venmo, paypal, credit card, etc")
                                 .font(.subheadline)
@@ -171,6 +147,7 @@ struct GiftConfirmView: View {
                         }
 
                         Button {
+                            amountFocused = false
                             path.append(.paymentMethod)
                         } label: {
                             HStack(spacing: 12) {
@@ -222,6 +199,7 @@ struct GiftConfirmView: View {
                         .buttonStyle(.plain)
 
                         Button {
+                            amountFocused = false
                             path.append(.sent)
                         } label: {
                             Text("Confirm Gift")
@@ -229,15 +207,99 @@ struct GiftConfirmView: View {
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(Theme.brandOrange)
+                                .background(Theme.brandOrange.opacity(draft.isValidGiftAmount ? 1 : 0.45))
                                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         }
                         .buttonStyle(.plain)
+                        .disabled(!draft.isValidGiftAmount)
                     }
                 }
                 .padding(.bottom, 28)
             }
             .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        amountFocused = false
+                    }
+                    .fontWeight(.semibold)
+                }
+            }
+        }
+    }
+
+    private var amountEditor: some View {
+        HStack(spacing: 4) {
+            Text("$")
+                .font(.system(size: 44, weight: .bold))
+                .foregroundStyle(Theme.darkText)
+
+            TextField("0", text: amountInputBinding)
+                .font(.system(size: 44, weight: .bold))
+                .foregroundStyle(Theme.darkText)
+                .keyboardType(.numberPad)
+                .textContentType(.none)
+                .multilineTextAlignment(.leading)
+                .focused($amountFocused)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(amountFocused ? Theme.brandOrange : Color.clear, lineWidth: 1.5)
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            amountFocused = true
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Gift amount")
+        .accessibilityValue(draft.amountLabel)
+    }
+
+    private var amountInputBinding: Binding<String> {
+        Binding(
+            get: { draft.amountInput },
+            set: { draft.sanitizeAmountInput($0) }
+        )
+    }
+
+    private var presetGrid: some View {
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: 8),
+                GridItem(.flexible(), spacing: 8),
+                GridItem(.flexible(), spacing: 8)
+            ],
+            spacing: 8
+        ) {
+            ForEach(presets, id: \.self) { preset in
+                let isSelected = draft.amount == preset
+                Button {
+                    draft.applyPreset(preset)
+                    amountFocused = false
+                } label: {
+                    Text(GiftDraft.formatCurrency(preset))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(isSelected ? .white : Theme.darkText)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(isSelected ? Theme.brandOrange : Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(isSelected ? Theme.brandOrange : GiftChrome.rowBorder, lineWidth: 1)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 }
@@ -396,45 +458,66 @@ struct GiftSentSuccessView: View {
 
     var body: some View {
         GiftOrangeScreen(title: "Gift to EmBeLife", showsBack: false) {
-            GiftWhiteCard {
-                VStack(spacing: 18) {
-                    GiftCelebrationIllustration()
+            ScrollView {
+                GiftWhiteCard {
+                    VStack(spacing: 18) {
+                        HStack {
+                            Spacer()
+                            Button {
+                                path = []
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(GiftChrome.muted)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color(red: 0.94, green: 0.95, blue: 0.97))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Close")
+                        }
+                        .padding(.bottom, -6)
 
-                    Text("Gift amount \(draft.amountLabel) sent")
-                        .font(.title2.weight(.bold))
-                        .foregroundStyle(Theme.darkText)
-                        .multilineTextAlignment(.center)
+                        GiftCelebrationIllustration()
 
-                    Text("Your gift receiver could see this amount right away in their gift fund wallet")
-                        .font(.subheadline)
-                        .foregroundStyle(GiftChrome.muted)
-                        .multilineTextAlignment(.center)
+                        Text("Gift amount \(draft.amountLabel) sent")
+                            .font(.title2.weight(.bold))
+                            .foregroundStyle(Theme.darkText)
+                            .multilineTextAlignment(.center)
 
-                    Button {
-                        path.append(.signUp)
-                    } label: {
-                        Text("Create An Account")
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(.white)
+                        Text("Your gift receiver could see this amount right away in their gift fund wallet")
+                            .font(.subheadline)
+                            .foregroundStyle(GiftChrome.muted)
+                            .multilineTextAlignment(.center)
+
+                        Button {
+                            path.append(.signUp)
+                        } label: {
+                            Text("Create An Account")
+                                .font(.headline.weight(.semibold))
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Theme.brandOrange)
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 4)
+
+                        SocialSignInRow()
+                            .padding(.top, 4)
+
+                        TermsFooter()
+                            .font(.caption)
+                            .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Theme.brandOrange)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .padding(.top, 4)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.top, 4)
-
-                    SocialSignInRow()
-                        .padding(.top, 4)
-
-                    TermsFooter()
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 4)
                 }
+                .padding(.top, 12)
+                .padding(.bottom, 28)
             }
-            .padding(.top, 12)
+            .scrollIndicators(.hidden)
         }
     }
 }

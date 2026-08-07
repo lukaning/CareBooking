@@ -12,7 +12,11 @@ enum GiftExperienceRoute: Hashable {
 /// Draft state for the Gift $ Amount flow.
 @Observable
 final class GiftDraft {
-    var amount: Double = 1_000
+    /// Preset gift amounts user can pick without typing.
+    static let amountPresets: [Double] = [50, 100, 200, 500, 1_000, 2_000]
+
+    /// Backing typed amount for the number pad field (digits only).
+    var amountInput: String = "1000"
     var selectedMethod: PaymentMethodKind = .creditCard
     var bankDetails = BankAccountDetails.sample
     var zelleDetails = ContactPaymentDetails.zelleSample
@@ -32,9 +36,40 @@ final class GiftDraft {
         .bankAccount, .zelle, .venmo, .paypal, .creditCard
     ]
 
+    var amount: Double {
+        get {
+            let cleaned = amountInput.filter { $0.isNumber || $0 == "." }
+            return Double(cleaned) ?? 0
+        }
+        set {
+            let value = max(0, newValue)
+            if value == floor(value) {
+                amountInput = String(Int(value))
+            } else {
+                amountInput = String(format: "%.2f", value)
+            }
+        }
+    }
+
+    var isValidGiftAmount: Bool {
+        amount > 0
+    }
+
     var amountLabel: String {
         Self.formatCurrency(amount)
     }
+
+    func applyPreset(_ preset: Double) {
+        amount = preset
+    }
+
+    func sanitizeAmountInput(_ raw: String) {
+        // Keep digits only for whole-dollar gifts via number pad.
+        let digits = raw.filter(\.isNumber)
+        // Cap length to avoid absurd values.
+        amountInput = String(digits.prefix(7))
+    }
+
 
     var paymentMethodSummaryTitle: String {
         switch selectedMethod {
