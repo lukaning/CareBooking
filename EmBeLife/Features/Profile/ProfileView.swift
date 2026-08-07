@@ -30,13 +30,15 @@ struct ProfileView: View {
     private let labelMuted = Color(red: 0.45, green: 0.48, blue: 0.56)
     private let bodyDark = Color(red: 0.12, green: 0.14, blue: 0.18)
     private let softCard = Color(red: 0.945, green: 0.952, blue: 0.965)
-    private let softBlueCard = Color(red: 0.93, green: 0.94, blue: 0.97)
     private let fieldValue = Color(red: 0.15, green: 0.16, blue: 0.20)
     private let giftScanTint = Color(red: 0.62, green: 0.52, blue: 0.88)
     private let purpleAccent = Color(red: 0.48, green: 0.42, blue: 0.78)
     private let tabDot = Color(red: 0.35, green: 0.55, blue: 0.95)
-    private let cancelFill = Color(red: 0.93, green: 0.94, blue: 0.96)
+    private let cancelFill = Color(red: 0.91, green: 0.92, blue: 0.94)
     private let borderLight = Color(red: 0.90, green: 0.91, blue: 0.93)
+    private let modalCardBG = Color(red: 0.965, green: 0.968, blue: 0.975)
+    private let iconMuted = Color(red: 0.42, green: 0.45, blue: 0.52)
+    private let cardShadow = Color.black.opacity(0.06)
     private let pagePadding: CGFloat = 16
     private let sectionSpacing: CGFloat = 22
 
@@ -606,43 +608,42 @@ struct ProfileView: View {
 
     private func richBookingCard(_ booking: Booking) -> some View {
         let isExpanded = expandedBookingID == booking.id
-        return VStack(alignment: .leading, spacing: 14) {
+        return VStack(alignment: .leading, spacing: 0) {
             Button {
                 withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
                     expandedBookingID = isExpanded ? nil : booking.id
                 }
             } label: {
-                HStack(spacing: 10) {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(purpleAccent.opacity(0.15))
-                        .frame(width: 32, height: 32)
-                        .overlay {
-                            Image(systemName: "calendar")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(purpleAccent)
-                        }
+                HStack(alignment: .center, spacing: 10) {
+                    RoundedRectangle(cornerRadius: 3, style: .continuous)
+                        .fill(purpleAccent.opacity(0.85))
+                        .frame(width: 5, height: 26)
 
                     Text(statusTitle(for: booking))
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(bodyDark)
 
                     Spacer(minLength: 8)
 
-                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.up")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(labelMuted)
+                        .foregroundStyle(iconMuted)
+                        .frame(width: 32, height: 32)
+                        .background(Color(red: 0.91, green: 0.92, blue: 0.94))
+                        .clipShape(Circle())
                 }
             }
             .buttonStyle(.plain)
+            .padding(.bottom, isExpanded ? 8 : 0)
 
             if isExpanded {
                 richBookingDetails(booking)
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
-        .padding(14)
-        .background(softBlueCard)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(16)
+        .background(modalCardBG)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .onAppear {
             if expandedBookingID == nil {
                 expandedBookingID = booking.id
@@ -750,119 +751,96 @@ struct ProfileView: View {
     private func activeBookingDetails(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Here is your upcoming appointment with \(booking.provider.name)")
-                .font(.system(size: 13))
+                .font(.system(size: 14))
                 .foregroundStyle(labelMuted)
+                .padding(.bottom, 4)
 
             providerMiniCard(booking)
 
-            // Date card (full width)
-            whiteInsetCard {
-                HStack(spacing: 12) {
+            // Date
+            floatingCard {
+                HStack(spacing: 14) {
                     Image(systemName: "calendar")
-                        .font(.system(size: 18))
-                        .foregroundStyle(Theme.brandOrange)
-                        .frame(width: 28)
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundStyle(iconMuted)
+                        .frame(width: 26)
 
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text("Date")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.system(size: 13))
                             .foregroundStyle(labelMuted)
                         Text(formattedBookingDate(booking.date))
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(bodyDark)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-
-            // Time card (full width)
-            whiteInsetCard {
-                HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 18))
-                        .foregroundStyle(Theme.brandOrange)
-                        .frame(width: 28)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Time")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(labelMuted)
-                        Text(durationLabel(booking.durationMinutes))
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(bodyDark)
-                        Text(timeRangeLine(booking))
-                            .font(.system(size: 12))
-                            .foregroundStyle(labelMuted)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-
-            // Cancel + Modify (split)
-            HStack(spacing: 10) {
-                Button {
-                    appModel.cancelBooking(id: booking.id)
-                    if expandedBookingID == booking.id {
-                        expandedBookingID = nil
-                    }
-                } label: {
-                    Text("Cancel")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(bodyDark)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(cancelFill)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }
-                .buttonStyle(.plain)
-
-                HStack(spacing: 0) {
-                    Button {
-                        bookingToReschedule = booking
-                    } label: {
-                        Text("Modify")
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                            .foregroundStyle(bodyDark)
                     }
-                    .buttonStyle(.plain)
+                    Spacer(minLength: 0)
+                }
+            }
 
-                    Menu {
-                        Button("Reschedule") {
-                            bookingToReschedule = booking
+            // Time + Cancel / Modify (actions live inside this card per design)
+            floatingCard {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(alignment: .top, spacing: 14) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundStyle(iconMuted)
+                            .frame(width: 26)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Time")
+                                .font(.system(size: 13))
+                                .foregroundStyle(labelMuted)
+                            Text(durationLabel(booking.durationMinutes))
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundStyle(bodyDark)
+                            Text("Start at \(clockTime(booking.startTime))")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundStyle(bodyDark)
+                            Text("End at \(clockTime(booking.endTime))")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundStyle(bodyDark)
                         }
-                        Button("Edit booking") {
-                            bookingRoute = BookingRoute(id: booking.id)
+                        Spacer(minLength: 0)
+                    }
+
+                    HStack(spacing: 12) {
+                        Button {
+                            appModel.cancelBooking(id: booking.id)
+                            if expandedBookingID == booking.id {
+                                expandedBookingID = nil
+                            }
+                        } label: {
+                            Text("Cancel")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundStyle(bodyDark)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(cancelFill)
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         }
-                    } label: {
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 40)
-                            .padding(.vertical, 14)
-                            .background(Theme.brandOrange.opacity(0.88))
+                        .buttonStyle(.plain)
+
+                        modifySplitButton(for: booking)
                     }
                 }
-                .background(Theme.brandOrange)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .frame(maxWidth: .infinity)
             }
 
             if !booking.serviceProvidedTo.isEmpty {
-                whiteInsetCard {
-                    HStack(spacing: 10) {
-                        Image(systemName: "person")
-                            .font(.system(size: 15))
-                            .foregroundStyle(labelMuted)
-                        (
-                            Text("Service provided to ")
-                                .font(.system(size: 14))
+                floatingCard {
+                    HStack(spacing: 14) {
+                        Image(systemName: "person.bubble")
+                            .font(.system(size: 18, weight: .regular))
+                            .foregroundStyle(iconMuted)
+                            .frame(width: 26)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Services provided to")
+                                .font(.system(size: 13))
                                 .foregroundStyle(labelMuted)
-                            + Text(booking.serviceProvidedTo)
-                                .font(.system(size: 14, weight: .semibold))
+                            Text(booking.serviceProvidedTo)
+                                .font(.system(size: 16, weight: .bold))
                                 .foregroundStyle(bodyDark)
-                        )
+                        }
                         Spacer(minLength: 0)
                     }
                 }
@@ -871,18 +849,19 @@ struct ProfileView: View {
             Button {
                 bookingRoute = BookingRoute(id: booking.id)
             } label: {
-                whiteInsetCard {
-                    HStack(spacing: 10) {
+                floatingCard {
+                    HStack(spacing: 14) {
                         Image(systemName: "list.bullet.rectangle")
-                            .font(.system(size: 15))
-                            .foregroundStyle(labelMuted)
+                            .font(.system(size: 18, weight: .regular))
+                            .foregroundStyle(iconMuted)
+                            .frame(width: 26)
                         Text("Checklist Details")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(bodyDark)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(labelMuted)
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(iconMuted)
                     }
                 }
             }
@@ -890,50 +869,91 @@ struct ProfileView: View {
         }
     }
 
+    private func modifySplitButton(for booking: Booking) -> some View {
+        HStack(spacing: 0) {
+            Button {
+                bookingToReschedule = booking
+            } label: {
+                Text("Modify")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+            }
+            .buttonStyle(.plain)
+
+            Rectangle()
+                .fill(Color.white.opacity(0.35))
+                .frame(width: 1, height: 22)
+
+            Menu {
+                Button("Reschedule") {
+                    bookingToReschedule = booking
+                }
+                Button("Edit booking") {
+                    bookingRoute = BookingRoute(id: booking.id)
+                }
+            } label: {
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 44)
+                    .padding(.vertical, 14)
+            }
+        }
+        .background(Theme.brandOrange)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .frame(maxWidth: .infinity)
+    }
+
     private func providerMiniCard(_ booking: Booking) -> some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             Image(booking.provider.imageName)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 48, height: 48)
+                .frame(width: 52, height: 52)
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(booking.provider.name)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(bodyDark)
                 Text(booking.provider.title)
                     .font(.system(size: 13))
                     .foregroundStyle(labelMuted)
-                Button {
-                    reviewProvider = booking.provider
-                } label: {
-                    ProviderRatingLabel(
-                        rating: booking.provider.rating,
-                        reviewCount: booking.provider.reviewCount,
-                        compact: true
-                    )
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Button {
+                        reviewProvider = booking.provider
+                    } label: {
+                        ProviderRatingLabel(
+                            rating: booking.provider.rating,
+                            reviewCount: booking.provider.reviewCount,
+                            compact: true
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer(minLength: 4)
+
+                    Text("$\(booking.provider.ratePerHour)/hour")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(bodyDark)
                 }
-                .buttonStyle(.plain)
             }
-
-            Spacer(minLength: 8)
-
-            Text("$\(booking.provider.ratePerHour)/hour")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(bodyDark)
         }
-        .padding(12)
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .shadow(color: cardShadow, radius: 8, x: 0, y: 3)
     }
 
     private func metaRow(icon: String, text: String) -> some View {
-        whiteInsetCard {
-            HStack(spacing: 10) {
+        floatingCard {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 15))
-                    .foregroundStyle(labelMuted)
+                    .font(.system(size: 16))
+                    .foregroundStyle(iconMuted)
                 Text(text)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(bodyDark)
@@ -943,11 +963,16 @@ struct ProfileView: View {
     }
 
     private func whiteInsetCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        floatingCard(content: content)
+    }
+
+    private func floatingCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
-            .padding(12)
+            .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .shadow(color: cardShadow, radius: 8, x: 0, y: 3)
     }
 
     private func formattedBookingDate(_ date: Date) -> String {
@@ -956,16 +981,25 @@ struct ProfileView: View {
         return formatter.string(from: date)
     }
 
+    private func clockTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "hh:mm a"
+        return formatter.string(from: date)
+    }
+
     private func timeRangeLine(_ booking: Booking) -> String {
-        let start = booking.startTime.formatted(date: .omitted, time: .shortened)
-        let end = booking.endTime.formatted(date: .omitted, time: .shortened)
-        return "\(start) - \(end)"
+        "\(clockTime(booking.startTime)) - \(clockTime(booking.endTime))"
     }
 
     private func durationLabel(_ minutes: Int) -> String {
         if minutes % 60 == 0 {
             let hours = minutes / 60
             return hours == 1 ? "1 hour" : "\(hours) hours"
+        }
+        if minutes > 60 {
+            let hours = minutes / 60
+            let rem = minutes % 60
+            return "\(hours)h \(rem) min"
         }
         return "\(minutes) min"
     }
