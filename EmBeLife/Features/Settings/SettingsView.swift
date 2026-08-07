@@ -4,10 +4,9 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
     case profile
     case dashboard
     case userManagement
-    case bookings
+    case passwordSecurity
+    case activities
     case giftFund
-    case language
-    case textSize
     case help
 
     var id: String { rawValue }
@@ -17,10 +16,9 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
         case .profile: "Profile"
         case .dashboard: "Dashboard"
         case .userManagement: "User management"
-        case .bookings: "Bookings"
+        case .passwordSecurity: "Password & Security"
+        case .activities: "Activities"
         case .giftFund: "Gift Fund"
-        case .language: "Language Setting"
-        case .textSize: "Text Size"
         case .help: "Help & getting started"
         }
     }
@@ -30,10 +28,9 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
         case .profile: "person.crop.circle"
         case .dashboard: "square.grid.2x2"
         case .userManagement: "person.crop.rectangle.stack"
-        case .bookings: "diamond"
+        case .passwordSecurity: "lock.shield"
+        case .activities: "list.bullet.rectangle"
         case .giftFund: "wallet.pass"
-        case .language: "character.bubble"
-        case .textSize: "textformat.size"
         case .help: "questionmark.circle"
         }
     }
@@ -48,14 +45,20 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(AppModel.self) private var appModel
+
     @State private var searchText = ""
     @State private var path: [SettingsDestination] = []
+    @State private var preferredLanguage = "English"
+    @State private var textSizeValue: Double = 1.0
 
-    private let rowColor = Color(red: 0.435, green: 0.463, blue: 0.494) // #6F767E
-    private let searchPlaceholder = Color(red: 0.396, green: 0.471, blue: 0.557) // #65788E
-    private let searchFill = Color(red: 0.941, green: 0.957, blue: 0.976) // #F0F4F9
-    private let badgeFill = Color(red: 0.792, green: 0.741, blue: 1.0) // #CABDFF
-    private let badgeText = Color(red: 0.102, green: 0.114, blue: 0.122) // #1A1D1F
+    private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
+    private let rowColor = Color(red: 0.435, green: 0.463, blue: 0.494)
+    private let searchPlaceholder = Color(red: 0.396, green: 0.471, blue: 0.557)
+    private let searchFill = Color(red: 0.941, green: 0.957, blue: 0.976)
+    private let badgeFill = Color(red: 0.792, green: 0.741, blue: 1.0)
+    private let badgeText = Color(red: 0.102, green: 0.114, blue: 0.122)
+    private let sectionFill = Color(red: 0.97, green: 0.975, blue: 0.985)
 
     private var filteredItems: [SettingsDestination] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -63,6 +66,15 @@ struct SettingsView: View {
         return SettingsDestination.allCases.filter {
             $0.title.localizedCaseInsensitiveContains(query)
         }
+    }
+
+    private var showPreferences: Bool {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return true }
+        return "Language Setting".localizedCaseInsensitiveContains(query)
+            || "Language".localizedCaseInsensitiveContains(query)
+            || "Text Size".localizedCaseInsensitiveContains(query)
+            || "Text".localizedCaseInsensitiveContains(query)
     }
 
     var body: some View {
@@ -75,10 +87,15 @@ struct SettingsView: View {
                     ForEach(filteredItems) { item in
                         settingsRow(item)
                     }
+
+                    if showPreferences {
+                        preferencesSection
+                            .padding(.top, 20)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
-                .padding(.bottom, 24)
+                .padding(.bottom, 32)
             }
             .background(Color(.systemBackground))
             .navigationTitle("Settings")
@@ -103,11 +120,20 @@ struct SettingsView: View {
                 switch destination {
                 case .profile:
                     ProfileView(embedsNavigation: false)
+                case .dashboard:
+                    DashboardView()
                 case .userManagement:
                     UserManagementView()
-                default:
+                case .passwordSecurity:
+                    PasswordSecurityView()
+                case .activities:
+                    ActivitiesView()
+                case .giftFund, .help:
                     SettingsDetailPlaceholder(destination: destination)
                 }
+            }
+            .onAppear {
+                preferredLanguage = appModel.preferredLanguage
             }
         }
         .tint(Theme.darkText)
@@ -163,6 +189,90 @@ struct SettingsView: View {
         }
         .buttonStyle(.plain)
     }
+
+    private var preferencesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Display & Language")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(rowColor)
+                .textCase(.uppercase)
+                .padding(.horizontal, 4)
+
+            VStack(alignment: .leading, spacing: 18) {
+                // Language — inline control, no drill-down
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "character.bubble")
+                            .font(.title3)
+                            .foregroundStyle(rowColor)
+                            .frame(width: 28)
+                        Text("Language Setting")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                    }
+
+                    Picker("Language", selection: $preferredLanguage) {
+                        ForEach(languageOptions, id: \.self) { option in
+                            Text(option).tag(option)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(Theme.brandOrange)
+                    .onChange(of: preferredLanguage) { _, newValue in
+                        appModel.preferredLanguage = newValue
+                    }
+                }
+
+                Divider()
+
+                // Text size — inline slider
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "textformat.size")
+                            .font(.title3)
+                            .foregroundStyle(rowColor)
+                            .frame(width: 28)
+                        Text("Text Size")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                        Spacer()
+                        Text(textSizeLabel)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(rowColor)
+                    }
+
+                    HStack(spacing: 12) {
+                        Text("A")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(rowColor)
+                        Slider(value: $textSizeValue, in: 0.85...1.3, step: 0.05)
+                            .tint(Theme.brandOrange)
+                        Text("A")
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(rowColor)
+                    }
+
+                    Text("Preview text looks like this.")
+                        .font(.system(size: 16 * textSizeValue, weight: .medium))
+                        .foregroundStyle(Theme.darkText)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 2)
+                }
+            }
+            .padding(16)
+            .background(sectionFill)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+    }
+
+    private var textSizeLabel: String {
+        switch textSizeValue {
+        case ..<0.95: return "Small"
+        case ..<1.1: return "Default"
+        case ..<1.2: return "Large"
+        default: return "Extra Large"
+        }
+    }
 }
 
 struct SettingsDetailPlaceholder: View {
@@ -181,4 +291,5 @@ struct SettingsDetailPlaceholder: View {
 
 #Preview {
     SettingsView()
+        .environment(AppModel())
 }
