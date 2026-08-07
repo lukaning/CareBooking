@@ -784,9 +784,17 @@ struct LocationStep: View {
 
     private var distanceSelector: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Select Distance")
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(Theme.darkText)
+            HStack {
+                Text("Select Distance")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.darkText)
+                Spacer()
+                Text(distanceLabel(for: appModel.searchRadiusMiles))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.brandOrange)
+                    .contentTransition(.numericText())
+                    .animation(.snappy(duration: 0.15), value: appModel.searchRadiusMiles)
+            }
 
             Slider(
                 value: Binding(
@@ -809,6 +817,11 @@ struct LocationStep: View {
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.darkText)
         }
+    }
+
+    private func distanceLabel(for miles: Double) -> String {
+        let value = Int(miles.rounded())
+        return value == 1 ? "1 mile" : "\(value) miles"
     }
 
     private func confirmButton(enabled: Bool, isConfirmed: Bool, action: @escaping () -> Void) -> some View {
