@@ -52,6 +52,7 @@ struct SettingsView: View {
     @State private var path: [SettingsDestination] = []
     @State private var preferredLanguage = "English"
     @State private var textSizeValue: Double = 1.0
+    @State private var showGiftFund = false
 
     private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
     private let rowColor = Color(red: 0.435, green: 0.463, blue: 0.494)
@@ -141,8 +142,8 @@ struct SettingsView: View {
                 case .activities:
                     ActivitiesView()
                 case .giftFund:
-                    GiftGiverFlowHost()
-                        .toolbar(.hidden, for: .navigationBar)
+                    // Fallback if path includes giftFund; prefer openSettingsItem fullScreenCover.
+                    EmptyView()
                 case .help:
                     SettingsDetailPlaceholder(destination: destination)
                 }
@@ -150,13 +151,25 @@ struct SettingsView: View {
             .onAppear {
                 preferredLanguage = appModel.preferredLanguage
             }
+            .fullScreenCover(isPresented: $showGiftFund) {
+                GiftGiverFlowHost()
+            }
         }
         .tint(Theme.darkText)
     }
 
+    private func openSettingsItem(_ item: SettingsDestination) {
+        if item == .giftFund {
+            // Present outside the Settings stack to avoid nested NavigationStack failure.
+            showGiftFund = true
+            return
+        }
+        path.append(item)
+    }
+
     private func settingsRow(_ item: SettingsDestination) -> some View {
         Button {
-            path.append(item)
+            openSettingsItem(item)
         } label: {
             HStack(spacing: 14) {
                 Image(systemName: item.systemImage)
