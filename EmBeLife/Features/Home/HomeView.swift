@@ -214,78 +214,87 @@ struct HomeView: View {
             }
         }
         .background(Color(.systemBackground))
+        // Keep soft edge without clipping the floating list-mode menu.
+        .zIndex(showListMenu ? 4 : 0)
         .animation(expandAnimation, value: filtersExpanded)
     }
 
     private var listModePicker: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                withAnimation(.easeInOut(duration: 0.15)) {
-                    showListMenu.toggle()
-                }
-            } label: {
-                HStack(spacing: 6) {
-                    Text(listMode.title)
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                    Image(systemName: "chevron.down")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                        .rotationEffect(.degrees(showListMenu ? 180 : 0))
-                }
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            withAnimation(.easeInOut(duration: 0.15)) {
+                showListMenu.toggle()
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(listMode.title)
-            .accessibilityHint("Choose provider list")
-
-            if showListMenu {
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(HomeProviderListMode.allCases) { mode in
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                listMode = mode
-                                showListMenu = false
-                            }
-                        } label: {
-                            Text(mode.title)
-                                .font(.system(
-                                    size: 15,
-                                    weight: listMode == mode ? .semibold : .regular
-                                ))
-                                .foregroundStyle(
-                                    listMode == mode
-                                        ? Theme.darkText
-                                        : Color(red: 0.45, green: 0.48, blue: 0.55)
-                                )
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 11)
-                                .background {
-                                    if listMode == mode {
-                                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                            .fill(Color(red: 0.94, green: 0.95, blue: 0.96))
-                                    }
-                                }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(6)
-                .frame(width: 188, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.white)
-                        .shadow(color: .black.opacity(0.12), radius: 14, y: 6)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color(red: 0.90, green: 0.91, blue: 0.93), lineWidth: 1)
-                )
-                .padding(.top, 8)
-                .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topLeading)))
+        } label: {
+            HStack(spacing: 6) {
+                Text(listMode.title)
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(Theme.darkText)
+                Image(systemName: "chevron.down")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.darkText)
+                    .rotationEffect(.degrees(showListMenu ? 180 : 0))
             }
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel(listMode.title)
+        .accessibilityHint("Choose provider list")
+        // Popover floats over content without expanding the header layout.
+        .overlay(alignment: .topLeading) {
+            if showListMenu {
+                listModeMenu
+                    .offset(y: 36)
+                    .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topLeading)))
+            }
+        }
+        .zIndex(showListMenu ? 10 : 0)
+    }
+
+    private var listModeMenu: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(HomeProviderListMode.allCases) { mode in
+                Button {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        listMode = mode
+                        showListMenu = false
+                    }
+                } label: {
+                    Text(mode.title)
+                        .font(.system(
+                            size: 15,
+                            weight: listMode == mode ? .semibold : .regular
+                        ))
+                        .foregroundStyle(
+                            listMode == mode
+                                ? Theme.darkText
+                                : Color(red: 0.45, green: 0.48, blue: 0.55)
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 11)
+                        .background {
+                            if listMode == mode {
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(Color(red: 0.94, green: 0.95, blue: 0.96))
+                            }
+                        }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(6)
+        .frame(width: 188, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.white)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color(red: 0.90, green: 0.91, blue: 0.93), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.14), radius: 14, y: 6)
+        .compositingGroup()
     }
 
     private var filterCriteriaBar: some View {
