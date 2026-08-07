@@ -47,6 +47,17 @@ struct HomeView: View {
                         appointmentType: request.appointmentType
                     )
                 }
+                .background {
+                    if bookingMenuProviderID != nil {
+                        Color.black.opacity(0.001)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    bookingMenuProviderID = nil
+                                }
+                            }
+                    }
+                }
                 .onAppear {
                     appModel.seedBookingsIfNeeded()
                 }
@@ -358,7 +369,7 @@ struct ProviderCard: View {
     var onSelectAppointmentType: (BookingAppointmentType) -> Void
 
     private let menuBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
-    private let menuDivider = Color(red: 0.93, green: 0.93, blue: 0.94)
+    private let toggleAnimation = Animation.easeInOut(duration: 0.15)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -406,29 +417,10 @@ struct ProviderCard: View {
                 .foregroundStyle(Theme.mutedText)
                 .lineLimit(1)
 
-            HStack(alignment: .top, spacing: 12) {
+            HStack(spacing: 12) {
                 iconButton(systemName: "ellipsis")
                 iconButton(systemName: "play.rectangle.fill", tint: .red)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Button(action: onToggleBookingMenu) {
-                        Text("Book Now")
-                            .font(.headline.weight(.bold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Theme.brandOrange)
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Book Now")
-                    .accessibilityHint(isBookingMenuExpanded ? "Hide booking options" : "Show booking options")
-
-                    if isBookingMenuExpanded {
-                        bookingTypeMenu
-                            .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
-                }
+                bookNowButton
             }
 
             Divider()
@@ -443,48 +435,86 @@ struct ProviderCard: View {
             }
         }
         .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 10, y: 4)
-        .zIndex(isBookingMenuExpanded ? 1 : 0)
+        // Avoid clipShape so the floating menu can hang over content below (like Send Gift).
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 10, y: 4)
+        )
+        .zIndex(isBookingMenuExpanded ? 2 : 0)
+    }
+
+    private var bookNowButton: some View {
+        Button {
+            withAnimation(toggleAnimation) {
+                onToggleBookingMenu()
+            }
+        } label: {
+            Text("Book Now")
+                .font(.headline.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Theme.brandOrange)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Book Now")
+        .accessibilityHint(isBookingMenuExpanded ? "Hide booking options" : "Show booking options")
+        .background(alignment: .topTrailing) {
+            if isBookingMenuExpanded {
+                bookingTypeMenu
+                    .padding(.top, 54)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(minWidth: 220)
+                    .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topTrailing)))
+            }
+        }
     }
 
     private var bookingTypeMenu: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             bookingTypeButton(
                 title: "Book an in-person Appointment",
                 type: .inPerson
             )
 
-            Rectangle()
-                .fill(menuDivider)
-                .frame(height: 1)
+            Divider()
+                .background(menuBorder)
+                .padding(.leading, 14)
 
             bookingTypeButton(
                 title: "Book a Video Appointment",
                 type: .video
             )
         }
-        .background(Color.white)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color.white)
+        }
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(menuBorder, lineWidth: 1)
         )
-        .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
+        .shadow(color: .black.opacity(0.14), radius: 14, y: 6)
+        .compositingGroup()
     }
 
     private func bookingTypeButton(title: String, type: BookingAppointmentType) -> some View {
         Button {
-            onSelectAppointmentType(type)
+            withAnimation(toggleAnimation) {
+                onSelectAppointmentType(type)
+            }
         } label: {
             Text(title)
-                .font(.body.weight(.semibold))
+                .font(.subheadline.weight(.medium))
                 .foregroundStyle(Theme.darkText)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 16)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 14)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
