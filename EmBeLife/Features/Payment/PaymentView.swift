@@ -230,10 +230,9 @@ struct PaymentView: View {
                     giftActionMessage = "\(action.rawValue) flow coming soon."
                 } label: {
                     HStack(spacing: 10) {
-                        Image(systemName: action.systemImage)
-                            .font(.body)
-                            .foregroundStyle(Theme.darkText)
-                            .frame(width: 20)
+                        sendGiftActionIcon(action)
+                            .frame(width: 20, height: 20)
+
                         Text(action.rawValue)
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(Theme.darkText)
@@ -265,6 +264,21 @@ struct PaymentView: View {
         )
         .shadow(color: .black.opacity(0.14), radius: 14, y: 6)
         .compositingGroup()
+    }
+
+    @ViewBuilder
+    private func sendGiftActionIcon(_ action: SendGiftAction) -> some View {
+        if let asset = action.assetImageName {
+            Image(asset)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(Theme.darkText)
+        } else if let system = action.systemImage {
+            Image(systemName: system)
+                .font(.body)
+                .foregroundStyle(Theme.darkText)
+        }
     }
 
     // MARK: - Segment

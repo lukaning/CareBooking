@@ -90,10 +90,19 @@ enum SendGiftAction: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var systemImage: String {
+    var systemImage: String? {
         switch self {
         case .giftAmount: "gift"
-        case .giftService, .receiveGift: "hand.raised"
+        case .giftService: "hand.raised"
+        case .receiveGift: nil
+        }
+    }
+
+    /// Asset catalog image for custom menu icons (e.g. Receive Gift).
+    var assetImageName: String? {
+        switch self {
+        case .receiveGift: "receiveGift"
+        default: nil
         }
     }
 }
