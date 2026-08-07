@@ -48,14 +48,13 @@ struct SettingsView: View {
     @Environment(AppModel.self) private var appModel
 
     @State private var searchText = ""
+    @State private var isSearchPresented = false
     @State private var path: [SettingsDestination] = []
     @State private var preferredLanguage = "English"
     @State private var textSizeValue: Double = 1.0
 
     private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
     private let rowColor = Color(red: 0.435, green: 0.463, blue: 0.494)
-    private let searchPlaceholder = Color(red: 0.396, green: 0.471, blue: 0.557)
-    private let searchFill = Color(red: 0.941, green: 0.957, blue: 0.976)
     private let badgeFill = Color(red: 0.792, green: 0.741, blue: 1.0)
     private let badgeText = Color(red: 0.102, green: 0.114, blue: 0.122)
     private let sectionFill = Color(red: 0.97, green: 0.975, blue: 0.985)
@@ -81,9 +80,6 @@ struct SettingsView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    searchField
-                        .padding(.bottom, 8)
-
                     ForEach(filteredItems) { item in
                         settingsRow(item)
                     }
@@ -100,6 +96,7 @@ struct SettingsView: View {
             .background(Color(.systemBackground))
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $searchText, isPresented: $isSearchPresented, prompt: "Search settings")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -112,6 +109,21 @@ struct SettingsView: View {
                             .contentShape(Rectangle())
                     }
                     .accessibilityLabel("Close")
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            isSearchPresented = true
+                        }
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                            .frame(width: 36, height: 36)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Search")
                 }
             }
             .toolbarBackground(Color(.systemBackground), for: .navigationBar)
@@ -137,22 +149,6 @@ struct SettingsView: View {
             }
         }
         .tint(Theme.darkText)
-    }
-
-    private var searchField: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .font(.body)
-                .foregroundStyle(searchPlaceholder)
-
-            TextField("Search..", text: $searchText)
-                .font(.body.weight(.medium))
-                .foregroundStyle(Theme.darkText)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(searchFill)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     private func settingsRow(_ item: SettingsDestination) -> some View {
@@ -199,29 +195,45 @@ struct SettingsView: View {
                 .padding(.horizontal, 4)
 
             VStack(alignment: .leading, spacing: 18) {
-                // Language — inline control, no drill-down
-                VStack(alignment: .leading, spacing: 10) {
+                // Language — left label, right value (inline menu)
+                Menu {
+                    ForEach(languageOptions, id: \.self) { option in
+                        Button {
+                            preferredLanguage = option
+                            appModel.preferredLanguage = option
+                        } label: {
+                            if preferredLanguage == option {
+                                Label(option, systemImage: "checkmark")
+                            } else {
+                                Text(option)
+                            }
+                        }
+                    }
+                } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "character.bubble")
                             .font(.title3)
                             .foregroundStyle(rowColor)
                             .frame(width: 28)
+
                         Text("Language Setting")
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.darkText)
-                    }
 
-                    Picker("Language", selection: $preferredLanguage) {
-                        ForEach(languageOptions, id: \.self) { option in
-                            Text(option).tag(option)
-                        }
+                        Spacer(minLength: 8)
+
+                        Text(preferredLanguage)
+                            .font(.body.weight(.medium))
+                            .foregroundStyle(rowColor)
+                            .lineLimit(1)
+
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(rowColor)
                     }
-                    .pickerStyle(.menu)
-                    .tint(Theme.brandOrange)
-                    .onChange(of: preferredLanguage) { _, newValue in
-                        appModel.preferredLanguage = newValue
-                    }
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
 
                 Divider()
 
