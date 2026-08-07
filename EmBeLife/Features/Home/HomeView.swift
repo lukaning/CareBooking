@@ -127,9 +127,22 @@ struct HomeView: View {
 
     private var providerList: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(providers) { provider in
-                    providerCard(for: provider)
+            // LazyVStack ignores sibling zIndex in a way that buries floating Book Now menus
+            // under the next card; use a plain stack while a menu is open.
+            let cards = ForEach(providers) { provider in
+                providerCard(for: provider)
+                    .zIndex(bookingMenuProviderID == provider.id ? 1000 : 0)
+            }
+
+            Group {
+                if bookingMenuProviderID != nil {
+                    VStack(spacing: 16) {
+                        cards
+                    }
+                } else {
+                    LazyVStack(spacing: 16) {
+                        cards
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -529,6 +542,7 @@ struct ProviderCard: View {
                 iconButton(systemName: "play.rectangle.fill", tint: .red)
                 bookNowButton
             }
+            .zIndex(isBookingMenuExpanded ? 20 : 0)
 
             Divider()
 
@@ -542,13 +556,14 @@ struct ProviderCard: View {
             }
         }
         .padding(16)
-        // Avoid clipShape so the floating menu can hang over content below (like Send Gift).
+        // Avoid clipShape so the floating menu can hang over content below.
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.04), radius: 10, y: 4)
         )
-        .zIndex(isBookingMenuExpanded ? 2 : 0)
+        // Do not use compositingGroup — it flattens/clips the overflow menu under the next card.
+        .zIndex(isBookingMenuExpanded ? 1000 : 0)
     }
 
     private var bookNowButton: some View {
@@ -568,7 +583,8 @@ struct ProviderCard: View {
         .buttonStyle(.plain)
         .accessibilityLabel("Book Now")
         .accessibilityHint(isBookingMenuExpanded ? "Hide booking options" : "Show booking options")
-        .background(alignment: .topTrailing) {
+        // Overlay paints above siblings; background was stacking under the next card.
+        .overlay(alignment: .topTrailing) {
             if isBookingMenuExpanded {
                 bookingTypeMenu
                     .padding(.top, 54)
@@ -577,6 +593,7 @@ struct ProviderCard: View {
                     .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .topTrailing)))
             }
         }
+        .zIndex(isBookingMenuExpanded ? 30 : 0)
     }
 
     private var bookingTypeMenu: some View {

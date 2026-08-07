@@ -8,10 +8,20 @@ struct ProfileDetailEditView: View {
     @State private var isAddingMember = false
     @State private var newMemberFirst = ""
     @State private var newMemberLast = ""
+    @State private var newPreferredServices: [String] = []
+    @State private var newPreferredTimes: [String] = []
+    @State private var showServicePicker = false
+    @State private var showTimePicker = false
+    @State private var pickerDraftServices: Set<String> = []
+    @State private var pickerDraftTimes: Set<String> = []
+    @State private var customTimeEnabled = false
+    @State private var customStart = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date()) ?? Date()
+    @State private var customEnd = Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date()) ?? Date()
     @State private var expandedMemberID: UUID?
     @State private var showLanguagePicker = false
 
     private let availableLanguages = ["English", "Spain", "French", "Chinese", "Portuguese"]
+    private let fieldStroke = Color(red: 0.902, green: 0.910, blue: 0.925)
 
     init(profile: UserProfile) {
         _draft = State(initialValue: profile)
@@ -57,6 +67,12 @@ struct ProfileDetailEditView: View {
                 }
             }
             Button("Cancel", role: .cancel) {}
+        }
+        .sheet(isPresented: $showServicePicker) {
+            preferredServicePickerSheet
+        }
+        .sheet(isPresented: $showTimePicker) {
+            preferredTimePickerSheet
         }
     }
 
@@ -310,6 +326,23 @@ struct ProfileDetailEditView: View {
                 profileField(title: "Last Name", text: $newMemberLast, required: false, placeholder: "Last")
             }
 
+            memberPreferenceRow(
+                title: "Preferred Service",
+                summary: preferredServicesSummary,
+                action: openServicePicker
+            )
+
+            memberPreferenceRow(
+                title: "Preferred time",
+                summary: preferredTimesSummary,
+                action: openTimePicker
+            )
+
+            // Preview selected preferences (matches expanded member card layout)
+            if !newPreferredServices.isEmpty || !newPreferredTimes.isEmpty {
+                memberPreferencePreview
+            }
+
             Text("Or Choose from account")
                 .font(.subheadline)
                 .foregroundStyle(Theme.grayscale70)
@@ -332,16 +365,15 @@ struct ProfileDetailEditView: View {
                 .padding(14)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color(red: 0.902, green: 0.910, blue: 0.925), lineWidth: 1.5)
+                        .stroke(fieldStroke, lineWidth: 1.5)
                 )
             }
 
             HStack {
                 Button("Cancel") {
                     withAnimation {
+                        resetAddMemberForm()
                         isAddingMember = false
-                        newMemberFirst = ""
-                        newMemberLast = ""
                     }
                 }
                 .foregroundStyle(Theme.grayscale70)
@@ -366,31 +398,326 @@ struct ProfileDetailEditView: View {
         .shadow(color: .black.opacity(0.06), radius: 12, y: 4)
     }
 
+    private var preferredServicesSummary: String {
+        if newPreferredServices.isEmpty { return "Select services" }
+        if newPreferredServices.count == 1 { return newPreferredServices[0] }
+        return "\(newPreferredServices.count) selected"
+    }
+
+    private var preferredTimesSummary: String {
+        if newPreferredTimes.isEmpty { return "Select times" }
+        if newPreferredTimes.count == 1 { return newPreferredTimes[0] }
+        return "\(newPreferredTimes.count) selected"
+    }
+
+    private var memberPreferencePreview: some View {
+        HStack(alignment: .top, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Preferred Service")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.darkText)
+                ForEach(newPreferredServices, id: \.self) { service in
+                    Text(service)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                }
+                if newPreferredServices.isEmpty {
+                    Text("—")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.grayscale60)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Rectangle()
+                .fill(Color(.separator))
+                .frame(width: 1)
+                .padding(.horizontal, 12)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Preferred time")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.darkText)
+                ForEach(newPreferredTimes, id: \.self) { time in
+                    HStack(spacing: 6) {
+                        Image(systemName: "calendar")
+                            .font(.caption)
+                            .foregroundStyle(Theme.grayscale60)
+                        Text(time)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                    }
+                }
+                if newPreferredTimes.isEmpty {
+                    Text("—")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.grayscale60)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .background(Color(red: 0.98, green: 0.98, blue: 0.985))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(fieldStroke, lineWidth: 1)
+        )
+    }
+
+    private func memberPreferenceRow(title: String, summary: String, action: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color(red: 0.561, green: 0.565, blue: 0.737))
+
+            Button(action: action) {
+                HStack {
+                    Text(summary)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(
+                            summary.hasPrefix("Select")
+                                ? Theme.grayscale60
+                                : Color(red: 0.349, green: 0.255, blue: 0.451)
+                        )
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.grayscale60)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 14)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(fieldStroke, lineWidth: 1.5)
+                )
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    private var preferredServicePickerSheet: some View {
+        NavigationStack {
+            List {
+                Section {
+                    ForEach(FamilyMember.preferredServiceOptions, id: \.self) { service in
+                        Button {
+                            if pickerDraftServices.contains(service) {
+                                pickerDraftServices.remove(service)
+                            } else {
+                                pickerDraftServices.insert(service)
+                            }
+                        } label: {
+                            HStack {
+                                Text(service)
+                                    .foregroundStyle(Theme.darkText)
+                                Spacer()
+                                if pickerDraftServices.contains(service) {
+                                    Image(systemName: "checkmark")
+                                        .font(.body.weight(.semibold))
+                                        .foregroundStyle(Theme.brandOrange)
+                                }
+                            }
+                        }
+                    }
+                } footer: {
+                    Text("Select one or more preferred services for this member.")
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("Preferred Service")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showServicePicker = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        newPreferredServices = FamilyMember.preferredServiceOptions.filter {
+                            pickerDraftServices.contains($0)
+                        }
+                        showServicePicker = false
+                    }
+                    .fontWeight(.semibold)
+                    .disabled(pickerDraftServices.isEmpty)
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+    }
+
+    private var preferredTimePickerSheet: some View {
+        NavigationStack {
+            List {
+                Section {
+                    ForEach(FamilyMember.preferredTimeOptions, id: \.self) { slot in
+                        Button {
+                            if pickerDraftTimes.contains(slot) {
+                                pickerDraftTimes.remove(slot)
+                            } else {
+                                pickerDraftTimes.insert(slot)
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "calendar")
+                                    .foregroundStyle(Theme.grayscale60)
+                                Text(slot)
+                                    .foregroundStyle(Theme.darkText)
+                                Spacer()
+                                if pickerDraftTimes.contains(slot) {
+                                    Image(systemName: "checkmark")
+                                        .font(.body.weight(.semibold))
+                                        .foregroundStyle(Theme.brandOrange)
+                                }
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Common time windows")
+                }
+
+                Section {
+                    Toggle("Custom time range", isOn: $customTimeEnabled)
+
+                    if customTimeEnabled {
+                        DatePicker(
+                            "Start",
+                            selection: $customStart,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+
+                        DatePicker(
+                            "End",
+                            selection: $customEnd,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+
+                        Text(customTimeLabel)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                } header: {
+                    Text("Or set a custom range")
+                } footer: {
+                    Text("Use the wheels to choose a custom window, then tap Done to confirm.")
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("Preferred time")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showTimePicker = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        confirmTimePicker()
+                    }
+                    .fontWeight(.semibold)
+                    .disabled(!canConfirmTimePicker)
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+    }
+
+    private var customTimeLabel: String {
+        "\(formatHourMinute(customStart)) – \(formatHourMinute(customEnd))"
+    }
+
+    private var canConfirmTimePicker: Bool {
+        !pickerDraftTimes.isEmpty || customTimeEnabled
+    }
+
+    private func openServicePicker() {
+        pickerDraftServices = Set(newPreferredServices)
+        showServicePicker = true
+    }
+
+    private func openTimePicker() {
+        pickerDraftTimes = Set(newPreferredTimes.filter { FamilyMember.preferredTimeOptions.contains($0) })
+        customTimeEnabled = newPreferredTimes.contains { !FamilyMember.preferredTimeOptions.contains($0) }
+        if let custom = newPreferredTimes.first(where: { !FamilyMember.preferredTimeOptions.contains($0) }) {
+            // Leave wheels as-is if we can't parse; values still re-added on Done.
+            _ = custom
+        }
+        showTimePicker = true
+    }
+
+    private func confirmTimePicker() {
+        var times = FamilyMember.preferredTimeOptions.filter { pickerDraftTimes.contains($0) }
+        if customTimeEnabled {
+            let label = customTimeLabel
+            if !times.contains(label) {
+                times.append(label)
+            }
+        }
+        newPreferredTimes = times
+        showTimePicker = false
+    }
+
+    private func formatHourMinute(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "ha"
+        formatter.amSymbol = "am"
+        formatter.pmSymbol = "pm"
+        return formatter.string(from: date).lowercased()
+    }
+
     private var canAddManual: Bool {
         !newMemberFirst.trimmingCharacters(in: .whitespaces).isEmpty
             && !newMemberLast.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    private func resetAddMemberForm() {
+        newMemberFirst = ""
+        newMemberLast = ""
+        newPreferredServices = []
+        newPreferredTimes = []
+        pickerDraftServices = []
+        pickerDraftTimes = []
+        customTimeEnabled = false
+    }
+
     private func addManualMember() {
+        let services = newPreferredServices.isEmpty
+            ? ["Personal care/ hygiene"]
+            : newPreferredServices
+        let times = newPreferredTimes.isEmpty
+            ? ["8am – 10am"]
+            : newPreferredTimes
         let member = FamilyMember(
             firstName: newMemberFirst.trimmingCharacters(in: .whitespaces),
             lastName: newMemberLast.trimmingCharacters(in: .whitespaces),
-            preferredServices: ["Personal care/ hygiene"],
-            preferredTimes: ["8am – 10am"],
+            preferredServices: services,
+            preferredTimes: times,
             avatarStyle: .next(after: draft.familyMembers.count)
         )
         withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
             draft.familyMembers.append(member)
             expandedMemberID = member.id
             isAddingMember = false
-            newMemberFirst = ""
-            newMemberLast = ""
+            resetAddMemberForm()
         }
     }
 
     private func addExisting(_ account: FamilyMember) {
-        var copy = account
-        copy = FamilyMember(
+        let copy = FamilyMember(
             firstName: account.firstName,
             lastName: account.lastName,
             preferredServices: account.preferredServices,
@@ -401,6 +728,7 @@ struct ProfileDetailEditView: View {
             draft.familyMembers.append(copy)
             expandedMemberID = copy.id
             isAddingMember = false
+            resetAddMemberForm()
         }
     }
 

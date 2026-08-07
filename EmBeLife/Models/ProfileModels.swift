@@ -96,6 +96,24 @@ struct UserProfile: Hashable {
 }
 
 extension FamilyMember {
+    static let preferredServiceOptions: [String] = [
+        "Personal care/ hygiene",
+        "Mobility assistance",
+        "House keeping",
+        "Companionship",
+        "Meal prep",
+        "Transportation",
+        "Light housekeeping"
+    ]
+
+    static let preferredTimeOptions: [String] = [
+        "8am – 10am",
+        "10am – 1pm",
+        "1pm – 3pm",
+        "3pm – 6pm",
+        "6pm – 8pm"
+    ]
+
     static let samples: [FamilyMember] = [
         FamilyMember(
             firstName: "S",
