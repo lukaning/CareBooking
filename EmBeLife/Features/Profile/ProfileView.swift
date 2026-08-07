@@ -11,12 +11,15 @@ struct ProfileView: View {
     @State private var expandedMemberID: UUID?
     @State private var bookingToReschedule: Booking?
     @State private var bookingRoute: BookingRoute?
+    @State private var showPayReceive = false
 
     private var profile: UserProfile { appModel.profile }
 
     private var filteredBookings: [Booking] {
         appModel.bookings.filter { $0.status.tab == bookingTab }
     }
+
+    private let giftScanTint = Color(red: 0.62, green: 0.52, blue: 0.88)
 
     var body: some View {
         Group {
@@ -46,16 +49,30 @@ struct ProfileView: View {
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    showPayReceive = true
+                } label: {
+                    Image(systemName: "viewfinder")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(giftScanTint)
+                }
+                .accessibilityLabel("Pay or receive gifts")
+                .accessibilityHint("Scan a gift code or share your gift receiving link")
+
                 Button {
                     showEdit = true
                 } label: {
                     Image(systemName: "pencil")
                 }
+                .accessibilityLabel("Edit profile")
             }
         }
         .navigationDestination(isPresented: $showEdit) {
             ProfileDetailEditView(profile: editingSeed)
+        }
+        .navigationDestination(isPresented: $showPayReceive) {
+            PayReceiveView()
         }
         .navigationDestination(item: $bookingRoute) { route in
             EditBookingView(bookingID: route.id)
@@ -187,7 +204,21 @@ struct ProfileView: View {
                         .foregroundStyle(Theme.mutedText)
                 }
             }
-            Spacer(minLength: 0)
+
+            Spacer(minLength: 8)
+
+            Button {
+                showPayReceive = true
+            } label: {
+                Image(systemName: "viewfinder")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(giftScanTint)
+                    .frame(width: 44, height: 44)
+                    .background(giftScanTint.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Pay or receive gifts")
         }
     }
 

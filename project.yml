@@ -23,6 +23,8 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_CFBundleDisplayName: EmBeLife
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Your precise location is used to show your position on the map, get directions, estimate travel times and improve search results."
+        INFOPLIST_KEY_NSCameraUsageDescription: "Camera access lets you scan gift QR codes to receive gift fund or services."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Photo library access lets you scan gift QR codes from saved images."
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

@@ -24,6 +24,7 @@
 		B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1050CDF517458A8ACD1927 /* AuthViews.swift */; };
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 		B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */; };
+		A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5PAYRECV234567890ABCDE /* PayReceiveView.swift */; };
 		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
 		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
 		A4DASHVW234567890ABCDEF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DASHVW234567890ABCDEF /* DashboardView.swift */; };
@@ -60,6 +61,7 @@
 		A1MSGMDL234567890ABCDE /* MessageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModels.swift; sourceTree = "<group>"; };
 		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B5PAYRECV234567890ABCDE /* PayReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayReceiveView.swift; sourceTree = "<group>"; };
 		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
 		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -133,10 +135,19 @@
 				F2A3B4C5D6E7489021NOT001 /* Notification */,
 				92337F985607488E9AFC0A96 /* Onboarding */,
 				F1A2B3C4D5E6478910E4F201 /* Payment */,
+				G1PAYRECVGRP234567890AB /* Gift */,
 				E26F03889FA94E0789722FD0 /* Profile */,
 				C0F53E804D6F4C3B1E9A7F42 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		G1PAYRECVGRP234567890AB /* Gift */ = {
+			isa = PBXGroup;
+			children = (
+				B5PAYRECV234567890ABCDE /* PayReceiveView.swift */,
+			);
+			path = Gift;
 			sourceTree = "<group>";
 		};
 		92337F985607488E9AFC0A96 /* Onboarding */ = {
@@ -367,6 +378,7 @@
 				08F72FE0F2824771ABB5D4AD /* OnboardingViews.swift in Sources */,
 				4B6EC2DD3715474E9D5F87FA /* ProfileDetailEditView.swift in Sources */,
 				9DE90EA2C0D54B59AF6B0C95 /* ProfileView.swift in Sources */,
+				A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */,
 				B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */,
 				A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */,
 				A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */,
@@ -407,7 +419,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access lets you scan gift QR codes to receive gift fund or services.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to show your position on the map, get directions, estimate travel times and improve search results.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo library access lets you scan gift QR codes from saved images.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -529,7 +543,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access lets you scan gift QR codes to receive gift fund or services.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to show your position on the map, get directions, estimate travel times and improve search results.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo library access lets you scan gift QR codes from saved images.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
