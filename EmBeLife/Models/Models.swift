@@ -133,6 +133,10 @@ struct Booking: Identifiable, Hashable {
     var clientReviewRating: Int?
     /// Optional free-text review left with the rating.
     var clientReviewText: String?
+    /// Last reschedule proposal reason (optional).
+    var rescheduleReason: String?
+    /// Last reschedule note sent to the provider (optional).
+    var rescheduleMessage: String?
 
     var hasClientReview: Bool {
         (clientReviewRating ?? 0) > 0
@@ -168,7 +172,9 @@ struct Booking: Identifiable, Hashable {
         dateCreated: Date = .now,
         checklistTasks: [BookingChecklistTask] = Booking.defaultChecklist,
         clientReviewRating: Int? = nil,
-        clientReviewText: String? = nil
+        clientReviewText: String? = nil,
+        rescheduleReason: String? = nil,
+        rescheduleMessage: String? = nil
     ) {
         self.id = id
         self.provider = provider
@@ -184,6 +190,8 @@ struct Booking: Identifiable, Hashable {
         self.checklistTasks = checklistTasks
         self.clientReviewRating = clientReviewRating
         self.clientReviewText = clientReviewText
+        self.rescheduleReason = rescheduleReason
+        self.rescheduleMessage = rescheduleMessage
     }
 
     static let defaultChecklist: [BookingChecklistTask] = [

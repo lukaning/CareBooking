@@ -237,6 +237,12 @@ struct BookingsView: View {
                                     Button("Edit booking") {
                                         editBookingID = booking.id
                                     }
+                                    Button("Cancel booking", role: .destructive) {
+                                        appModel.cancelBooking(id: booking.id)
+                                        if expandedBookingID == booking.id {
+                                            expandedBookingID = nil
+                                        }
+                                    }
                                 } label: {
                                     Image(systemName: "chevron.down")
                                         .font(.system(size: 12, weight: .bold))

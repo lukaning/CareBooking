@@ -237,10 +237,20 @@ final class AppModel {
         bookings[index] = booking
     }
 
-    func rescheduleBooking(id: UUID, date: Date, startTime: Date) {
+    func rescheduleBooking(
+        id: UUID,
+        date: Date,
+        startTime: Date,
+        reason: String = "",
+        message: String = ""
+    ) {
         guard let index = bookings.firstIndex(where: { $0.id == id }) else { return }
         bookings[index].date = date
         bookings[index].startTime = startTime
+        let trimmedReason = reason.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        bookings[index].rescheduleReason = trimmedReason.isEmpty ? nil : trimmedReason
+        bookings[index].rescheduleMessage = trimmedMessage.isEmpty ? nil : trimmedMessage
     }
 
     func cancelBooking(id: UUID) {

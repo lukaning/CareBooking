@@ -893,6 +893,12 @@ struct ProfileView: View {
                 Button("Edit booking") {
                     bookingRoute = BookingRoute(id: booking.id)
                 }
+                Button("Cancel booking", role: .destructive) {
+                    appModel.cancelBooking(id: booking.id)
+                    if expandedBookingID == booking.id {
+                        expandedBookingID = nil
+                    }
+                }
             } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 12, weight: .bold))
