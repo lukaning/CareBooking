@@ -18,6 +18,9 @@ struct BookingsView: View {
     private let cancelFill = Color(red: 0.91, green: 0.92, blue: 0.94)
     private let purpleAccent = Color(red: 0.48, green: 0.42, blue: 0.78)
     private let cardShadow = Color.black.opacity(0.06)
+    private let segmentTrack = Color(red: 0.94, green: 0.945, blue: 0.955)
+    private let segmentInactiveText = Color(red: 0.45, green: 0.51, blue: 0.58)
+    private let segmentDivider = Color(red: 0.86, green: 0.88, blue: 0.91)
 
     init(initialTab: BookingTab = .booked) {
         self.initialTab = initialTab
@@ -31,12 +34,7 @@ struct BookingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Picker("Bookings", selection: $bookingTab) {
-                    ForEach(BookingTab.allCases) { tab in
-                        Text(tab.shortTitle).tag(tab)
-                    }
-                }
-                .pickerStyle(.segmented)
+                bookingSegmentControl
 
                 if filteredBookings.isEmpty {
                     emptyState
@@ -65,6 +63,48 @@ struct BookingsView: View {
         .sheet(item: $bookingToReschedule) { booking in
             RescheduleBookingSheet(booking: booking)
         }
+    }
+
+    private var bookingSegmentControl: some View {
+        let tabs = BookingTab.allCases
+        return HStack(spacing: 0) {
+            ForEach(Array(tabs.enumerated()), id: \.element.id) { index, tab in
+                let selected = bookingTab == tab
+                let nextSelected = index + 1 < tabs.count && bookingTab == tabs[index + 1]
+
+                Button {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        bookingTab = tab
+                    }
+                } label: {
+                    Text(tab.shortTitle)
+                        .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                        .foregroundStyle(selected ? headingColor : segmentInactiveText)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 11)
+                        .background {
+                            if selected {
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(Color.white)
+                                    .shadow(color: Color.black.opacity(0.04), radius: 2, y: 1)
+                            }
+                        }
+                }
+                .buttonStyle(.plain)
+
+                // Divider between inactive neighbors only (hidden next to selected pill)
+                if index < tabs.count - 1 {
+                    Rectangle()
+                        .fill(segmentDivider)
+                        .frame(width: 1, height: 16)
+                        .opacity(selected || nextSelected ? 0 : 1)
+                }
+            }
+        }
+        .padding(4)
+        .background(segmentTrack)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .accessibilityElement(children: .contain)
     }
 
     private var emptyState: some View {

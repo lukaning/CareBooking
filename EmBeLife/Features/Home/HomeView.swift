@@ -47,7 +47,7 @@ struct HomeView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { homeToolbar }
                 .navigationDestination(isPresented: $showBooked) {
-                    BookingsView(initialTab: .booked)
+                    BookingsView(initialTab: .requested)
                 }
                 .navigationDestination(item: $reviewProvider) { provider in
                     RateAndReviewView(provider: provider)
