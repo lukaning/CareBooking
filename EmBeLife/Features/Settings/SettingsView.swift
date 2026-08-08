@@ -86,8 +86,12 @@ struct SettingsView: View {
                     }
 
                     if showPreferences {
+                        Divider()
+                            .padding(.top, 8)
+                            .padding(.bottom, 4)
+
                         preferencesSection
-                            .padding(.top, 20)
+                            .padding(.top, 12)
                     }
                 }
                 .padding(.horizontal, 20)

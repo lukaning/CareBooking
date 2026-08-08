@@ -102,14 +102,21 @@ struct InviteUserView: View {
                         .foregroundStyle(Theme.darkText)
                 }
             }
-            .sheet(isPresented: $showSuccess, onDismiss: {
-                dismiss()
-            }) {
-                InvitationSentSheet(name: invitedDisplayName)
-                    .presentationDetents([.height(260)])
-                    .presentationDragIndicator(.visible)
+        }
+        .overlay {
+            if showSuccess {
+                InvitationSentOverlay(
+                    name: invitedDisplayName,
+                    onDismiss: {
+                        showSuccess = false
+                        dismiss()
+                    }
+                )
+                .transition(.opacity)
+                .zIndex(100)
             }
         }
+        .animation(.easeInOut(duration: 0.22), value: showSuccess)
     }
 
     private var defaultBullets: [String] {
@@ -215,30 +222,47 @@ struct InviteUserView: View {
     }
 }
 
-struct InvitationSentSheet: View {
+struct InvitationSentOverlay: View {
     let name: String
+    var onDismiss: () -> Void
 
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(Color(red: 0.30, green: 0.72, blue: 0.38))
-                .padding(.top, 12)
+        ZStack {
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onDismiss)
 
-            Text("Invitation Sent")
-                .font(.title3.weight(.bold))
-                .foregroundStyle(Theme.darkText)
+            // Centered card — not a sheet, so it sits mid-screen with even spacing.
+            VStack(spacing: 16) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 56))
+                    .foregroundStyle(Color(red: 0.30, green: 0.72, blue: 0.38))
 
-            Text("An invitation has been sent to \(name.isEmpty ? "their" : name) email address.")
-                .font(.subheadline)
-                .foregroundStyle(Theme.mutedText)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
+                Text("Invitation Sent")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Theme.darkText)
 
-            Spacer(minLength: 0)
+                Text("An invitation has been sent to \(name.isEmpty ? "their" : name) email address.")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.mutedText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 8)
+
+                Button("Done", action: onDismiss)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.brandOrange)
+                    .padding(.top, 4)
+            }
+            .padding(.horizontal, 28)
+            .padding(.vertical, 32)
+            .frame(maxWidth: 320)
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shadow(color: .black.opacity(0.12), radius: 24, y: 10)
+            .padding(.horizontal, 28)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
+        .accessibilityAddTraits(.isModal)
     }
 }
 
