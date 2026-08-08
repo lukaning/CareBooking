@@ -101,7 +101,7 @@ struct WelcomeStep: View {
                 Text("Hi, 👋")
                     .font(.system(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
-                    .padding(.top, 28)
+                    .padding(.top, 16)
 
                 Text("Welcome to")
                     .font(.system(size: 56, weight: .bold))
@@ -136,8 +136,8 @@ struct WelcomeStep: View {
     }
 
     private var welcomeHeroHeight: CGFloat {
-        // ~40% of a typical phone content area; keeps full-bleed top photo presence.
-        min(320, max(240, UIScreen.main.bounds.height * 0.38))
+        // Slightly shorter hero so the greeting sits higher on screen.
+        min(300, max(220, UIScreen.main.bounds.height * 0.34))
     }
 }
 
