@@ -101,7 +101,7 @@ struct WelcomeStep: View {
                 Text("Hi, 👋")
                     .font(.system(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
-                    .padding(.top, 16)
+                    .padding(.top, 10)
 
                 Text("Welcome to")
                     .font(.system(size: 56, weight: .bold))
@@ -124,7 +124,7 @@ struct WelcomeStep: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 24)
 
-            Spacer(minLength: 24)
+            Spacer(minLength: 16)
 
             Button("Next", action: onContinue)
                 .buttonStyle(PrimaryOrangeButtonStyle())
@@ -136,8 +136,8 @@ struct WelcomeStep: View {
     }
 
     private var welcomeHeroHeight: CGFloat {
-        // Slightly shorter hero so the greeting sits higher on screen.
-        min(300, max(220, UIScreen.main.bounds.height * 0.34))
+        // Larger photo band; greeting sits with a tight gap below the white edge.
+        min(380, max(280, UIScreen.main.bounds.height * 0.44))
     }
 }
 
