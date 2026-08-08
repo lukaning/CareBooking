@@ -99,12 +99,12 @@ struct WelcomeStep: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("Hi, 👋")
-                    .font(.system(size: 44, weight: .bold))
+                    .font(.system(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
                     .padding(.top, 28)
 
                 Text("Welcome to")
-                    .font(.system(size: 44, weight: .bold))
+                    .font(.system(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
                     .padding(.top, 2)
 
