@@ -515,14 +515,6 @@ struct ProviderCard: View {
                         Text("$\(provider.ratePerHour)/hour")
                             .font(.subheadline.weight(.semibold))
                     }
-
-                    Button(action: onRatingTap) {
-                        ProviderRatingLabel(
-                            rating: provider.rating,
-                            reviewCount: provider.reviewCount
-                        )
-                    }
-                    .buttonStyle(.plain)
                 }
             }
 
@@ -539,21 +531,29 @@ struct ProviderCard: View {
 
             HStack(spacing: 12) {
                 iconButton(systemName: "ellipsis")
-                iconButton(systemName: "play.rectangle.fill", tint: .red)
+                // FaceTime-style video marker — not a red YouTube-like play rectangle
+                iconButton(systemName: "video.fill", tint: Theme.linkBlue)
                 bookNowButton
             }
             .zIndex(isBookingMenuExpanded ? 20 : 0)
 
             Divider()
 
-            HStack {
-                Text("\(provider.bookingCount) of bookings")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.mutedText)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(Theme.mutedText)
+            Button(action: onRatingTap) {
+                HStack {
+                    ProviderRatingLabel(
+                        rating: provider.rating,
+                        reviewCount: provider.reviewCount
+                    )
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.mutedText)
+                }
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Reviews")
+            .accessibilityHint("View provider reviews")
         }
         .padding(16)
         // Avoid clipShape so the floating menu can hang over content below.
