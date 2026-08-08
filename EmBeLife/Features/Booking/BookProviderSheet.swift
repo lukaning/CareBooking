@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Multi-step booking: schedule → who → task details → payment → summary → requested booking.
+/// Multi-step booking: schedule → who → select category → task detail → payment → summary.
 struct BookProviderSheet: View {
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
@@ -11,7 +11,8 @@ struct BookProviderSheet: View {
     enum Step: Int, CaseIterable {
         case schedule
         case who
-        case tasks
+        case selectCategory
+        case taskDetail
         case payment
         case summary
     }
@@ -34,20 +35,16 @@ struct BookProviderSheet: View {
     @State private var newMemberLast = ""
     @State private var draftMembers: [FamilyMember] = []
 
-    // Task details
+    // Task flow
+    @State private var selectedCategoryIDs: Set<String> = []
+    @State private var selectedChecklistIDs: Set<UUID> = []
+    @State private var workingSuggestedTasks: [BookingChecklistTask] = []
     @State private var bookingTasks: [BookingChecklistTask] = []
-    @State private var taskSearch = ""
-    @State private var selectedTaskCategoryID: String?
-    @State private var selectedTaskGroupID: String?
-    @State private var isComposingTask = false
-    @State private var composeCategoryTitle = ""
-    @State private var composeSubcategoryTitle = ""
-    @State private var composeTitle = ""
-    @State private var composePriority: BookingTaskPriority = .medium
-    @State private var composeHasDeadline = false
-    @State private var composeDeadline = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
-    @State private var composeDescription = ""
+    @State private var taskDescriptionDetail = ""
+    @State private var estimatedTimeLabel = "30 min"
     @State private var showTaskValidation = false
+    @State private var checklistExpanded = true
+    @State private var showEstimatedTimePicker = false
 
     @State private var selectedPayment: PaymentMethodKind = .creditCard
     @State private var bankDetails = BankAccountDetails.sample
@@ -60,12 +57,15 @@ struct BookProviderSheet: View {
     @State private var submittedBookingID: UUID?
 
     private let durations = [15, 30, 45, 60, 75, 90, 120]
+    private let timeEstimates = ["15 min", "30 min", "45 min", "1 hour", "1.5 hours", "2 hours"]
     private let giftBalance = 240
     private let linkBlue = Theme.linkBlue
     private let softBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
-    private let selectedFill = Color(red: 1.0, green: 0.847, blue: 0.796)
+    private let selectedChipFill = Color(red: 0.88, green: 0.93, blue: 1.0)
+    private let paymentSelectedFill = Color(red: 1.0, green: 0.847, blue: 0.796)
     private let radioRing = Color(red: 0.70, green: 0.72, blue: 0.76)
     private let fieldLabel = Color(red: 0.10, green: 0.20, blue: 0.45)
+    private let checklistBG = Color(red: 0.94, green: 0.93, blue: 0.98)
 
     private var availableMembers: [FamilyMember] {
         let profileMembers = appModel.profile.familyMembers
@@ -93,6 +93,10 @@ struct BookProviderSheet: View {
         return Int((Double(provider.ratePerHour) * hours).rounded())
     }
 
+    private var selectedCategoryOptions: [BookingTaskOption] {
+        BookingTaskCatalog.allOptions.filter { selectedCategoryIDs.contains($0.id) }
+    }
+
     private var paymentMethodLabel: String {
         switch selectedPayment {
         case .bankAccount:
@@ -111,6 +115,23 @@ struct BookProviderSheet: View {
         }
     }
 
+    private var canGoForward: Bool {
+        switch step {
+        case .schedule:
+            return true
+        case .who:
+            return !selectedMemberIDs.isEmpty
+        case .selectCategory:
+            return !selectedCategoryIDs.isEmpty
+        case .taskDetail:
+            return !bookingTasks.isEmpty || !selectedChecklistIDs.isEmpty
+        case .payment:
+            return true
+        case .summary:
+            return true
+        }
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -125,8 +146,10 @@ struct BookProviderSheet: View {
                         scheduleStep
                     case .who:
                         whoStep
-                    case .tasks:
-                        tasksStep
+                    case .selectCategory:
+                        selectCategoryStep
+                    case .taskDetail:
+                        taskDetailStep
                     case .payment:
                         paymentStep
                     case .summary:
@@ -138,6 +161,21 @@ struct BookProviderSheet: View {
             .background(Color(.systemBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    if step != .schedule && step != .summary {
+                        Button {
+                            goBack()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(Theme.darkText)
+                                .frame(width: 32, height: 32)
+                                .background(Color(.tertiarySystemFill))
+                                .clipShape(Circle())
+                        }
+                        .accessibilityLabel("Back")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
@@ -154,6 +192,33 @@ struct BookProviderSheet: View {
             }
             .onAppear {
                 seedMembersIfNeeded()
+            }
+            .sheet(isPresented: $showEstimatedTimePicker) {
+                NavigationStack {
+                    List(timeEstimates, id: \.self) { label in
+                        Button {
+                            estimatedTimeLabel = label
+                            showEstimatedTimePicker = false
+                        } label: {
+                            HStack {
+                                Text(label)
+                                Spacer()
+                                if estimatedTimeLabel == label {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(linkBlue)
+                                }
+                            }
+                        }
+                    }
+                    .navigationTitle("Estimated Time")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Close") { showEstimatedTimePicker = false }
+                        }
+                    }
+                }
+                .presentationDetents([.medium])
             }
         }
         .presentationDetents([.large])
@@ -172,7 +237,7 @@ struct BookProviderSheet: View {
                 Text(headerTitle)
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Theme.darkText)
-                if step != .payment && step != .summary && step != .tasks {
+                if step == .schedule || step == .who {
                     Text(provider.name)
                         .font(.subheadline)
                         .foregroundStyle(Theme.mutedText)
@@ -184,11 +249,128 @@ struct BookProviderSheet: View {
 
     private var headerTitle: String {
         switch step {
+        case .schedule, .who: "Book a Provider"
+        case .selectCategory: "Select category"
+        case .taskDetail: "Detail"
         case .payment: "Set up payment"
-        case .tasks: "Task details"
         case .summary: "Booking details"
-        default: "Book a Provider"
         }
+    }
+
+    // MARK: - Navigation
+
+    private func goBack() {
+        showTaskValidation = false
+        withAnimation(.easeInOut(duration: 0.2)) {
+            switch step {
+            case .schedule, .summary:
+                break
+            case .who:
+                step = .schedule
+            case .selectCategory:
+                step = .who
+            case .taskDetail:
+                step = .selectCategory
+            case .payment:
+                step = .taskDetail
+            }
+        }
+    }
+
+    private func goForward() {
+        switch step {
+        case .schedule:
+            withAnimation(.easeInOut(duration: 0.2)) { step = .who }
+        case .who:
+            if selectedMemberIDs.isEmpty {
+                isAddingMember = true
+                return
+            }
+            withAnimation(.easeInOut(duration: 0.2)) { step = .selectCategory }
+        case .selectCategory:
+            if selectedCategoryIDs.isEmpty {
+                withAnimation { showTaskValidation = true }
+                return
+            }
+            // Seed checklist selection from category chips when entering detail.
+            rebuildSuggestedTasks(selectAllIfEmpty: true)
+            showTaskValidation = false
+            withAnimation(.easeInOut(duration: 0.2)) { step = .taskDetail }
+        case .taskDetail:
+            finalizeTasksFromChecklistIfNeeded()
+            if bookingTasks.isEmpty {
+                withAnimation { showTaskValidation = true }
+                return
+            }
+            showTaskValidation = false
+            withAnimation(.easeInOut(duration: 0.2)) { step = .payment }
+        case .payment:
+            confirmPaymentAndSummarize()
+        case .summary:
+            break
+        }
+    }
+
+    private func rebuildSuggestedTasks(selectAllIfEmpty: Bool = false) {
+        let previouslyCheckedTitles = Set(
+            workingSuggestedTasks
+                .filter { selectedChecklistIDs.contains($0.id) }
+                .map(\.title)
+        )
+        workingSuggestedTasks = BookingTaskCatalog.suggestedChecklist(from: selectedCategoryOptions)
+        if previouslyCheckedTitles.isEmpty, selectAllIfEmpty {
+            selectedChecklistIDs = Set(workingSuggestedTasks.map(\.id))
+        } else {
+            selectedChecklistIDs = Set(
+                workingSuggestedTasks
+                    .filter { previouslyCheckedTitles.contains($0.title) }
+                    .map(\.id)
+            )
+        }
+    }
+
+    private func finalizeTasksFromChecklistIfNeeded() {
+        let chosen = workingSuggestedTasks.filter { selectedChecklistIDs.contains($0.id) }
+        if bookingTasks.isEmpty, !chosen.isEmpty {
+            bookingTasks = chosen.map { task in
+                var copy = task
+                if !taskDescriptionDetail.isEmpty {
+                    copy.detailDescription = taskDescriptionDetail
+                }
+                return copy
+            }
+        }
+    }
+
+    private func stepFooter(
+        primaryTitle: String,
+        primaryEnabled: Bool = true,
+        showBack: Bool = true,
+        validationMessage: String? = nil
+    ) -> some View {
+        VStack(spacing: 10) {
+            if let validationMessage, showTaskValidation {
+                Text(validationMessage)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.errorCoral)
+            }
+            Button(primaryTitle) {
+                goForward()
+            }
+            .buttonStyle(PrimaryOrangeButtonStyle())
+            .opacity(primaryEnabled ? 1 : 0.55)
+            .disabled(!primaryEnabled && step != .taskDetail && step != .selectCategory)
+
+            if showBack, step != .schedule, step != .summary {
+                Button("Back") {
+                    goBack()
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.mutedText)
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 20)
     }
 
     // MARK: - Step 1: Schedule
@@ -238,14 +420,7 @@ struct BookProviderSheet: View {
 
             Spacer(minLength: 0)
 
-            Button("Next Step") {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    step = .who
-                }
-            }
-            .buttonStyle(PrimaryOrangeButtonStyle())
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            stepFooter(primaryTitle: "Next Step", showBack: false)
         }
     }
 
@@ -400,18 +575,10 @@ struct BookProviderSheet: View {
                 .padding(20)
             }
 
-            Button("Continue") {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    if selectedMemberIDs.isEmpty {
-                        isAddingMember = true
-                    } else {
-                        step = .tasks
-                    }
-                }
-            }
-            .buttonStyle(PrimaryOrangeButtonStyle())
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            stepFooter(
+                primaryTitle: "Continue",
+                primaryEnabled: !selectedMemberIDs.isEmpty
+            )
             .opacity(selectedMemberIDs.isEmpty ? 0.55 : 1)
         }
     }
@@ -569,563 +736,351 @@ struct BookProviderSheet: View {
             && !newMemberLast.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
-    // MARK: - Step 3: Task details
+    // MARK: - Step 3: Select category
 
-    private var tasksStep: some View {
+    private var selectCategoryStep: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    Text("Add the care tasks for this visit")
+                    Text("Choose at least one care task category for this visit")
                         .font(.subheadline)
                         .foregroundStyle(Theme.mutedText)
 
-                    if !bookingTasks.isEmpty {
+                    ForEach(BookingTaskCatalog.groups) { group in
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Added tasks (\(bookingTasks.count))")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.darkText)
-                            ForEach(bookingTasks) { task in
-                                addedTaskCard(task)
+                            HStack(spacing: 8) {
+                                Image(systemName: "list.bullet.rectangle")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Theme.mutedText)
+                                Text(group.title)
+                                    .font(.subheadline.weight(.bold))
+                                    .foregroundStyle(Theme.darkText)
+                            }
+
+                            FlowLayout(spacing: 8) {
+                                ForEach(group.options) { option in
+                                    categoryChip(option)
+                                }
                             }
                         }
-                    }
-
-                    if isComposingTask {
-                        composeTaskForm
-                    } else {
-                        taskCatalogBrowser
                     }
                 }
                 .padding(20)
             }
 
-            VStack(spacing: 10) {
-                if showTaskValidation && bookingTasks.isEmpty {
-                    Text("Add at least one task to continue")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.errorCoral)
-                }
-                Button("Continue") {
-                    if bookingTasks.isEmpty {
-                        withAnimation { showTaskValidation = true }
-                    } else {
-                        showTaskValidation = false
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            step = .payment
-                        }
-                    }
-                }
-                .buttonStyle(PrimaryOrangeButtonStyle())
-                .opacity(bookingTasks.isEmpty ? 0.7 : 1)
-
-                Button("Back") {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        isComposingTask = false
-                        step = .who
-                    }
-                }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.mutedText)
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
-        }
-    }
-
-    private var taskCatalogBrowser: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            // Search
-            HStack(spacing: 10) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(Theme.mutedText)
-                TextField("Search tasks or equipment support", text: $taskSearch)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-            }
-            .padding(12)
-            .background(Color(red: 0.96, green: 0.965, blue: 0.975))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-            Text("Choose category")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.darkText)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(ServiceCategory.all) { category in
-                        let selected = selectedTaskCategoryID == category.id
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                selectedTaskCategoryID = category.id
-                                selectedTaskGroupID = nil
-                            }
-                        } label: {
-                            Text(shortCategoryTitle(category.title))
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(selected ? .white : Theme.darkText)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 9)
-                                .background(selected ? Theme.brandOrange : Color(red: 0.94, green: 0.95, blue: 0.97))
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-
-            if let categoryID = selectedTaskCategoryID {
-                if OnboardingServiceCatalog.usesNestedOptions(categoryID) {
-                    let groups = filteredGroups(for: categoryID)
-                    Text("Sub-category")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.mutedText)
-
-                    ForEach(groups) { group in
-                        let expanded = selectedTaskGroupID == group.id
-                        VStack(alignment: .leading, spacing: 8) {
-                            Button {
-                                withAnimation(.easeInOut(duration: 0.15)) {
-                                    selectedTaskGroupID = expanded ? nil : group.id
-                                }
-                            } label: {
-                                HStack {
-                                    Text(group.title)
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(Theme.darkText)
-                                    Spacer()
-                                    Image(systemName: expanded ? "chevron.down" : "chevron.right")
-                                        .font(.caption.weight(.semibold))
-                                        .foregroundStyle(Theme.mutedText)
-                                }
-                                .padding(12)
-                                .background(Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(softBorder, lineWidth: 1)
-                                )
-                            }
-                            .buttonStyle(.plain)
-
-                            if expanded {
-                                ForEach(filteredOptions(group.children)) { option in
-                                    taskOptionRow(
-                                        option,
-                                        categoryTitle: categoryTitle(for: categoryID),
-                                        subcategoryTitle: group.title
-                                    )
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    Text("Select a task")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.mutedText)
-
-                    ForEach(filteredOptions(OnboardingServiceCatalog.subOptions(for: categoryID))) { option in
-                        taskOptionRow(
-                            option,
-                            categoryTitle: categoryTitle(for: categoryID),
-                            subcategoryTitle: option.title
-                        )
-                    }
-                }
-            } else if !taskSearch.trimmingCharacters(in: .whitespaces).isEmpty {
-                // Global search across categories
-                Text("Search results")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.mutedText)
-                ForEach(globalSearchResults, id: \.id) { hit in
-                    taskOptionRow(
-                        hit.option,
-                        categoryTitle: hit.categoryTitle,
-                        subcategoryTitle: hit.groupTitle ?? hit.option.title
-                    )
-                }
-                if globalSearchResults.isEmpty {
-                    Text("No matching tasks")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.mutedText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 20)
-                }
-            } else {
-                Text("Pick a category or search above to add tasks.")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.mutedText)
-                    .padding(.top, 4)
-            }
-        }
-    }
-
-    private func taskOptionRow(
-        _ option: ServiceSubOption,
-        categoryTitle: String,
-        subcategoryTitle: String
-    ) -> some View {
-        Button {
-            beginComposeTask(
-                categoryTitle: categoryTitle,
-                subcategoryTitle: subcategoryTitle,
-                suggestedTitle: option.title
+            stepFooter(
+                primaryTitle: "Next",
+                primaryEnabled: !selectedCategoryIDs.isEmpty,
+                validationMessage: "Select at least 1 task to continue"
             )
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(Theme.brandOrange)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(option.title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                    Text(categoryTitle)
-                        .font(.caption)
-                        .foregroundStyle(Theme.mutedText)
-                        .lineLimit(2)
+        }
+    }
+
+    private func categoryChip(_ option: BookingTaskOption) -> some View {
+        let selected = selectedCategoryIDs.contains(option.id)
+        return Button {
+            withAnimation(.easeInOut(duration: 0.12)) {
+                if selected {
+                    selectedCategoryIDs.remove(option.id)
+                } else {
+                    selectedCategoryIDs.insert(option.id)
                 }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.mutedText)
+                // Keep booking tasks in sync when categories change
+                bookingTasks = []
+                selectedChecklistIDs = []
+                workingSuggestedTasks = []
+                showTaskValidation = false
             }
-            .padding(14)
-            .background(Color.white)
+        } label: {
+            HStack(spacing: 6) {
+                if selected {
+                    Image(systemName: "checkmark")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(linkBlue)
+                }
+                Text(option.title)
+                    .font(.subheadline.weight(selected ? .semibold : .regular))
+                    .foregroundStyle(selected ? Color(red: 0.15, green: 0.25, blue: 0.55) : Theme.darkText)
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(selected ? selectedChipFill : Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(softBorder, lineWidth: 1)
+                    .stroke(selected ? linkBlue.opacity(0.45) : softBorder, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
     }
 
-    private var composeTaskForm: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text("Add task details")
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(Theme.darkText)
-                Spacer()
-                Button("Cancel") {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        isComposingTask = false
-                        resetComposeForm()
-                    }
-                }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.mutedText)
-            }
+    // MARK: - Step 4: Task detail / checklist
 
-            // Context summary card
-            VStack(alignment: .leading, spacing: 8) {
-                summaryKV("Category", composeCategoryTitle)
-                if !composeSubcategoryTitle.isEmpty {
-                    summaryKV("Sub-category", composeSubcategoryTitle)
-                }
-                summaryKV("Rate", "$\(provider.ratePerHour)/hour")
-                summaryKV("Duration", "\(durationMinutes) min")
-            }
-            .padding(14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(red: 0.97, green: 0.975, blue: 0.985))
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-
-            formLabeledField("Title of task", required: true) {
-                TextField("e.g. Morning hygiene routine", text: $composeTitle)
-                    .padding(12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .stroke(
-                                showTaskValidation && composeTitle.trimmingCharacters(in: .whitespaces).isEmpty
-                                    ? Theme.errorCoral
-                                    : softBorder,
-                                lineWidth: 1
-                            )
-                    )
-            }
-
-            formLabeledField("Priority", required: false) {
-                Picker("Priority", selection: $composePriority) {
-                    ForEach(BookingTaskPriority.allCases) { priority in
-                        Text(priority.rawValue).tag(priority)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-
-            formLabeledField("Deadline", required: false) {
-                Toggle(isOn: $composeHasDeadline) {
-                    Text(composeHasDeadline ? "Set deadline" : "No deadline")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.darkText)
-                }
-                .tint(Theme.brandOrange)
-                if composeHasDeadline {
-                    DatePicker(
-                        "Deadline",
-                        selection: $composeDeadline,
-                        in: Date()...,
-                        displayedComponents: [.date, .hourAndMinute]
-                    )
-                    .labelsHidden()
-                    .datePickerStyle(.compact)
-                }
-            }
-
-            formLabeledField("Description", required: false) {
-                TextField("Describe what support is needed…", text: $composeDescription, axis: .vertical)
-                    .lineLimit(3...6)
-                    .padding(12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .stroke(softBorder, lineWidth: 1)
-                    )
-            }
-
-            Button("Add details") {
-                addComposedTask()
-            }
-            .font(.headline.weight(.bold))
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(
-                composeTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? Color.black.opacity(0.35)
-                    : Color.black
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .disabled(composeTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        }
-        .padding(16)
-        .background(Color(red: 0.985, green: 0.985, blue: 0.99))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-
-    private func formLabeledField<Content: View>(
-        _ title: String,
-        required: Bool,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 4) {
-                Text(title)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(fieldLabel)
-                if required {
-                    Text("*")
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(Theme.errorCoral)
-                }
-            }
-            content()
-        }
-    }
-
-    private func summaryKV(_ key: String, _ value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(key)
-                .font(.caption)
-                .foregroundStyle(Theme.mutedText)
-                .frame(width: 96, alignment: .leading)
-            Text(value)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.darkText)
-            Spacer(minLength: 0)
-        }
-    }
-
-    private func addedTaskCard(_ task: BookingChecklistTask) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Theme.darkText)
-                Text(task.categoryPathLabel)
-                    .font(.caption)
-                    .foregroundStyle(Theme.mutedText)
-                    .lineLimit(2)
-                HStack(spacing: 8) {
-                    Text(task.priority.rawValue)
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(priorityColor(task.priority))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(priorityColor(task.priority).opacity(0.12))
-                        .clipShape(Capsule())
-                    if let deadline = task.deadline {
-                        Text(deadline.formatted(date: .abbreviated, time: .shortened))
-                            .font(.caption2.weight(.medium))
+    private var taskDetailStep: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    // Selected category chips
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Task Category")
+                            .font(.caption)
                             .foregroundStyle(Theme.mutedText)
+
+                        if selectedCategoryOptions.isEmpty {
+                            Text("No categories selected")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.mutedText)
+                        } else {
+                            FlowLayout(spacing: 8) {
+                                ForEach(selectedCategoryOptions) { option in
+                                    HStack(spacing: 6) {
+                                        Text(option.title)
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundStyle(.white)
+                                        Button {
+                                            selectedCategoryIDs.remove(option.id)
+                                            bookingTasks = []
+                                            rebuildSuggestedTasks(selectAllIfEmpty: true)
+                                        } label: {
+                                            Image(systemName: "xmark")
+                                                .font(.caption2.weight(.bold))
+                                                .foregroundStyle(.white.opacity(0.9))
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 8)
+                                    .background(Theme.brandOrange)
+                                    .clipShape(Capsule())
+                                }
+                            }
+                        }
                     }
+
+                    // Suggested tasks checklist
+                    VStack(alignment: .leading, spacing: 0) {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                checklistExpanded.toggle()
+                            }
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(Color(red: 0.45, green: 0.40, blue: 0.75))
+                                Text("Suggested Tasks Checklist")
+                                    .font(.subheadline.weight(.bold))
+                                    .foregroundStyle(Theme.darkText)
+                                Spacer()
+                                Image(systemName: checklistExpanded ? "chevron.down" : "chevron.right")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Theme.mutedText)
+                            }
+                            .padding(14)
+                        }
+                        .buttonStyle(.plain)
+
+                        if checklistExpanded {
+                            VStack(spacing: 10) {
+                                ForEach(workingSuggestedTasks) { task in
+                                    suggestedTaskRow(task)
+                                }
+
+                                Button {
+                                    confirmChecklistSelection()
+                                } label: {
+                                    Text("Confirm")
+                                        .font(.headline.weight(.bold))
+                                        .foregroundStyle(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 14)
+                                        .background(Theme.brandOrange)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.top, 4)
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.bottom, 14)
+                        }
+                    }
+                    .background(checklistBG)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+                    // Confirmed tasks
+                    if !bookingTasks.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(Color(red: 0.20, green: 0.70, blue: 0.40))
+                                Text("Tasks Checklist (\(bookingTasks.count))")
+                                    .font(.subheadline.weight(.bold))
+                                    .foregroundStyle(Theme.darkText)
+                            }
+                            ForEach(bookingTasks) { task in
+                                HStack(alignment: .top, spacing: 10) {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(task.title)
+                                            .font(.subheadline.weight(.semibold))
+                                        Text(task.categoryPathLabel)
+                                            .font(.caption)
+                                            .foregroundStyle(Theme.mutedText)
+                                    }
+                                    Spacer()
+                                    Button {
+                                        bookingTasks.removeAll { $0.id == task.id }
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundStyle(Theme.errorCoral)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            }
+                        }
+                    }
+
+                    // Task details form
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "list.clipboard")
+                                .foregroundStyle(Theme.mutedText)
+                            Text("Task Details")
+                                .font(.subheadline.weight(.bold))
+                                .foregroundStyle(Theme.darkText)
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Description")
+                                .font(.caption)
+                                .foregroundStyle(Theme.mutedText)
+                            TextField("Describe the support needed…", text: $taskDescriptionDetail, axis: .vertical)
+                                .lineLimit(3...6)
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .stroke(softBorder, lineWidth: 1)
+                                )
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Estimated Time")
+                                .font(.caption)
+                                .foregroundStyle(Theme.mutedText)
+                            Button {
+                                showEstimatedTimePicker = true
+                            } label: {
+                                HStack {
+                                    Text(estimatedTimeLabel)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundStyle(Theme.darkText)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(Theme.mutedText)
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .stroke(softBorder, lineWidth: 1)
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Add any relevant files/ photos")
+                                .font(.caption)
+                                .foregroundStyle(Theme.mutedText)
+                            HStack {
+                                Text("Optional attachments")
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.mutedText)
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(Theme.mutedText)
+                            }
+                            .padding(12)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .stroke(softBorder, lineWidth: 1)
+                            )
+                        }
+                    }
+                    .padding(16)
+                    .background(Color(red: 0.97, green: 0.975, blue: 0.985))
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
-                if !task.detailDescription.isEmpty {
-                    Text(task.detailDescription)
+                .padding(20)
+            }
+
+            stepFooter(
+                primaryTitle: "Continue",
+                primaryEnabled: canGoForward,
+                validationMessage: "Add at least 1 task to continue (tap Confirm on the checklist)"
+            )
+        }
+    }
+
+    private func suggestedTaskRow(_ task: BookingChecklistTask) -> some View {
+        let selected = selectedChecklistIDs.contains(task.id)
+        return Button {
+            withAnimation(.easeInOut(duration: 0.12)) {
+                if selected {
+                    selectedChecklistIDs.remove(task.id)
+                } else {
+                    selectedChecklistIDs.insert(task.id)
+                }
+                showTaskValidation = false
+            }
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: selected ? "checkmark.square.fill" : "square")
+                    .font(.title3)
+                    .foregroundStyle(selected ? Color(red: 0.20, green: 0.70, blue: 0.40) : linkBlue.opacity(0.55))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(task.title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.darkText)
+                        .multilineTextAlignment(.leading)
+                    Text(task.category)
                         .font(.caption)
                         .foregroundStyle(Theme.mutedText)
-                        .lineLimit(2)
                 }
+                Spacer(minLength: 0)
             }
-            Spacer(minLength: 8)
-            Button {
-                withAnimation {
-                    bookingTasks.removeAll { $0.id == task.id }
-                }
-            } label: {
-                Image(systemName: "trash")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.errorCoral)
-            }
-            .buttonStyle(.plain)
+            .padding(12)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
-        .padding(14)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(softBorder, lineWidth: 1)
-        )
+        .buttonStyle(.plain)
     }
 
-    private func priorityColor(_ priority: BookingTaskPriority) -> Color {
-        switch priority {
-        case .low: Color(red: 0.35, green: 0.55, blue: 0.95)
-        case .medium: Theme.brandOrange
-        case .high: Theme.errorCoral
-        }
-    }
-
-    private func beginComposeTask(categoryTitle: String, subcategoryTitle: String, suggestedTitle: String) {
-        composeCategoryTitle = categoryTitle
-        composeSubcategoryTitle = subcategoryTitle
-        composeTitle = suggestedTitle
-        composePriority = .medium
-        composeHasDeadline = false
-        composeDeadline = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
-        composeDescription = ""
-        showTaskValidation = false
-        withAnimation(.easeInOut(duration: 0.2)) {
-            isComposingTask = true
-        }
-    }
-
-    private func addComposedTask() {
-        let title = composeTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !title.isEmpty else {
-            showTaskValidation = true
+    private func confirmChecklistSelection() {
+        let chosen = workingSuggestedTasks.filter { selectedChecklistIDs.contains($0.id) }
+        guard !chosen.isEmpty else {
+            withAnimation { showTaskValidation = true }
             return
         }
-        let task = BookingChecklistTask(
-            title: title,
-            category: composeCategoryTitle,
-            subcategory: composeSubcategoryTitle,
-            priority: composePriority,
-            deadline: composeHasDeadline ? composeDeadline : nil,
-            detailDescription: composeDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-        )
         withAnimation(.easeInOut(duration: 0.2)) {
-            bookingTasks.append(task)
-            isComposingTask = false
-            resetComposeForm()
+            bookingTasks = chosen.map { task in
+                var copy = task
+                if !taskDescriptionDetail.isEmpty {
+                    copy.detailDescription = taskDescriptionDetail
+                }
+                return copy
+            }
             showTaskValidation = false
         }
-    }
-
-    private func resetComposeForm() {
-        composeCategoryTitle = ""
-        composeSubcategoryTitle = ""
-        composeTitle = ""
-        composePriority = .medium
-        composeHasDeadline = false
-        composeDescription = ""
-    }
-
-    private func shortCategoryTitle(_ title: String) -> String {
-        if title.count <= 22 { return title }
-        let first = title.split(separator: "/").first.map(String.init) ?? title
-        if first.count <= 28 { return first }
-        return String(first.prefix(24)) + "…"
-    }
-
-    private func categoryTitle(for id: String) -> String {
-        ServiceCategory.all.first(where: { $0.id == id })?.title ?? id
-    }
-
-    private func filteredOptions(_ options: [ServiceSubOption]) -> [ServiceSubOption] {
-        let q = taskSearch.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !q.isEmpty else { return options }
-        return options.filter { $0.title.lowercased().contains(q) }
-    }
-
-    private func filteredGroups(for categoryID: String) -> [ServiceOptionGroup] {
-        let groups = OnboardingServiceCatalog.optionGroups(for: categoryID)
-        let q = taskSearch.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !q.isEmpty else { return groups }
-        return groups.compactMap { group in
-            let children = group.children.filter {
-                $0.title.lowercased().contains(q) || group.title.lowercased().contains(q)
-            }
-            if children.isEmpty && !group.title.lowercased().contains(q) {
-                return nil
-            }
-            return ServiceOptionGroup(
-                id: group.id,
-                title: group.title,
-                children: children.isEmpty ? group.children : children
-            )
-        }
-    }
-
-    private struct TaskSearchHit: Identifiable {
-        var id: String { "\(categoryID)-\(option.id)" }
-        let categoryID: String
-        let categoryTitle: String
-        let groupTitle: String?
-        let option: ServiceSubOption
-    }
-
-    private var globalSearchResults: [TaskSearchHit] {
-        let q = taskSearch.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !q.isEmpty else { return [] }
-        var hits: [TaskSearchHit] = []
-        for category in ServiceCategory.all {
-            if OnboardingServiceCatalog.usesNestedOptions(category.id) {
-                for group in OnboardingServiceCatalog.optionGroups(for: category.id) {
-                    for option in group.children where option.title.lowercased().contains(q)
-                        || group.title.lowercased().contains(q)
-                        || category.title.lowercased().contains(q)
-                    {
-                        hits.append(
-                            TaskSearchHit(
-                                categoryID: category.id,
-                                categoryTitle: category.title,
-                                groupTitle: group.title,
-                                option: option
-                            )
-                        )
-                    }
-                }
-            } else {
-                for option in OnboardingServiceCatalog.subOptions(for: category.id)
-                    where option.title.lowercased().contains(q) || category.title.lowercased().contains(q)
-                {
-                    hits.append(
-                        TaskSearchHit(
-                            categoryID: category.id,
-                            categoryTitle: category.title,
-                            groupTitle: nil,
-                            option: option
-                        )
-                    )
-                }
-            }
-        }
-        return hits
     }
 
     // MARK: - Step 4: Payment
@@ -1145,16 +1100,10 @@ struct BookProviderSheet: View {
                 .padding(20)
             }
 
-            Button {
-                confirmPaymentAndSummarize()
-            } label: {
-                Text("Request Booking")
-            }
-            .buttonStyle(PrimaryOrangeButtonStyle())
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
-            .disabled(!paymentReady)
-            .opacity(paymentReady ? 1 : 0.55)
+            stepFooter(
+                primaryTitle: "Request Booking",
+                primaryEnabled: paymentReady
+            )
         }
     }
 
@@ -1206,7 +1155,7 @@ struct BookProviderSheet: View {
             }
         }
         .padding(14)
-        .background(isSelected ? selectedFill : Color.white)
+        .background(isSelected ? paymentSelectedFill : Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -1325,7 +1274,7 @@ struct BookProviderSheet: View {
                                     HStack(spacing: 8) {
                                         Text("Priority: \(task.priority.rawValue)")
                                             .font(.caption.weight(.semibold))
-                                            .foregroundStyle(priorityColor(task.priority))
+                                            .foregroundStyle(Theme.brandOrange)
                                         if let deadline = task.deadline {
                                             Text("Due \(deadline.formatted(date: .abbreviated, time: .omitted))")
                                                 .font(.caption)

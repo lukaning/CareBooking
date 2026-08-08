@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1C0010000000000000001 /* BookingTaskCatalog.swift */; };
 		04BA17E838DF4F2FA2B63A71 /* EmBeLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */; };
 		08F72FE0F2824771ABB5D4AD /* OnboardingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD210CCE9E0D4C98B78955DC /* OnboardingViews.swift */; };
 		34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3BA9C6496A444DABE40EFF /* RootView.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B7A1C0010000000000000001 /* BookingTaskCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingTaskCatalog.swift; sourceTree = "<group>"; };
 		18D4A1803BAD494E9EA0297C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1F1050CDF517458A8ACD1927 /* AuthViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViews.swift; sourceTree = "<group>"; };
 		30D1503C76AA4E0198DB2D93 /* EmBeLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmBeLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				E2ONBRDMDL234567890ABC /* OnboardingModels.swift */,
+				B7A1C0010000000000000001 /* BookingTaskCatalog.swift */,
 				B1NOTESMDL234567890ABC /* NotesModels.swift */,
 				C3NOTMDL234567890ABCDE /* NotificationModels.swift */,
 				A1MSGMDL234567890ABCDE /* MessageModels.swift */,
@@ -390,6 +393,7 @@
 				34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */,
 				B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */,
 				8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */,
+				B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */,
 				A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */,
 				A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */,
 				C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */,
