@@ -10,6 +10,7 @@ struct BookingsView: View {
     @State private var expandedBookingID: UUID?
     @State private var bookingToReschedule: Booking?
     @State private var editBookingID: UUID?
+    @State private var addTaskBookingID: UUID?
 
     private let headingColor = Color(red: 0.12, green: 0.14, blue: 0.18)
     private let mutedColor = Color(red: 0.45, green: 0.48, blue: 0.56)
@@ -62,6 +63,14 @@ struct BookingsView: View {
         }
         .sheet(item: $bookingToReschedule) { booking in
             RescheduleBookingSheet(booking: booking)
+        }
+        .sheet(isPresented: Binding(
+            get: { addTaskBookingID != nil },
+            set: { if !$0 { addTaskBookingID = nil } }
+        )) {
+            if let addTaskBookingID {
+                AddTaskToBookingSheet(bookingID: addTaskBookingID)
+            }
         }
     }
 
@@ -339,6 +348,13 @@ struct BookingsView: View {
                 }
             }
             .buttonStyle(.plain)
+
+            if booking.status == .requested || booking.status == .booked {
+                AddTaskCTAButton {
+                    addTaskBookingID = booking.id
+                }
+                .padding(.top, 4)
+            }
         }
     }
 

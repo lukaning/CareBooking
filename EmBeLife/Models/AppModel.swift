@@ -237,6 +237,15 @@ final class AppModel {
         bookings[index] = booking
     }
 
+    /// Append care tasks to a Requested or Booked appointment checklist.
+    func appendChecklistTasks(to bookingID: UUID, tasks: [BookingChecklistTask]) {
+        guard !tasks.isEmpty,
+              let index = bookings.firstIndex(where: { $0.id == bookingID })
+        else { return }
+        guard bookings[index].status != .completed else { return }
+        bookings[index].checklistTasks.append(contentsOf: tasks)
+    }
+
     func rescheduleBooking(
         id: UUID,
         date: Date,

@@ -11,6 +11,7 @@ struct ProfileView: View {
     @State private var expandedMemberID: UUID?
     @State private var bookingToReschedule: Booking?
     @State private var bookingRoute: BookingRoute?
+    @State private var addTaskBookingID: UUID?
     @State private var showPayReceive = false
     @State private var reviewProvider: Provider?
     @State private var reviewingBookingID: UUID?
@@ -97,6 +98,14 @@ struct ProfileView: View {
         }
         .sheet(item: $bookingToReschedule) { booking in
             RescheduleBookingSheet(booking: booking)
+        }
+        .sheet(isPresented: Binding(
+            get: { addTaskBookingID != nil },
+            set: { if !$0 { addTaskBookingID = nil } }
+        )) {
+            if let addTaskBookingID {
+                AddTaskToBookingSheet(bookingID: addTaskBookingID)
+            }
         }
         .onAppear {
             appModel.seedBookingsIfNeeded()
@@ -866,6 +875,13 @@ struct ProfileView: View {
                 }
             }
             .buttonStyle(.plain)
+
+            if booking.status == .requested || booking.status == .booked {
+                AddTaskCTAButton {
+                    addTaskBookingID = booking.id
+                }
+                .padding(.top, 4)
+            }
         }
     }
 

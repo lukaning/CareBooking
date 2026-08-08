@@ -12,6 +12,7 @@ struct EditBookingView: View {
     @State private var showReschedule = false
     @State private var showCancelConfirm = false
     @State private var showSavedBanner = false
+    @State private var showAddTask = false
 
     @State private var draftTitle = ""
     @State private var draftDescription = ""
@@ -92,6 +93,9 @@ struct EditBookingView: View {
             if let booking {
                 RescheduleBookingSheet(booking: booking)
             }
+        }
+        .sheet(isPresented: $showAddTask) {
+            AddTaskToBookingSheet(bookingID: bookingID)
         }
         .confirmationDialog(
             "Cancel this booking?",
@@ -447,6 +451,10 @@ struct EditBookingView: View {
                             }
                             .buttonStyle(.plain)
                         }
+                    } else if booking.status != .completed {
+                        AddTaskCTAButton {
+                            showAddTask = true
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -457,6 +465,11 @@ struct EditBookingView: View {
         .background(cardFill)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: cardShadow, radius: 6, y: 4)
+        .onChange(of: showAddTask) { _, isPresented in
+            if !isPresented {
+                loadDraftFromBooking()
+            }
+        }
     }
 
     private func taskDetailCard(_ task: BookingChecklistTask, canDelete: Bool) -> some View {
