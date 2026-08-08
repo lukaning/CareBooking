@@ -127,11 +127,10 @@ struct WelcomeStep: View {
             Spacer(minLength: 24)
 
             Button("Next", action: onContinue)
-                .font(.system(size: 17, weight: .semibold))
                 .buttonStyle(PrimaryOrangeButtonStyle())
                 .padding(.horizontal, 20)
                 .padding(.top, 12)
-                .padding(.bottom, 20)
+                .padding(.bottom, 16)
         }
         .background(pageBG.ignoresSafeArea())
     }
@@ -624,11 +623,11 @@ struct LocationStep: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 14) {
                     Text("Where do you need help?")
                         .font(.title.weight(.semibold))
                         .foregroundStyle(Theme.darkText)
-                        .padding(.top, 28)
+                        .padding(.top, 20)
 
                     currentLocationSection
                     customizeLocationSection
@@ -725,16 +724,15 @@ struct LocationStep: View {
     }
 
     private var currentLocationPanel: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             Text(currentAddressText)
                 .font(.subheadline)
                 .foregroundStyle(Theme.darkText)
                 .fixedSize(horizontal: false, vertical: true)
 
-            locationMapPreview(coordinate: mapCoordinate)
-
             distanceSelector
 
+            // Confirm sits above the map so it stays on the first viewport.
             confirmButton(
                 enabled: true,
                 isConfirmed: appModel.locationConfirmed && appModel.locationChoice == .current
@@ -745,12 +743,14 @@ struct LocationStep: View {
                 }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
+
+            locationMapPreview(coordinate: mapCoordinate)
         }
         .padding(.leading, 40)
     }
 
     private var customizeLocationPanel: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             TextField("Address", text: Binding(
                 get: { appModel.customAddress },
                 set: {
@@ -787,8 +787,6 @@ struct LocationStep: View {
                 .foregroundStyle(Theme.grayscale70)
                 .fixedSize(horizontal: false, vertical: true)
 
-            locationMapPreview(coordinate: mapCoordinate)
-
             distanceSelector
 
             confirmButton(
@@ -803,6 +801,8 @@ struct LocationStep: View {
                 }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
+
+            locationMapPreview(coordinate: mapCoordinate)
         }
         .padding(16)
         .background(Color.white)
@@ -887,7 +887,7 @@ struct LocationStep: View {
             coordinate: coordinate,
             radiusMiles: appModel.searchRadiusMiles
         )
-        .frame(height: 180)
+        .frame(height: 110)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 

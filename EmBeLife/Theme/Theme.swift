@@ -34,10 +34,11 @@ struct HeroHeaderImage: View {
 struct PrimaryOrangeButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
+            .font(.headline.weight(.bold))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            // Match PrimaryBlackButtonStyle / "Get Started" control height.
+            .padding(.vertical, 18)
             .background(Theme.brandOrange.opacity(configuration.isPressed ? 0.85 : 1))
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }

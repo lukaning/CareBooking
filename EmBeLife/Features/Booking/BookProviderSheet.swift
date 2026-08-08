@@ -23,9 +23,9 @@ struct BookProviderSheet: View {
     }
 
     @State private var step: Step = .schedule
-    @State private var selectedField: ScheduleField = .duration
+    @State private var selectedField: ScheduleField = .date
 
-    @State private var selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
+    @State private var selectedDate = Calendar.current.startOfDay(for: .now)
     @State private var startTime = Calendar.current.date(bySettingHour: 12, minute: 30, second: 0, of: .now) ?? .now
     @State private var durationMinutes = 30
 
@@ -136,32 +136,40 @@ struct BookProviderSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                header
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 12)
+            Group {
+                switch step {
+                case .summary:
+                    summaryStep
+                case .requested:
+                    requestedStep
+                default:
+                    VStack(spacing: 0) {
+                        header
+                            .padding(.horizontal, 20)
+                            .padding(.top, 8)
+                            .padding(.bottom, 12)
 
-                Group {
-                    switch step {
-                    case .schedule:
-                        scheduleStep
-                    case .who:
-                        whoStep
-                    case .selectCategory:
-                        selectCategoryStep
-                    case .taskDetail:
-                        taskDetailStep
-                    case .payment:
-                        paymentStep
-                    case .summary:
-                        summaryStep
-                    case .requested:
-                        requestedStep
+                        Group {
+                            switch step {
+                            case .schedule:
+                                scheduleStep
+                            case .who:
+                                whoStep
+                            case .selectCategory:
+                                selectCategoryStep
+                            case .taskDetail:
+                                taskDetailStep
+                            case .payment:
+                                paymentStep
+                            case .summary, .requested:
+                                EmptyView()
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -181,14 +189,7 @@ struct BookProviderSheet: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    if step == .summary {
-                        Button("Edit") {
-                            goBack()
-                        }
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(linkBlue)
-                        .accessibilityLabel("Edit booking")
-                    } else if step != .requested {
+                    if step != .summary && step != .requested {
                         Button {
                             dismiss()
                         } label: {
@@ -234,8 +235,20 @@ struct BookProviderSheet: View {
                 .presentationDetents([.medium])
             }
         }
-        .presentationDetents([.large])
+        .presentationDetents(bookingPresentationDetents)
         .presentationDragIndicator(.visible)
+        .presentationCornerRadius(28)
+    }
+
+    private var bookingPresentationDetents: Set<PresentationDetent> {
+        switch step {
+        case .requested:
+            return [.height(340)]
+        case .summary:
+            return [.medium, .large]
+        default:
+            return [.large]
+        }
     }
 
     // MARK: - Header
@@ -258,6 +271,34 @@ struct BookProviderSheet: View {
             }
             Spacer(minLength: 0)
         }
+    }
+
+    /// Design header: orange accent | centered title | optional trailing action.
+    private func bookingDetailsChrome() -> some View {
+        bookingDetailsChrome { EmptyView() }
+    }
+
+    private func bookingDetailsChrome<Trailing: View>(
+        @ViewBuilder trailing: () -> Trailing
+    ) -> some View {
+        ZStack {
+            HStack {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Theme.brandOrange)
+                    .frame(width: 4, height: 22)
+                Spacer(minLength: 0)
+                trailing()
+                    .frame(minWidth: 40, alignment: .trailing)
+            }
+
+            Text("Booking details")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(Theme.darkText)
+                .allowsHitTesting(false)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 10)
+        .padding(.bottom, 18)
     }
 
     private var headerTitle: String {
@@ -1327,59 +1368,134 @@ struct BookProviderSheet: View {
 
     private var summaryStep: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    HStack(alignment: .top, spacing: 12) {
-                        summaryRow(label: "Booking Dates", value: bookingDateLabel)
-                        summaryRow(label: "To who", value: recipientLabel)
-                    }
-
-                    if !bookingTasks.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Task details")
-                                .font(.subheadline.weight(.bold))
-                                .foregroundStyle(Theme.darkText)
-                            ForEach(bookingTasks) { task in
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text(task.title)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundStyle(Theme.darkText)
-                                    Text(task.categoryPathLabel)
-                                        .font(.caption)
-                                        .foregroundStyle(Theme.mutedText)
-                                    if !task.detailDescription.isEmpty {
-                                        Text(task.detailDescription)
-                                            .font(.caption)
-                                            .foregroundStyle(Theme.mutedText)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(12)
-                                .background(Color(red: 0.97, green: 0.975, blue: 0.985))
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            }
-                        }
-                    }
-
-                    labeledIconRow(icon: "calendar", title: "Service Date", value: serviceDateLabel)
-                    labeledIconRow(
-                        icon: "clock",
-                        title: "Time",
-                        value: "\(startTimeLabel)\n\(durationMinutes) min"
-                    )
-                    labeledIconRow(icon: "face.smiling", title: "Provider", value: provider.name)
-                    labeledIconRow(icon: "receipt", title: "Total", value: "$\(estimatedTotal)")
-                    labeledIconRow(icon: "creditcard", title: "Payment method", value: paymentMethodLabel)
+            bookingDetailsChrome {
+                Button("Edit") {
+                    goBack()
                 }
-                .padding(20)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(linkBlue)
+            }
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    // Top meta: two columns, plain text (no filled cards)
+                    HStack(alignment: .top, spacing: 16) {
+                        summaryMetaColumn(label: "Booking Dates", value: bookingDateLabel)
+                        summaryMetaColumn(label: "To who", value: recipientLabel)
+                    }
+                    .padding(.bottom, 28)
+
+                    VStack(spacing: 22) {
+                        detailIconRow(
+                            icon: "calendar",
+                            label: "Service Date:",
+                            value: serviceDateLabel
+                        )
+                        detailIconRow(
+                            icon: "calendar.badge.clock",
+                            label: "Time:",
+                            primaryValue: startTimeLabel,
+                            secondaryValue: "\(durationMinutes) min"
+                        )
+                        detailIconRow(
+                            icon: "face.smiling",
+                            label: "Provider",
+                            value: provider.name
+                        )
+                        detailIconRow(
+                            icon: "bookmark",
+                            label: "Total:",
+                            value: "$\(estimatedTotal)"
+                        )
+                        detailIconRow(
+                            icon: "wallet.pass",
+                            label: "Payment method:",
+                            value: summaryPaymentLabel
+                        )
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 12)
             }
 
             Button("Request Booking") {
                 goForward()
             }
-            .buttonStyle(PrimaryOrangeButtonStyle())
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .font(.headline.weight(.bold))
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 18)
+            .background(Theme.brandOrange)
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .padding(.horizontal, 24)
+            .padding(.top, 8)
+            .padding(.bottom, 24)
+        }
+    }
+
+    private var summaryPaymentLabel: String {
+        switch selectedPayment {
+        case .bankAccount: return "Bank account"
+        case .zelle: return "Zelle"
+        case .venmo: return "Venmo"
+        case .paypal: return "PayPal"
+        case .giftFund: return "Gift Fund"
+        case .creditCard: return "Credit card"
+        }
+    }
+
+    private func summaryMetaColumn(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label)
+                .font(.system(size: 13, weight: .regular))
+                .foregroundStyle(Theme.mutedText)
+            Text(value)
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Theme.darkText)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func detailIconRow(
+        icon: String,
+        label: String,
+        value: String
+    ) -> some View {
+        detailIconRow(icon: icon, label: label, primaryValue: value, secondaryValue: nil)
+    }
+
+    private func detailIconRow(
+        icon: String,
+        label: String,
+        primaryValue: String,
+        secondaryValue: String?
+    ) -> some View {
+        HStack(alignment: .center, spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .regular))
+                .foregroundStyle(Color(red: 0.62, green: 0.64, blue: 0.68))
+                .frame(width: 24, height: 24)
+
+            Text(label)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(Theme.mutedText)
+
+            Spacer(minLength: 8)
+
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(primaryValue)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.darkText)
+                    .multilineTextAlignment(.trailing)
+                if let secondaryValue {
+                    Text(secondaryValue)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Theme.darkText)
+                        .multilineTextAlignment(.trailing)
+                }
+            }
         }
     }
 
@@ -1387,68 +1503,41 @@ struct BookProviderSheet: View {
 
     private var requestedStep: some View {
         VStack(spacing: 0) {
-            Spacer(minLength: 0)
+            bookingDetailsChrome()
 
-            VStack(spacing: 16) {
+            Spacer(minLength: 12)
+
+            VStack(spacing: 18) {
                 Image(systemName: "tray.and.arrow.up")
-                    .font(.system(size: 56, weight: .regular))
-                    .foregroundStyle(Theme.mutedText)
-                    .padding(.bottom, 8)
+                    .font(.system(size: 64, weight: .light))
+                    .foregroundStyle(Color(red: 0.58, green: 0.56, blue: 0.72))
+                    .symbolRenderingMode(.monochrome)
+                    .padding(.bottom, 4)
 
                 Text("Booking Requested!")
-                    .font(.title2.weight(.bold))
+                    .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(Theme.darkText)
 
-                Text("Your booking has been requested and waiting for confirmation from your provider.")
-                    .font(.subheadline)
+                Text("Your booking has been requested and waiting for confirmation from your provider")
+                    .font(.system(size: 15, weight: .regular))
                     .foregroundStyle(Theme.mutedText)
                     .multilineTextAlignment(.center)
+                    .lineSpacing(3)
                     .padding(.horizontal, 28)
             }
             .frame(maxWidth: .infinity)
 
-            Spacer(minLength: 0)
+            Spacer(minLength: 20)
 
+            // Match design (no primary CTA); keep a quiet control for accessibility dismiss.
             Button("Done") {
                 dismiss()
             }
-            .buttonStyle(PrimaryOrangeButtonStyle())
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Theme.mutedText.opacity(0.85))
+            .padding(.bottom, 16)
         }
-    }
-
-    private func summaryRow(label: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(Theme.mutedText)
-            Text(value)
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Theme.darkText)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(Color(red: 0.97, green: 0.975, blue: 0.985))
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-    }
-
-    private func labeledIconRow(icon: String, title: String, value: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.body)
-                .foregroundStyle(Theme.mutedText)
-                .frame(width: 24)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundStyle(Theme.mutedText)
-                Text(value)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.darkText)
-            }
-            Spacer()
-        }
+        .accessibilityAction(.escape) { dismiss() }
     }
 
     // MARK: - Shared
