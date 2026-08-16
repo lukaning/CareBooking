@@ -46,6 +46,8 @@ struct BookProviderSheet: View {
     @State private var showTaskValidation = false
     @State private var checklistExpanded = true
     @State private var showEstimatedTimePicker = false
+    @State private var showAddSubtaskComposer = false
+    @State private var composerSubtasks: [BookingChecklistTask] = []
 
     @State private var selectedPayment: PaymentMethodKind = .creditCard
     @State private var bankDetails = BankAccountDetails.sample
@@ -235,6 +237,16 @@ struct BookProviderSheet: View {
                 }
                 .presentationDetents([.medium])
             }
+            .sheet(isPresented: $showAddSubtaskComposer) {
+                AddSubTaskComposerView(
+                    onCancel: { showAddSubtaskComposer = false },
+                    onSave: { task in
+                        composerSubtasks.append(task)
+                        showAddSubtaskComposer = false
+                    }
+                )
+                .presentationDetents([.large])
+            }
         }
         .presentationDetents(bookingPresentationDetents)
         .presentationDragIndicator(step == .summary || step == .requested ? .hidden : .visible)
@@ -355,6 +367,7 @@ struct BookProviderSheet: View {
             showTaskValidation = false
             withAnimation(.easeInOut(duration: 0.2)) { step = .taskDetail }
         case .taskDetail:
+            ensureComposerTaskIfNeeded()
             if bookingTasks.isEmpty {
                 withAnimation { showTaskValidation = true }
                 return
@@ -989,14 +1002,18 @@ struct BookProviderSheet: View {
                     .padding(16)
                     .background(Color(red: 0.97, green: 0.975, blue: 0.985))
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+                    SubtaskListSection(subtasks: composerSubtasks) {
+                        showAddSubtaskComposer = true
+                    }
                 }
                 .padding(20)
             }
 
             stepFooter(
                 primaryTitle: "Continue",
-                primaryEnabled: !bookingTasks.isEmpty,
-                validationMessage: "Add at least 1 task to continue (tap Confirm on the checklist)"
+                primaryEnabled: !bookingTasks.isEmpty || !composerSubtasks.isEmpty || !taskDescriptionDetail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                validationMessage: "Add a task, description, or sub-task to continue"
             )
         }
     }
@@ -1081,33 +1098,52 @@ struct BookProviderSheet: View {
             if checklistExpanded {
                 VStack(spacing: 10) {
                     ForEach(bookingTasks) { task in
-                        HStack(alignment: .top, spacing: 12) {
-                            Image(systemName: "checkmark.square.fill")
-                                .font(.title3)
-                                .foregroundStyle(Color(red: 0.20, green: 0.70, blue: 0.40))
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(task.title)
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(Theme.darkText)
-                                Text(task.category)
-                                    .font(.caption)
-                                    .foregroundStyle(Theme.mutedText)
-                            }
-                            Spacer(minLength: 0)
-                            Button {
-                                withAnimation(.easeInOut(duration: 0.15)) {
-                                    bookingTasks.removeAll { $0.id == task.id }
-                                    // Re-show suggested checklist when nothing remains confirmed.
-                                    if bookingTasks.isEmpty {
-                                        rebuildSuggestedTasks(selectAllIfEmpty: true)
-                                    }
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: "checkmark.square.fill")
+                                    .font(.title3)
+                                    .foregroundStyle(Color(red: 0.20, green: 0.70, blue: 0.40))
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(task.title)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Theme.darkText)
+                                    Text(task.category)
+                                        .font(.caption)
+                                        .foregroundStyle(Theme.mutedText)
                                 }
-                            } label: {
-                                Image(systemName: "trash")
-                                    .font(.caption.weight(.semibold))
-                                    .foregroundStyle(Theme.errorCoral)
+                                Spacer(minLength: 0)
+                                Button {
+                                    withAnimation(.easeInOut(duration: 0.15)) {
+                                        bookingTasks.removeAll { $0.id == task.id }
+                                        if bookingTasks.isEmpty {
+                                            rebuildSuggestedTasks(selectAllIfEmpty: true)
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(Theme.errorCoral)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
+
+                            ForEach(task.subtasks) { subtask in
+                                HStack(alignment: .top, spacing: 10) {
+                                    Image(systemName: "square")
+                                        .foregroundStyle(Theme.mutedText)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(subtask.title)
+                                            .font(.subheadline.weight(.semibold))
+                                        if let subtitle = subtask.scheduleSubtitle {
+                                            Text(subtitle)
+                                                .font(.caption)
+                                                .foregroundStyle(Theme.mutedText)
+                                        }
+                                    }
+                                    Spacer(minLength: 0)
+                                }
+                                .padding(.leading, 28)
+                            }
                         }
                         .padding(12)
                         .background(Color.white)
@@ -1197,9 +1233,34 @@ struct BookProviderSheet: View {
                 }
                 return copy
             }
+            attachComposerSubtasksToBookingTasks()
             checklistExpanded = true
             showTaskValidation = false
         }
+    }
+
+    private func ensureComposerTaskIfNeeded() {
+        if bookingTasks.isEmpty {
+            let trimmed = taskDescriptionDetail.trimmingCharacters(in: .whitespacesAndNewlines)
+            let title = trimmed.isEmpty ? composerSubtasks.first?.title : trimmed
+            guard let title, !title.isEmpty else { return }
+            let option = selectedCategoryOptions.first
+            bookingTasks = [
+                BookingChecklistTask(
+                    title: title,
+                    category: option?.categoryTitle ?? "Custom task",
+                    subcategory: option?.title ?? title,
+                    detailDescription: trimmed,
+                    estimatedMinutes: BookingChecklistTask.minutes(fromEstimateLabel: estimatedTimeLabel)
+                )
+            ]
+        }
+        attachComposerSubtasksToBookingTasks()
+    }
+
+    private func attachComposerSubtasksToBookingTasks() {
+        guard !composerSubtasks.isEmpty, !bookingTasks.isEmpty else { return }
+        bookingTasks[0].subtasks = composerSubtasks
     }
 
     // MARK: - Step 5: Payment
@@ -1649,6 +1710,8 @@ struct BookProviderSheet: View {
             }
             return "\(appointmentType.title) · \(durationMinutes) min · $\(estimatedTotal) · \(paymentMethodLabel)"
         }()
+
+        attachComposerSubtasksToBookingTasks()
 
         let booking = Booking(
             provider: provider,

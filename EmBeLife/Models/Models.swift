@@ -114,6 +114,9 @@ struct BookingChecklistTask: Identifiable, Hashable {
     var priority: BookingTaskPriority
     var deadline: Date?
     var detailDescription: String
+    var estimatedMinutes: Int?
+    var attachmentNames: [String]
+    var subtasks: [BookingChecklistTask]
 
     init(
         id: UUID = UUID(),
@@ -122,7 +125,10 @@ struct BookingChecklistTask: Identifiable, Hashable {
         subcategory: String = "",
         priority: BookingTaskPriority = .medium,
         deadline: Date? = nil,
-        detailDescription: String = ""
+        detailDescription: String = "",
+        estimatedMinutes: Int? = nil,
+        attachmentNames: [String] = [],
+        subtasks: [BookingChecklistTask] = []
     ) {
         self.id = id
         self.title = title
@@ -131,11 +137,54 @@ struct BookingChecklistTask: Identifiable, Hashable {
         self.priority = priority
         self.deadline = deadline
         self.detailDescription = detailDescription
+        self.estimatedMinutes = estimatedMinutes
+        self.attachmentNames = attachmentNames
+        self.subtasks = subtasks
     }
 
     var categoryPathLabel: String {
         if subcategory.isEmpty { return category }
         return "\(category) · \(subcategory)"
+    }
+
+    var scheduleSubtitle: String? {
+        if let deadline {
+            let time = deadline.formatted(date: .omitted, time: .shortened)
+            if Calendar.current.isDateInToday(deadline) {
+                return "Today at \(time)"
+            }
+            return "\(deadline.formatted(date: .abbreviated, time: .omitted)) at \(time)"
+        }
+        if let estimatedMinutes {
+            return BookingChecklistTask.estimateLabel(for: estimatedMinutes)
+        }
+        return nil
+    }
+
+    static let estimateOptions = ["15 min", "30 min", "45 min", "1 hour", "1.5 hours", "2 hours"]
+
+    static func minutes(fromEstimateLabel label: String) -> Int? {
+        switch label {
+        case "15 min": return 15
+        case "30 min": return 30
+        case "45 min": return 45
+        case "1 hour": return 60
+        case "1.5 hours": return 90
+        case "2 hours": return 120
+        default: return nil
+        }
+    }
+
+    static func estimateLabel(for minutes: Int) -> String {
+        switch minutes {
+        case 15: return "15 min"
+        case 30: return "30 min"
+        case 45: return "45 min"
+        case 60: return "1 hour"
+        case 90: return "1.5 hours"
+        case 120: return "2 hours"
+        default: return "\(minutes) min"
+        }
     }
 }
 

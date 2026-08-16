@@ -246,6 +246,16 @@ final class AppModel {
         bookings[index].checklistTasks.append(contentsOf: tasks)
     }
 
+    /// Append a sub-task under an existing checklist item on a Requested or Booked visit.
+    func appendSubtask(to bookingID: UUID, parentTaskID: UUID, subtask: BookingChecklistTask) {
+        guard let bookingIndex = bookings.firstIndex(where: { $0.id == bookingID }) else { return }
+        guard bookings[bookingIndex].status != .completed else { return }
+        guard let taskIndex = bookings[bookingIndex].checklistTasks.firstIndex(where: { $0.id == parentTaskID }) else {
+            return
+        }
+        bookings[bookingIndex].checklistTasks[taskIndex].subtasks.append(subtask)
+    }
+
     func rescheduleBooking(
         id: UUID,
         date: Date,

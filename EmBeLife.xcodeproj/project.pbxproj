@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1C0010000000000000001 /* BookingTaskCatalog.swift */; };
 		04BA17E838DF4F2FA2B63A71 /* EmBeLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */; };
 		08F72FE0F2824771ABB5D4AD /* OnboardingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD210CCE9E0D4C98B78955DC /* OnboardingViews.swift */; };
 		34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3BA9C6496A444DABE40EFF /* RootView.swift */; };
@@ -16,24 +15,27 @@
 		70ABC330977D45CF8E6B6A5B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC90410B92A471FBE8CFBBB /* Theme.swift */; };
 		8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */; };
 		9DE90EA2C0D54B59AF6B0C95 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBD3560D1BC4998BD69B719 /* ProfileView.swift */; };
-		A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BOOKVW234567890ABCDEF /* BookingsView.swift */; };
 		A1ADDTSKSRC234567890AB /* AddTaskToBookingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ADDTSK234567890ABCDEF /* AddTaskToBookingSheet.swift */; };
+		A1CARECOMPSRC23456789AB /* CareTaskComposerViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CARECOMP234567890ABCDE /* CareTaskComposerViews.swift */; };
+		A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BOOKVW234567890ABCDEF /* BookingsView.swift */; };
 		A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */; };
+		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
+		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
+		A3LOCMGR234567890ABCDEF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4LOCMGR234567890ABCDEF /* LocationManager.swift */; };
 		A4D5E6F708194A0234DEF012 /* FeatureAccessListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */; };
+		A4DASHVW234567890ABCDEF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DASHVW234567890ABCDEF /* DashboardView.swift */; };
+		A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */; };
+		A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTMDL234567890ABCDE /* GiftModels.swift */; };
+		A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5PAYRECV234567890ABCDE /* PayReceiveView.swift */; };
+		A6REVVMDL234567890ABCDE /* ReviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVMDL234567890ABCDE /* ReviewModels.swift */; };
+		A6REVVW234567890ABCDEF /* ReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVW234567890ABCDEF /* ReviewViews.swift */; };
 		B2C3D4E5F647891021BCDEF0 /* PaymentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */; };
 		B2MSGMDL234567890ABCDE /* MessageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1MSGMDL234567890ABCDE /* MessageModels.swift */; };
 		B6373694A844458AA0C86287 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D4A1803BAD494E9EA0297C /* MainTabView.swift */; };
+		B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1C0010000000000000001 /* BookingTaskCatalog.swift */; };
 		B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1050CDF517458A8ACD1927 /* AuthViews.swift */; };
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 		B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */; };
-		A5PAYRECV234567890ABCDE /* PayReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5PAYRECV234567890ABCDE /* PayReceiveView.swift */; };
-		A5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */; };
-		A5GIFTMDL234567890ABCDE /* GiftModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5GIFTMDL234567890ABCDE /* GiftModels.swift */; };
-		A6REVVMDL234567890ABCDE /* ReviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVMDL234567890ABCDE /* ReviewModels.swift */; };
-		A6REVVW234567890ABCDEF /* ReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6REVVW234567890ABCDEF /* ReviewViews.swift */; };
-		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
-		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
-		A4DASHVW234567890ABCDEF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DASHVW234567890ABCDEF /* DashboardView.swift */; };
 		C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1NOTESMDL234567890ABC /* NotesModels.swift */; };
 		C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDITBK234567890ABCDEF /* EditBookingView.swift */; };
 		C5EAC8970E2A40A99703B386 /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D761365D7E1A4CAAA4730F7D /* ProfileModels.swift */; };
@@ -48,11 +50,9 @@
 		EF740A1E67BE48519D2A321A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6AE23790F13461B911BAD1F /* Assets.xcassets */; };
 		F1ONBRDMDL234567890ABC /* OnboardingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2ONBRDMDL234567890ABC /* OnboardingModels.swift */; };
 		F6MSGVW234567890ABCDEF /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5MSGVW234567890ABCDEF /* MessagesView.swift */; };
-		A3LOCMGR234567890ABCDEF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4LOCMGR234567890ABCDEF /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B7A1C0010000000000000001 /* BookingTaskCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingTaskCatalog.swift; sourceTree = "<group>"; };
 		18D4A1803BAD494E9EA0297C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1F1050CDF517458A8ACD1927 /* AuthViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViews.swift; sourceTree = "<group>"; };
 		30D1503C76AA4E0198DB2D93 /* EmBeLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmBeLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,26 +61,29 @@
 		5233FEB2A55E4F9BA9124241 /* ProfileDetailEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailEditView.swift; sourceTree = "<group>"; };
 		811085CE35FB4C15896EFEA8 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookProviderSheet.swift; sourceTree = "<group>"; };
-		A1BOOKVW234567890ABCDEF /* BookingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingsView.swift; sourceTree = "<group>"; };
-		A1ADDTSK234567890ABCDEF /* AddTaskToBookingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskToBookingSheet.swift; sourceTree = "<group>"; };
 		9A4AE86E400646F7A553090E /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		9E3BA9C6496A444DABE40EFF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		A1ADDTSK234567890ABCDEF /* AddTaskToBookingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskToBookingSheet.swift; sourceTree = "<group>"; };
+		A1CARECOMP234567890ABCDE /* CareTaskComposerViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareTaskComposerViews.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6478910ABCDEF /* PaymentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModels.swift; sourceTree = "<group>"; };
+		A1BOOKVW234567890ABCDEF /* BookingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingsView.swift; sourceTree = "<group>"; };
 		A1MSGMDL234567890ABCDE /* MessageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModels.swift; sourceTree = "<group>"; };
 		A7NOTVW234567890ABCDEF /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		B5PAYRECV234567890ABCDE /* PayReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayReceiveView.swift; sourceTree = "<group>"; };
-		B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftExperienceViews.swift; sourceTree = "<group>"; };
-		B5GIFTMDL234567890ABCDE /* GiftModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftModels.swift; sourceTree = "<group>"; };
-		B6REVVMDL234567890ABCDE /* ReviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModels.swift; sourceTree = "<group>"; };
-		B6REVVW234567890ABCDEF /* ReviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViews.swift; sourceTree = "<group>"; };
-		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
-		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
-		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		ADBD3560D1BC4998BD69B719 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		B1NOTESMDL234567890ABC /* NotesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesModels.swift; sourceTree = "<group>"; };
+		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
 		B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RescheduleBookingSheet.swift; sourceTree = "<group>"; };
+		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
+		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		B4LOCMGR234567890ABCDEF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		B5E6F708192A4B1345EF0123 /* UserManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementView.swift; sourceTree = "<group>"; };
+		B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftExperienceViews.swift; sourceTree = "<group>"; };
+		B5GIFTMDL234567890ABCDE /* GiftModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftModels.swift; sourceTree = "<group>"; };
+		B5PAYRECV234567890ABCDE /* PayReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayReceiveView.swift; sourceTree = "<group>"; };
+		B6REVVMDL234567890ABCDE /* ReviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModels.swift; sourceTree = "<group>"; };
+		B6REVVW234567890ABCDEF /* ReviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViews.swift; sourceTree = "<group>"; };
+		B7A1C0010000000000000001 /* BookingTaskCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingTaskCatalog.swift; sourceTree = "<group>"; };
 		C3D4E5F64789103212CDEF01 /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
 		C3NOTMDL234567890ABCDE /* NotificationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModels.swift; sourceTree = "<group>"; };
 		D1A2B3C4E5F6478901ABCDEF /* UserManagementModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementModels.swift; sourceTree = "<group>"; };
@@ -94,7 +97,6 @@
 		E4A63E30AE5A4896B294A751 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		E5MSGVW234567890ABCDEF /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F3C4D5E6F708490123CDEF01 /* FeatureAccessListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureAccessListView.swift; sourceTree = "<group>"; };
-		B4LOCMGR234567890ABCDEF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			children = (
 				8D33E1AD229446318C8C57B9 /* BookProviderSheet.swift */,
 				A1ADDTSK234567890ABCDEF /* AddTaskToBookingSheet.swift */,
+				A1CARECOMP234567890ABCDE /* CareTaskComposerViews.swift */,
 				A1BOOKVW234567890ABCDEF /* BookingsView.swift */,
 				D4EDITBK234567890ABCDEF /* EditBookingView.swift */,
 				B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */,
@@ -154,23 +157,6 @@
 				C0F53E804D6F4C3B1E9A7F42 /* Settings */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		G6REVIEWGRP234567890ABCD /* Review */ = {
-			isa = PBXGroup;
-			children = (
-				B6REVVW234567890ABCDEF /* ReviewViews.swift */,
-			);
-			path = Review;
-			sourceTree = "<group>";
-		};
-		G1PAYRECVGRP234567890AB /* Gift */ = {
-			isa = PBXGroup;
-			children = (
-				B5PAYRECV234567890ABCDE /* PayReceiveView.swift */,
-				B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */,
-			);
-			path = Gift;
 			sourceTree = "<group>";
 		};
 		92337F985607488E9AFC0A96 /* Onboarding */ = {
@@ -301,6 +287,23 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
+		G1PAYRECVGRP234567890AB /* Gift */ = {
+			isa = PBXGroup;
+			children = (
+				B5PAYRECV234567890ABCDE /* PayReceiveView.swift */,
+				B5GIFTEXP234567890ABCDE /* GiftExperienceViews.swift */,
+			);
+			path = Gift;
+			sourceTree = "<group>";
+		};
+		G6REVIEWGRP234567890ABCD /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				B6REVVW234567890ABCDEF /* ReviewViews.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -398,6 +401,7 @@
 				8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */,
 				B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */,
 				A1ADDTSKSRC234567890AB /* AddTaskToBookingSheet.swift in Sources */,
+				A1CARECOMPSRC23456789AB /* CareTaskComposerViews.swift in Sources */,
 				A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */,
 				A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */,
 				C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */,

@@ -1,95 +1,87 @@
+import PhotosUI
 import SwiftUI
 
-/// Flow for appending care tasks to an existing Requested or Booked appointment.
+/// Flow for appending a care task (and optional sub-tasks) to a Requested or Booked appointment.
 struct AddTaskToBookingSheet: View {
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
 
     let bookingID: UUID
+    /// When set, Done saves a sub-task onto this existing checklist item instead of a new parent task.
+    var parentTaskID: UUID? = nil
 
-    private enum Step {
-        case selectCategory
-        case detail
+    private enum Screen {
+        case addTask
+        case suggested
+        case addSubtask
     }
 
-    @State private var step: Step = .selectCategory
-    @State private var selectedCategoryIDs: Set<String> = []
-    @State private var selectedChecklistIDs: Set<UUID> = []
+    @State private var screen: Screen
+    @State private var selectedCategoryID: String?
+    @State private var descriptionText = ""
+    @State private var estimatedLabel = ""
+    @State private var photoItems: [PhotosPickerItem] = []
+    @State private var attachmentNames: [String] = []
+    @State private var subtasks: [BookingChecklistTask] = []
+    @State private var selectedSuggestedIDs: Set<UUID> = []
     @State private var workingSuggestedTasks: [BookingChecklistTask] = []
-    @State private var confirmedTasks: [BookingChecklistTask] = []
-    @State private var taskDescriptionDetail = ""
+    @State private var selectedCategoryIDs: Set<String> = []
+    @State private var showTimePicker = false
+    @State private var showCategoryPicker = false
     @State private var showValidation = false
-    @State private var checklistExpanded = true
 
     private let linkBlue = Theme.linkBlue
     private let softBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
     private let selectedChipFill = Color(red: 0.88, green: 0.93, blue: 1.0)
-    private let checklistBG = Color(red: 0.94, green: 0.93, blue: 0.98)
-    private let confirmedChecklistBG = Color(red: 0.90, green: 0.96, blue: 0.92)
+    private let pageBG = Color(red: 0.96, green: 0.96, blue: 0.97)
 
-    private var booking: Booking? {
-        appModel.booking(id: bookingID)
+    init(bookingID: UUID, parentTaskID: UUID? = nil) {
+        self.bookingID = bookingID
+        self.parentTaskID = parentTaskID
+        _screen = State(initialValue: parentTaskID == nil ? .addTask : .addSubtask)
     }
 
-    private var selectedCategoryOptions: [BookingTaskOption] {
-        BookingTaskCatalog.allOptions.filter { selectedCategoryIDs.contains($0.id) }
+    private var selectedCategoryOption: BookingTaskOption? {
+        BookingTaskCatalog.allOptions.first { $0.id == selectedCategoryID }
     }
 
-    private var canSave: Bool {
-        !confirmedTasks.isEmpty || !selectedChecklistIDs.isEmpty
+    private var categoryPlaceholder: String {
+        selectedCategoryOption?.title ?? "Select one of the following category"
+    }
+
+    private var canSaveTask: Bool {
+        let hasBody = !descriptionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || selectedCategoryOption != nil
+            || !subtasks.isEmpty
+        return hasBody
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                header
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 12)
-
-                Group {
-                    switch step {
-                    case .selectCategory:
-                        selectCategoryStep
-                    case .detail:
-                        detailStep
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            }
-            .background(Color(.systemBackground))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    if step == .detail {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                step = .selectCategory
-                            }
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .font(.body.weight(.semibold))
-                                .foregroundStyle(Theme.darkText)
-                                .frame(width: 32, height: 32)
-                                .background(Color(.tertiarySystemFill))
-                                .clipShape(Circle())
+        Group {
+            switch screen {
+            case .addTask:
+                addTaskScreen
+            case .suggested:
+                suggestedScreen
+            case .addSubtask:
+                AddSubTaskComposerView(
+                    onCancel: {
+                        if parentTaskID != nil {
+                            dismiss()
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.2)) { screen = .addTask }
                         }
-                        .accessibilityLabel("Back")
+                    },
+                    onSave: { task in
+                        if let parentTaskID {
+                            appModel.appendSubtask(to: bookingID, parentTaskID: parentTaskID, subtask: task)
+                            dismiss()
+                        } else {
+                            subtasks.append(task)
+                            withAnimation(.easeInOut(duration: 0.2)) { screen = .addTask }
+                        }
                     }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.darkText)
-                            .frame(width: 32, height: 32)
-                            .background(Color(.tertiarySystemFill))
-                            .clipShape(Circle())
-                    }
-                    .accessibilityLabel("Close")
-                }
+                )
             }
         }
         .presentationDetents([.large])
@@ -97,82 +89,225 @@ struct AddTaskToBookingSheet: View {
         .presentationCornerRadius(28)
     }
 
-    private var header: some View {
-        HStack(spacing: 10) {
-            RoundedRectangle(cornerRadius: 3)
-                .fill(Theme.brandOrange)
-                .frame(width: 4, height: 22)
-            Text(step == .selectCategory ? "Select category" : "Add Task")
-                .font(.title3.weight(.bold))
-                .foregroundStyle(Theme.darkText)
-            Spacer(minLength: 0)
+    // MARK: - Add Task
+
+    private var addTaskScreen: some View {
+        VStack(spacing: 0) {
+            AddTaskNavHeader(
+                title: "Add Task",
+                doneEnabled: canSaveTask
+            ) {
+                dismiss()
+            } onDone: {
+                save()
+            }
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    SuggestedTasksBanner {
+                        rebuildSuggestedTasks(selectAllIfEmpty: workingSuggestedTasks.isEmpty)
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            screen = .suggested
+                        }
+                    }
+
+                    TaskComposerFieldCard {
+                        TaskComposerLabeledField(label: "Task Category") {
+                            Button {
+                                showCategoryPicker = true
+                            } label: {
+                                HStack {
+                                    Text(categoryPlaceholder)
+                                        .font(.subheadline.weight(selectedCategoryOption == nil ? .regular : .semibold))
+                                        .foregroundStyle(selectedCategoryOption == nil ? Theme.mutedText : Theme.darkText)
+                                        .multilineTextAlignment(.leading)
+                                    Spacer()
+                                    Image(systemName: "chevron.down")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(Theme.mutedText)
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(TaskComposerOutlineField.stroke())
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        TaskComposerLabeledField(label: "Description") {
+                            TextField("", text: $descriptionText, axis: .vertical)
+                                .font(.body.weight(.semibold))
+                                .lineLimit(3...6)
+                                .padding(12)
+                                .frame(minHeight: 72, alignment: .topLeading)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(TaskComposerOutlineField.stroke())
+                        }
+
+                        TaskComposerLabeledField(label: "Estimated Time") {
+                            Button {
+                                showTimePicker = true
+                            } label: {
+                                HStack {
+                                    Text(estimatedLabel.isEmpty ? " " : estimatedLabel)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundStyle(Theme.darkText)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(Theme.mutedText)
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(TaskComposerOutlineField.stroke())
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        TaskComposerLabeledField(label: "Add any relevant files/ photos") {
+                            PhotosPicker(selection: $photoItems, maxSelectionCount: 6, matching: .images) {
+                                HStack {
+                                    if attachmentNames.isEmpty {
+                                        Color.clear.frame(height: 20)
+                                    } else {
+                                        Text(attachmentNames.joined(separator: ", "))
+                                            .font(.subheadline)
+                                            .foregroundStyle(Theme.darkText)
+                                            .lineLimit(1)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.body)
+                                        .foregroundStyle(Color(red: 0.62, green: 0.58, blue: 0.82))
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(TaskComposerOutlineField.stroke())
+                            }
+                        }
+                    }
+
+                    SubtaskListSection(subtasks: subtasks) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            screen = .addSubtask
+                        }
+                    }
+
+                    if showValidation {
+                        Text("Add a category, description, or sub-task before tapping Done")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.errorCoral)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 28)
+            }
+        }
+        .background(pageBG)
+        .sheet(isPresented: $showTimePicker) {
+            EstimatedTimePickerSheet(isPresented: $showTimePicker, selectedLabel: estimatedLabel) { label in
+                estimatedLabel = label
+            }
+        }
+        .sheet(isPresented: $showCategoryPicker) {
+            categoryPickerSheet
+        }
+        .onChange(of: photoItems) { _, items in
+            attachmentNames = items.enumerated().map { "Photo \($0.offset + 1)" }
         }
     }
 
-    // MARK: - Select category
-
-    private var selectCategoryStep: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    if let booking {
-                        Text("Add tasks to your \(booking.status == .booked ? "booked" : "requested") visit with \(booking.provider.name)")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.mutedText)
-                    }
-
-                    ForEach(BookingTaskCatalog.groups) { group in
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "list.bullet.rectangle")
-                                    .font(.caption.weight(.semibold))
-                                    .foregroundStyle(Theme.mutedText)
-                                Text(group.title)
-                                    .font(.subheadline.weight(.bold))
-                                    .foregroundStyle(Theme.darkText)
-                            }
-
-                            FlowLayout(spacing: 8) {
-                                ForEach(group.options) { option in
-                                    categoryChip(option)
+    private var categoryPickerSheet: some View {
+        NavigationStack {
+            List {
+                ForEach(BookingTaskCatalog.groups) { group in
+                    Section(group.title) {
+                        ForEach(group.options) { option in
+                            Button {
+                                selectedCategoryID = option.id
+                                if descriptionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    descriptionText = option.title
+                                }
+                                showCategoryPicker = false
+                            } label: {
+                                HStack {
+                                    Text(option.title)
+                                        .foregroundStyle(Theme.darkText)
+                                    Spacer()
+                                    if selectedCategoryID == option.id {
+                                        Image(systemName: "checkmark")
+                                            .foregroundStyle(linkBlue)
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                .padding(20)
             }
-
-            footerBar(
-                title: "Next",
-                enabled: !selectedCategoryIDs.isEmpty,
-                validation: "Select at least 1 task to continue"
-            ) {
-                guard !selectedCategoryIDs.isEmpty else {
-                    withAnimation { showValidation = true }
-                    return
-                }
-                rebuildSuggestedTasks(selectAllIfEmpty: true)
-                confirmedTasks = []
-                showValidation = false
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    step = .detail
+            .navigationTitle("Task Category")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") { showCategoryPicker = false }
                 }
             }
         }
+        .presentationDetents([.medium, .large])
     }
 
-    private func categoryChip(_ option: BookingTaskOption) -> some View {
+    // MARK: - Suggested checklist
+
+    private var suggestedScreen: some View {
+        VStack(spacing: 0) {
+            AddTaskNavHeader(title: "Add Task") {
+                withAnimation(.easeInOut(duration: 0.2)) { screen = .addTask }
+            } onDone: {
+                applySuggestedSelection()
+            }
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    ForEach(BookingTaskCatalog.groups) { group in
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(group.title)
+                                .font(.subheadline.weight(.bold))
+                                .foregroundStyle(Theme.darkText)
+                            FlowLayout(spacing: 8) {
+                                ForEach(group.options) { option in
+                                    suggestedCategoryChip(option)
+                                }
+                            }
+                        }
+                    }
+
+                    if !workingSuggestedTasks.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Suggested Tasks Checklist")
+                                .font(.subheadline.weight(.bold))
+                            ForEach(workingSuggestedTasks) { task in
+                                suggestedRow(task)
+                            }
+                        }
+                    }
+                }
+                .padding(16)
+            }
+        }
+        .background(pageBG)
+    }
+
+    private func suggestedCategoryChip(_ option: BookingTaskOption) -> some View {
         let selected = selectedCategoryIDs.contains(option.id)
         return Button {
-            withAnimation(.easeInOut(duration: 0.12)) {
-                if selected {
-                    selectedCategoryIDs.remove(option.id)
-                } else {
-                    selectedCategoryIDs.insert(option.id)
-                }
-                showValidation = false
+            if selected {
+                selectedCategoryIDs.remove(option.id)
+            } else {
+                selectedCategoryIDs.insert(option.id)
             }
+            rebuildSuggestedTasks(selectAllIfEmpty: true)
         } label: {
             HStack(spacing: 6) {
                 if selected {
@@ -183,7 +318,6 @@ struct AddTaskToBookingSheet: View {
                 Text(option.title)
                     .font(.subheadline.weight(selected ? .semibold : .regular))
                     .foregroundStyle(selected ? Color(red: 0.15, green: 0.25, blue: 0.55) : Theme.darkText)
-                    .multilineTextAlignment(.leading)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
@@ -197,164 +331,13 @@ struct AddTaskToBookingSheet: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Detail / confirm
-
-    private var detailStep: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    if confirmedTasks.isEmpty {
-                        suggestedSection
-                    } else {
-                        confirmedSection
-                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Description (optional)")
-                            .font(.caption)
-                            .foregroundStyle(Theme.mutedText)
-                        TextField("Describe the support needed…", text: $taskDescriptionDetail, axis: .vertical)
-                            .lineLimit(3...5)
-                            .padding(12)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .stroke(softBorder, lineWidth: 1)
-                            )
-                    }
-                    .padding(14)
-                    .background(Color(red: 0.97, green: 0.975, blue: 0.985))
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                }
-                .padding(20)
-            }
-
-            footerBar(
-                title: "Add Task",
-                enabled: canSave,
-                validation: "Confirm at least 1 task to add"
-            ) {
-                saveTasks()
-            }
-        }
-    }
-
-    private var suggestedSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    checklistExpanded.toggle()
-                }
-            } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: "sparkles")
-                        .foregroundStyle(Color(red: 0.45, green: 0.40, blue: 0.75))
-                    Text("Suggested Tasks Checklist")
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(Theme.darkText)
-                    Spacer()
-                    Image(systemName: checklistExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.mutedText)
-                }
-                .padding(14)
-            }
-            .buttonStyle(.plain)
-
-            if checklistExpanded {
-                VStack(spacing: 10) {
-                    ForEach(workingSuggestedTasks) { task in
-                        suggestedRow(task)
-                    }
-
-                    Button {
-                        confirmChecklist()
-                    } label: {
-                        Text("Confirm")
-                            .font(.headline.weight(.bold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(selectedChecklistIDs.isEmpty ? Theme.grayscale60 : Theme.brandOrange)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(selectedChecklistIDs.isEmpty)
-                }
-                .padding(.horizontal, 14)
-                .padding(.bottom, 14)
-            }
-        }
-        .background(checklistBG)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-
-    private var confirmedSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
-                Image(systemName: "checkmark.square.fill")
-                    .foregroundStyle(Color(red: 0.20, green: 0.70, blue: 0.40))
-                Text("Tasks Checklist")
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Theme.darkText)
-                Spacer()
-            }
-            .padding(14)
-
-            VStack(spacing: 10) {
-                ForEach(confirmedTasks) { task in
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "checkmark.square.fill")
-                            .font(.title3)
-                            .foregroundStyle(Color(red: 0.20, green: 0.70, blue: 0.40))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(task.title)
-                                .font(.subheadline.weight(.semibold))
-                            Text(task.category)
-                                .font(.caption)
-                                .foregroundStyle(Theme.mutedText)
-                        }
-                        Spacer(minLength: 0)
-                    }
-                    .padding(12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }
-
-                Button {
-                    withAnimation {
-                        confirmedTasks = []
-                        rebuildSuggestedTasks(selectAllIfEmpty: true)
-                    }
-                } label: {
-                    Text("Edit Tasks")
-                        .font(.headline.weight(.bold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(Theme.brandOrange)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 14)
-            .padding(.bottom, 14)
-        }
-        .background(confirmedChecklistBG)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-
     private func suggestedRow(_ task: BookingChecklistTask) -> some View {
-        let selected = selectedChecklistIDs.contains(task.id)
+        let selected = selectedSuggestedIDs.contains(task.id)
         return Button {
-            withAnimation(.easeInOut(duration: 0.12)) {
-                if selected {
-                    selectedChecklistIDs.remove(task.id)
-                } else {
-                    selectedChecklistIDs.insert(task.id)
-                }
-                showValidation = false
+            if selected {
+                selectedSuggestedIDs.remove(task.id)
+            } else {
+                selectedSuggestedIDs.insert(task.id)
             }
         } label: {
             HStack(alignment: .top, spacing: 12) {
@@ -365,7 +348,6 @@ struct AddTaskToBookingSheet: View {
                     Text(task.title)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.darkText)
-                        .multilineTextAlignment(.leading)
                     Text(task.category)
                         .font(.caption)
                         .foregroundStyle(Theme.mutedText)
@@ -379,84 +361,73 @@ struct AddTaskToBookingSheet: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Shared UI
-
-    private func footerBar(
-        title: String,
-        enabled: Bool,
-        validation: String,
-        action: @escaping () -> Void
-    ) -> some View {
-        VStack(spacing: 10) {
-            if showValidation {
-                Text(validation)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.errorCoral)
-            }
-            Button(title, action: action)
-                .buttonStyle(PrimaryOrangeButtonStyle())
-                .opacity(enabled ? 1 : 0.55)
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 20)
-    }
+    // MARK: - Persistence
 
     private func rebuildSuggestedTasks(selectAllIfEmpty: Bool) {
-        let previouslyCheckedTitles = Set(
-            workingSuggestedTasks
-                .filter { selectedChecklistIDs.contains($0.id) }
-                .map(\.title)
+        let options = BookingTaskCatalog.allOptions.filter { selectedCategoryIDs.contains($0.id) }
+        let previouslyChecked = Set(
+            workingSuggestedTasks.filter { selectedSuggestedIDs.contains($0.id) }.map(\.title)
         )
-        workingSuggestedTasks = BookingTaskCatalog.suggestedChecklist(from: selectedCategoryOptions)
-        if previouslyCheckedTitles.isEmpty, selectAllIfEmpty {
-            selectedChecklistIDs = Set(workingSuggestedTasks.map(\.id))
+        workingSuggestedTasks = BookingTaskCatalog.suggestedChecklist(from: options)
+        if previouslyChecked.isEmpty, selectAllIfEmpty {
+            selectedSuggestedIDs = Set(workingSuggestedTasks.map(\.id))
         } else {
-            selectedChecklistIDs = Set(
-                workingSuggestedTasks
-                    .filter { previouslyCheckedTitles.contains($0.title) }
-                    .map(\.id)
+            selectedSuggestedIDs = Set(
+                workingSuggestedTasks.filter { previouslyChecked.contains($0.title) }.map(\.id)
             )
         }
     }
 
-    private func confirmChecklist() {
-        let chosen = workingSuggestedTasks.filter { selectedChecklistIDs.contains($0.id) }
-        guard !chosen.isEmpty else {
-            withAnimation { showValidation = true }
-            return
+    private func applySuggestedSelection() {
+        let chosen = workingSuggestedTasks.filter { selectedSuggestedIDs.contains($0.id) }
+        if let first = chosen.first {
+            selectedCategoryID = BookingTaskCatalog.allOptions.first {
+                $0.title == first.title && $0.categoryTitle == first.category
+            }?.id ?? selectedCategoryID
+            if descriptionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                descriptionText = first.title
+            }
+            let extra = Array(chosen.dropFirst())
+            for item in extra where !subtasks.contains(where: { $0.title == item.title }) {
+                subtasks.append(
+                    BookingChecklistTask(
+                        title: item.title,
+                        category: item.category,
+                        subcategory: item.subcategory,
+                        detailDescription: item.detailDescription
+                    )
+                )
+            }
         }
         withAnimation(.easeInOut(duration: 0.2)) {
-            confirmedTasks = applyDescription(to: chosen)
-            showValidation = false
+            screen = .addTask
         }
     }
 
-    private func applyDescription(to tasks: [BookingChecklistTask]) -> [BookingChecklistTask] {
-        let detail = taskDescriptionDetail.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !detail.isEmpty else { return tasks }
-        return tasks.map { task in
-            var copy = task
-            copy.detailDescription = detail
-            return copy
-        }
-    }
-
-    private func saveTasks() {
-        var tasks = confirmedTasks
-        if tasks.isEmpty {
-            let chosen = workingSuggestedTasks.filter { selectedChecklistIDs.contains($0.id) }
-            tasks = applyDescription(to: chosen)
-        } else if !taskDescriptionDetail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            tasks = applyDescription(to: tasks)
-        }
-
-        guard !tasks.isEmpty else {
-            withAnimation { showValidation = true }
+    private func save() {
+        guard let task = makeParentTask() else {
+            showValidation = true
             return
         }
-
-        appModel.appendChecklistTasks(to: bookingID, tasks: tasks)
+        appModel.appendChecklistTasks(to: bookingID, tasks: [task])
         dismiss()
+    }
+
+    private func makeParentTask() -> BookingChecklistTask? {
+        let option = selectedCategoryOption
+        let trimmedDescription = descriptionText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let title = trimmedDescription.isEmpty ? (option?.title ?? subtasks.first?.title) : trimmedDescription
+        guard let title, !title.isEmpty else { return nil }
+
+        return BookingChecklistTask(
+            title: title,
+            category: option?.categoryTitle ?? "Custom task",
+            subcategory: option?.title ?? title,
+            detailDescription: trimmedDescription,
+            estimatedMinutes: BookingChecklistTask.minutes(fromEstimateLabel: estimatedLabel),
+            attachmentNames: attachmentNames,
+            subtasks: subtasks
+        )
     }
 }
 

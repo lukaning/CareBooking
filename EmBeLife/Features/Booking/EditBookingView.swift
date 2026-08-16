@@ -13,6 +13,7 @@ struct EditBookingView: View {
     @State private var showCancelConfirm = false
     @State private var showSavedBanner = false
     @State private var showAddTask = false
+    @State private var addSubtaskParentID: UUID?
 
     @State private var draftTitle = ""
     @State private var draftDescription = ""
@@ -96,6 +97,14 @@ struct EditBookingView: View {
         }
         .sheet(isPresented: $showAddTask) {
             AddTaskToBookingSheet(bookingID: bookingID)
+        }
+        .sheet(isPresented: Binding(
+            get: { addSubtaskParentID != nil },
+            set: { if !$0 { addSubtaskParentID = nil } }
+        )) {
+            if let addSubtaskParentID {
+                AddTaskToBookingSheet(bookingID: bookingID, parentTaskID: addSubtaskParentID)
+            }
         }
         .confirmationDialog(
             "Cancel this booking?",
@@ -429,7 +438,7 @@ struct EditBookingView: View {
 
                     let tasks = isEditing ? draftTasks : booking.checklistTasks
                     ForEach(tasks) { task in
-                        taskDetailCard(task, canDelete: isEditing)
+                        taskDetailCard(task, canDelete: isEditing, canAddSubtask: booking.status != .completed && !isEditing)
                     }
 
                     if isEditing {
@@ -470,48 +479,109 @@ struct EditBookingView: View {
                 loadDraftFromBooking()
             }
         }
+        .onChange(of: addSubtaskParentID) { _, parentID in
+            if parentID == nil {
+                loadDraftFromBooking()
+            }
+        }
     }
 
-    private func taskDetailCard(_ task: BookingChecklistTask, canDelete: Bool) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(bodyDark)
-                Text(task.categoryPathLabel)
-                    .font(.caption)
-                    .foregroundStyle(labelMuted)
-                HStack(spacing: 8) {
-                    Text(task.priority.rawValue)
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(priorityColor(task.priority))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(priorityColor(task.priority).opacity(0.12))
-                        .clipShape(Capsule())
-                    if let deadline = task.deadline {
-                        Label(
-                            deadline.formatted(date: .abbreviated, time: .shortened),
-                            systemImage: "calendar"
-                        )
-                        .font(.caption2)
-                        .foregroundStyle(labelMuted)
-                    }
-                }
-                if !task.detailDescription.isEmpty {
-                    Text(task.detailDescription)
+    private func taskDetailCard(_ task: BookingChecklistTask, canDelete: Bool, canAddSubtask: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 10) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(task.title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(bodyDark)
+                    Text(task.categoryPathLabel)
                         .font(.caption)
                         .foregroundStyle(labelMuted)
+                    HStack(spacing: 8) {
+                        Text(task.priority.rawValue)
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(priorityColor(task.priority))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(priorityColor(task.priority).opacity(0.12))
+                            .clipShape(Capsule())
+                        if let subtitle = task.scheduleSubtitle {
+                            Text(subtitle)
+                                .font(.caption2)
+                                .foregroundStyle(labelMuted)
+                        } else if let deadline = task.deadline {
+                            Label(
+                                deadline.formatted(date: .abbreviated, time: .shortened),
+                                systemImage: "calendar"
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(labelMuted)
+                        }
+                    }
+                    if !task.detailDescription.isEmpty, task.detailDescription != task.title {
+                        Text(task.detailDescription)
+                            .font(.caption)
+                            .foregroundStyle(labelMuted)
+                    }
+                    if !task.attachmentNames.isEmpty {
+                        Text(task.attachmentNames.joined(separator: ", "))
+                            .font(.caption2)
+                            .foregroundStyle(labelMuted)
+                    }
+                }
+                Spacer(minLength: 8)
+                if canDelete {
+                    Button {
+                        draftTasks.removeAll { $0.id == task.id }
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.errorCoral)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
-            Spacer(minLength: 8)
-            if canDelete {
+
+            if !task.subtasks.isEmpty {
+                VStack(spacing: 8) {
+                    ForEach(task.subtasks) { subtask in
+                        HStack(alignment: .top, spacing: 10) {
+                            Image(systemName: "square")
+                                .font(.body)
+                                .foregroundStyle(labelMuted)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(subtask.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(bodyDark)
+                                if let subtitle = subtask.scheduleSubtitle {
+                                    Text(subtitle)
+                                        .font(.caption)
+                                        .foregroundStyle(labelMuted)
+                                } else if !subtask.detailDescription.isEmpty {
+                                    Text(subtask.detailDescription)
+                                        .font(.caption)
+                                        .foregroundStyle(labelMuted)
+                                }
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(10)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    }
+                }
+            }
+
+            if canAddSubtask {
                 Button {
-                    draftTasks.removeAll { $0.id == task.id }
+                    addSubtaskParentID = task.id
                 } label: {
-                    Image(systemName: "trash")
+                    Text("Add Sub-Task")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.errorCoral)
+                        .foregroundStyle(Theme.darkText)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(Color(red: 0.18, green: 0.18, blue: 0.20).opacity(0.08))
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
                 .buttonStyle(.plain)
             }
