@@ -170,7 +170,7 @@ struct BookProviderSheet: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.systemBackground))
+            .background(step == .summary || step == .requested ? Color.clear : Color(.systemBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -207,6 +207,7 @@ struct BookProviderSheet: View {
             .onAppear {
                 seedMembersIfNeeded()
             }
+            .toolbar((step == .summary || step == .requested) ? .hidden : .automatic, for: .navigationBar)
             .sheet(isPresented: $showEstimatedTimePicker) {
                 NavigationStack {
                     List(timeEstimates, id: \.self) { label in
@@ -236,16 +237,16 @@ struct BookProviderSheet: View {
             }
         }
         .presentationDetents(bookingPresentationDetents)
-        .presentationDragIndicator(.visible)
-        .presentationCornerRadius(28)
+        .presentationDragIndicator(step == .summary || step == .requested ? .hidden : .visible)
+        .presentationCornerRadius(step == .summary || step == .requested ? 0 : 28)
+        .presentationBackground(step == .summary || step == .requested ? Color.clear : Color(.systemBackground))
+        .interactiveDismissDisabled(step == .summary)
     }
 
     private var bookingPresentationDetents: Set<PresentationDetent> {
         switch step {
-        case .requested:
-            return [.height(340)]
-        case .summary:
-            return [.medium, .large]
+        case .requested, .summary:
+            return [.large]
         default:
             return [.large]
         }
@@ -273,7 +274,7 @@ struct BookProviderSheet: View {
         }
     }
 
-    /// Design header: orange accent | centered title | optional trailing action.
+    /// Design header: orange accent left, title centered, optional Edit on the right.
     private func bookingDetailsChrome() -> some View {
         bookingDetailsChrome { EmptyView() }
     }
@@ -282,23 +283,22 @@ struct BookProviderSheet: View {
         @ViewBuilder trailing: () -> Trailing
     ) -> some View {
         ZStack {
-            HStack {
-                RoundedRectangle(cornerRadius: 3)
+            HStack(spacing: 0) {
+                RoundedRectangle(cornerRadius: 2, style: .continuous)
                     .fill(Theme.brandOrange)
-                    .frame(width: 4, height: 22)
+                    .frame(width: 5, height: 22)
                 Spacer(minLength: 0)
                 trailing()
-                    .frame(minWidth: 40, alignment: .trailing)
             }
 
             Text("Booking details")
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(Theme.darkText)
                 .allowsHitTesting(false)
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-        .padding(.bottom, 18)
+        .padding(.horizontal, 18)
+        .padding(.top, 18)
+        .padding(.bottom, 16)
     }
 
     private var headerTitle: String {
@@ -1367,6 +1367,20 @@ struct BookProviderSheet: View {
     // MARK: - Step 6: Summary (review before request)
 
     private var summaryStep: some View {
+        ZStack {
+            Color.black.opacity(0.38)
+                .ignoresSafeArea()
+
+            VStack {
+                Spacer(minLength: 24)
+                summaryCard
+                Spacer(minLength: 24)
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private var summaryCard: some View {
         VStack(spacing: 0) {
             bookingDetailsChrome {
                 Button("Edit") {
@@ -1376,61 +1390,60 @@ struct BookProviderSheet: View {
                 .foregroundStyle(linkBlue)
             }
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    // Top meta: two columns, plain text (no filled cards)
-                    HStack(alignment: .top, spacing: 16) {
-                        summaryMetaColumn(label: "Booking Dates", value: bookingDateLabel)
-                        summaryMetaColumn(label: "To who", value: recipientLabel)
-                    }
-                    .padding(.bottom, 28)
-
-                    VStack(spacing: 22) {
-                        detailIconRow(
-                            icon: "calendar",
-                            label: "Service Date:",
-                            value: serviceDateLabel
-                        )
-                        detailIconRow(
-                            icon: "calendar.badge.clock",
-                            label: "Time:",
-                            primaryValue: startTimeLabel,
-                            secondaryValue: "\(durationMinutes) min"
-                        )
-                        detailIconRow(
-                            icon: "face.smiling",
-                            label: "Provider",
-                            value: provider.name
-                        )
-                        detailIconRow(
-                            icon: "bookmark",
-                            label: "Total:",
-                            value: "$\(estimatedTotal)"
-                        )
-                        detailIconRow(
-                            icon: "wallet.pass",
-                            label: "Payment method:",
-                            value: summaryPaymentLabel
-                        )
-                    }
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: 12) {
+                    summaryMetaColumn(label: "Booking Dates", value: bookingDateLabel)
+                    summaryMetaColumn(label: "To who", value: recipientLabel)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 12)
+                .padding(.bottom, 22)
+
+                VStack(spacing: 18) {
+                    detailIconRow(
+                        icon: "calendar",
+                        label: "Service Date:",
+                        value: serviceDateLabel
+                    )
+                    detailIconRow(
+                        icon: "clock",
+                        label: "Time:",
+                        primaryValue: startTimeLabel,
+                        secondaryValue: "\(durationMinutes) min"
+                    )
+                    detailIconRow(
+                        icon: "face.smiling",
+                        label: "Provider",
+                        value: provider.name
+                    )
+                    detailIconRow(
+                        icon: "ticket",
+                        label: "Total:",
+                        value: "$\(estimatedTotal)"
+                    )
+                    detailIconRow(
+                        icon: "wallet.pass",
+                        label: "Payment method:",
+                        value: summaryPaymentLabel
+                    )
+                }
             }
+            .padding(.horizontal, 18)
 
             Button("Request Booking") {
                 goForward()
             }
-            .font(.headline.weight(.bold))
+            .font(.system(size: 17, weight: .bold))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 18)
+            .padding(.vertical, 16)
             .background(Theme.brandOrange)
-            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-            .padding(.horizontal, 24)
-            .padding(.top, 8)
-            .padding(.bottom, 24)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .padding(.horizontal, 18)
+            .padding(.top, 28)
+            .padding(.bottom, 20)
         }
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: Color.black.opacity(0.12), radius: 24, y: 8)
     }
 
     private var summaryPaymentLabel: String {
@@ -1472,26 +1485,26 @@ struct BookProviderSheet: View {
         primaryValue: String,
         secondaryValue: String?
     ) -> some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 18, weight: .regular))
+                .font(.system(size: 17, weight: .regular))
                 .foregroundStyle(Color(red: 0.62, green: 0.64, blue: 0.68))
-                .frame(width: 24, height: 24)
+                .frame(width: 22, height: 22)
 
             Text(label)
-                .font(.system(size: 15, weight: .regular))
+                .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(Theme.mutedText)
 
             Spacer(minLength: 8)
 
-            VStack(alignment: .trailing, spacing: 2) {
+            VStack(alignment: .trailing, spacing: 1) {
                 Text(primaryValue)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.darkText)
                     .multilineTextAlignment(.trailing)
                 if let secondaryValue {
                     Text(secondaryValue)
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Theme.darkText)
                         .multilineTextAlignment(.trailing)
                 }
@@ -1502,42 +1515,50 @@ struct BookProviderSheet: View {
     // MARK: - Step 7: Requested confirmation
 
     private var requestedStep: some View {
+        ZStack {
+            Color.black.opacity(0.38)
+                .ignoresSafeArea()
+                .onTapGesture { dismiss() }
+
+            VStack {
+                Spacer(minLength: 24)
+                requestedCard
+                Spacer(minLength: 24)
+            }
+            .padding(.horizontal, 28)
+        }
+        .accessibilityAction(.escape) { dismiss() }
+    }
+
+    private var requestedCard: some View {
         VStack(spacing: 0) {
             bookingDetailsChrome()
 
-            Spacer(minLength: 12)
-
-            VStack(spacing: 18) {
+            VStack(spacing: 14) {
                 Image(systemName: "tray.and.arrow.up")
-                    .font(.system(size: 64, weight: .light))
-                    .foregroundStyle(Color(red: 0.58, green: 0.56, blue: 0.72))
+                    .font(.system(size: 52, weight: .light))
+                    .foregroundStyle(Color(red: 0.62, green: 0.60, blue: 0.70))
                     .symbolRenderingMode(.monochrome)
-                    .padding(.bottom, 4)
+                    .padding(.top, 8)
+                    .padding(.bottom, 6)
 
                 Text("Booking Requested!")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(Theme.darkText)
 
                 Text("Your booking has been requested and waiting for confirmation from your provider")
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 14, weight: .regular))
                     .foregroundStyle(Theme.mutedText)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(3)
-                    .padding(.horizontal, 28)
+                    .lineSpacing(2)
+                    .padding(.horizontal, 20)
             }
             .frame(maxWidth: .infinity)
-
-            Spacer(minLength: 20)
-
-            // Match design (no primary CTA); keep a quiet control for accessibility dismiss.
-            Button("Done") {
-                dismiss()
-            }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Theme.mutedText.opacity(0.85))
-            .padding(.bottom, 16)
+            .padding(.bottom, 32)
         }
-        .accessibilityAction(.escape) { dismiss() }
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: Color.black.opacity(0.12), radius: 24, y: 8)
     }
 
     // MARK: - Shared
