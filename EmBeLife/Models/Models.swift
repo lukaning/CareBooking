@@ -186,6 +186,20 @@ struct BookingChecklistTask: Identifiable, Hashable {
         default: return "\(minutes) min"
         }
     }
+
+    func copiedAsTemplate() -> BookingChecklistTask {
+        BookingChecklistTask(
+            title: title,
+            category: category,
+            subcategory: subcategory,
+            priority: priority,
+            deadline: deadline,
+            detailDescription: detailDescription,
+            estimatedMinutes: estimatedMinutes,
+            attachmentNames: attachmentNames,
+            subtasks: subtasks.map { $0.copiedAsTemplate() }
+        )
+    }
 }
 
 enum BookingTaskPriority: String, CaseIterable, Identifiable, Hashable {

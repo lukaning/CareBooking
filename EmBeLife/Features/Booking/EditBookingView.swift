@@ -13,6 +13,8 @@ struct EditBookingView: View {
     @State private var showSavedBanner = false
     @State private var showAddTask = false
     @State private var addSubtaskParentID: UUID?
+    @State private var taskToEdit: BookingChecklistTask?
+    @State private var bannerMessage = "Booking updated"
 
     @State private var draftTitle = ""
     @State private var draftDescription = ""
@@ -75,6 +77,9 @@ struct EditBookingView: View {
         .sheet(isPresented: $showAddTask) {
             AddTaskToBookingSheet(bookingID: bookingID)
         }
+        .sheet(item: $taskToEdit) { task in
+            AddTaskToBookingSheet(bookingID: bookingID, editingTask: task)
+        }
         .sheet(isPresented: Binding(
             get: { addSubtaskParentID != nil },
             set: { if !$0 { addSubtaskParentID = nil } }
@@ -101,7 +106,7 @@ struct EditBookingView: View {
         }
         .overlay(alignment: .top) {
             if showSavedBanner {
-                Text("Booking updated")
+                Text(bannerMessage)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 16)
@@ -368,7 +373,7 @@ struct EditBookingView: View {
             HStack(spacing: 12) {
                 Image(systemName: "list.bullet.rectangle")
                     .foregroundStyle(iconMuted)
-                Text("Task details")
+                Text("Task list details")
                     .font(.headline)
                     .foregroundStyle(bodyDark)
                 Spacer()
@@ -383,7 +388,7 @@ struct EditBookingView: View {
 
                     let tasks = isEditing ? draftTasks : booking.checklistTasks
                     ForEach(tasks) { task in
-                        taskDetailCard(task, canDelete: isEditing, canAddSubtask: booking.status != .completed && !isEditing)
+                        taskDetailCard(task, canAddSubtask: booking.status != .completed)
                     }
 
                     if isEditing {
@@ -422,6 +427,11 @@ struct EditBookingView: View {
                 loadDraftFromBooking()
             }
         }
+        .onChange(of: taskToEdit) { _, task in
+            if task == nil {
+                loadDraftFromBooking()
+            }
+        }
         .onChange(of: addSubtaskParentID) { _, parentID in
             if parentID == nil {
                 loadDraftFromBooking()
@@ -429,7 +439,7 @@ struct EditBookingView: View {
         }
     }
 
-    private func taskDetailCard(_ task: BookingChecklistTask, canDelete: Bool, canAddSubtask: Bool = false) -> some View {
+    private func taskDetailCard(_ task: BookingChecklistTask, canAddSubtask: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 10) {
                 VStack(alignment: .leading, spacing: 6) {
@@ -472,16 +482,32 @@ struct EditBookingView: View {
                     }
                 }
                 Spacer(minLength: 8)
-                if canDelete {
+                Menu {
                     Button {
-                        draftTasks.removeAll { $0.id == task.id }
+                        taskToEdit = task
                     } label: {
-                        Image(systemName: "trash")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.errorCoral)
+                        Label("Edit", systemImage: "pencil")
                     }
-                    .buttonStyle(.plain)
+                    Button {
+                        appModel.saveTaskForNextTime(task)
+                        showBanner("Saved for next time")
+                    } label: {
+                        Label("Save for next time", systemImage: "bookmark")
+                    }
+                    Button(role: .destructive) {
+                        appModel.removeChecklistTask(from: bookingID, taskID: task.id)
+                        loadDraftFromBooking()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(bodyDark)
+                        .frame(width: 32, height: 32)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Task actions")
             }
 
             if !task.subtasks.isEmpty {
@@ -703,6 +729,13 @@ struct EditBookingView: View {
         withAnimation(.easeInOut(duration: 0.2)) {
             isEditing = false
             isAddingTaskDetail = false
+            showBanner("Booking updated")
+        }
+    }
+
+    private func showBanner(_ message: String) {
+        bannerMessage = message
+        withAnimation(.easeInOut(duration: 0.2)) {
             showSavedBanner = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {

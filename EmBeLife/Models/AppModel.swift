@@ -68,6 +68,8 @@ final class AppModel {
 
     var profile = UserProfile()
     var bookings: [Booking] = []
+    /// Tasks the client saved to reuse on a later booking.
+    var savedTaskTemplates: [BookingChecklistTask] = []
     var providers: [Provider] = Provider.samples
     var managedUsers: [ManagedTeamUser] = ManagedTeamUser.samples
     /// All provider reviews keyed for Rate & Review screens.
@@ -244,6 +246,27 @@ final class AppModel {
         else { return }
         guard bookings[index].status != .completed else { return }
         bookings[index].checklistTasks.append(contentsOf: tasks)
+    }
+
+    func removeChecklistTask(from bookingID: UUID, taskID: UUID) {
+        guard let index = bookings.firstIndex(where: { $0.id == bookingID }) else { return }
+        bookings[index].checklistTasks.removeAll { $0.id == taskID }
+    }
+
+    func replaceChecklistTask(in bookingID: UUID, task: BookingChecklistTask) {
+        guard let bookingIndex = bookings.firstIndex(where: { $0.id == bookingID }) else { return }
+        guard let taskIndex = bookings[bookingIndex].checklistTasks.firstIndex(where: { $0.id == task.id }) else {
+            return
+        }
+        bookings[bookingIndex].checklistTasks[taskIndex] = task
+    }
+
+    func saveTaskForNextTime(_ task: BookingChecklistTask) {
+        let template = task.copiedAsTemplate()
+        if savedTaskTemplates.contains(where: { $0.title == template.title && $0.category == template.category }) {
+            return
+        }
+        savedTaskTemplates.append(template)
     }
 
     /// Append a sub-task under an existing checklist item on a Requested or Booked visit.

@@ -9,6 +9,8 @@ struct AddTaskToBookingSheet: View {
     let bookingID: UUID
     /// When set, Done saves a sub-task onto this existing checklist item instead of a new parent task.
     var parentTaskID: UUID? = nil
+    /// When set, Done updates this checklist item in place.
+    var editingTask: BookingChecklistTask? = nil
 
     private enum Screen {
         case addTask
@@ -35,10 +37,24 @@ struct AddTaskToBookingSheet: View {
     private let selectedChipFill = Color(red: 0.88, green: 0.93, blue: 1.0)
     private let pageBG = Color(red: 0.96, green: 0.96, blue: 0.97)
 
-    init(bookingID: UUID, parentTaskID: UUID? = nil) {
+    init(bookingID: UUID, parentTaskID: UUID? = nil, editingTask: BookingChecklistTask? = nil) {
         self.bookingID = bookingID
         self.parentTaskID = parentTaskID
+        self.editingTask = editingTask
         _screen = State(initialValue: parentTaskID == nil ? .addTask : .addSubtask)
+        if let editingTask {
+            let matched = BookingTaskCatalog.allOptions.first {
+                $0.title == editingTask.subcategory || $0.title == editingTask.title
+            }
+            _selectedCategoryID = State(initialValue: matched?.id)
+            let description = editingTask.detailDescription.isEmpty ? editingTask.title : editingTask.detailDescription
+            _descriptionText = State(initialValue: description)
+            if let minutes = editingTask.estimatedMinutes {
+                _estimatedLabel = State(initialValue: BookingChecklistTask.estimateLabel(for: minutes))
+            }
+            _attachmentNames = State(initialValue: editingTask.attachmentNames)
+            _subtasks = State(initialValue: editingTask.subtasks)
+        }
     }
 
     private var selectedCategoryOption: BookingTaskOption? {
@@ -94,7 +110,7 @@ struct AddTaskToBookingSheet: View {
     private var addTaskScreen: some View {
         VStack(spacing: 0) {
             AddTaskNavHeader(
-                title: "Add Task",
+                title: editingTask == nil ? "Add Task" : "Edit Task",
                 doneEnabled: canSaveTask
             ) {
                 dismiss()
@@ -283,6 +299,16 @@ struct AddTaskToBookingSheet: View {
                         }
                     }
 
+                    if !appModel.savedTaskTemplates.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Saved for next time")
+                                .font(.subheadline.weight(.bold))
+                            ForEach(appModel.savedTaskTemplates) { task in
+                                suggestedRow(task)
+                            }
+                        }
+                    }
+
                     if !workingSuggestedTasks.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Suggested Tasks Checklist")
@@ -379,7 +405,9 @@ struct AddTaskToBookingSheet: View {
     }
 
     private func applySuggestedSelection() {
-        let chosen = workingSuggestedTasks.filter { selectedSuggestedIDs.contains($0.id) }
+        let catalogChosen = workingSuggestedTasks.filter { selectedSuggestedIDs.contains($0.id) }
+        let savedChosen = appModel.savedTaskTemplates.filter { selectedSuggestedIDs.contains($0.id) }
+        let chosen = catalogChosen + savedChosen
         if let first = chosen.first {
             selectedCategoryID = BookingTaskCatalog.allOptions.first {
                 $0.title == first.title && $0.categoryTitle == first.category
@@ -405,24 +433,31 @@ struct AddTaskToBookingSheet: View {
     }
 
     private func save() {
-        guard let task = makeParentTask() else {
+        guard let task = makeParentTask(id: editingTask?.id) else {
             showValidation = true
             return
         }
-        appModel.appendChecklistTasks(to: bookingID, tasks: [task])
+        if editingTask != nil {
+            appModel.replaceChecklistTask(in: bookingID, task: task)
+        } else {
+            appModel.appendChecklistTasks(to: bookingID, tasks: [task])
+        }
         dismiss()
     }
 
-    private func makeParentTask() -> BookingChecklistTask? {
+    private func makeParentTask(id: UUID? = nil) -> BookingChecklistTask? {
         let option = selectedCategoryOption
         let trimmedDescription = descriptionText.trimmingCharacters(in: .whitespacesAndNewlines)
         let title = trimmedDescription.isEmpty ? (option?.title ?? subtasks.first?.title) : trimmedDescription
         guard let title, !title.isEmpty else { return nil }
 
         return BookingChecklistTask(
+            id: id ?? UUID(),
             title: title,
-            category: option?.categoryTitle ?? "Custom task",
-            subcategory: option?.title ?? title,
+            category: option?.categoryTitle ?? editingTask?.category ?? "Custom task",
+            subcategory: option?.title ?? editingTask?.subcategory ?? title,
+            priority: editingTask?.priority ?? .medium,
+            deadline: editingTask?.deadline,
             detailDescription: trimmedDescription,
             estimatedMinutes: BookingChecklistTask.minutes(fromEstimateLabel: estimatedLabel),
             attachmentNames: attachmentNames,
