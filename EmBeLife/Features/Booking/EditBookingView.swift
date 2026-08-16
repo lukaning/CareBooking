@@ -8,7 +8,6 @@ struct EditBookingView: View {
     let bookingID: UUID
 
     @State private var isEditing = false
-    @State private var checklistExpanded = true
     @State private var showReschedule = false
     @State private var showCancelConfirm = false
     @State private var showSavedBanner = false
@@ -50,7 +49,7 @@ struct EditBookingView: View {
             }
         }
         .background(Color(.systemBackground))
-        .navigationTitle(isEditing ? "Edit Booking" : "Booking")
+        .navigationTitle("Checklist Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -65,28 +64,6 @@ struct EditBookingView: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel("Back")
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                if booking != nil, booking?.status != .completed {
-                    Button {
-                        if isEditing {
-                            saveEdits()
-                        } else {
-                            loadDraftFromBooking()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                isEditing = true
-                            }
-                        }
-                    } label: {
-                        Image(systemName: isEditing ? "checkmark" : "pencil")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(bodyDark)
-                            .frame(width: 36, height: 36)
-                            .background(Color(.tertiarySystemFill))
-                            .clipShape(Circle())
-                    }
-                    .accessibilityLabel(isEditing ? "Save" : "Edit")
-                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -139,33 +116,12 @@ struct EditBookingView: View {
 
     @ViewBuilder
     private func content(_ booking: Booking) -> some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    headerSection(booking)
-                    detailCards(booking)
-                    checklistSection(booking)
-
-                    if booking.status != .completed {
-                        actionSection(booking)
-                    }
-                }
-                .padding(20)
-                .padding(.bottom, isEditing ? 80 : 12)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                checklistSection(booking)
             }
-
-            if isEditing {
-                Button("Save changes") {
-                    saveEdits()
-                }
-                .buttonStyle(PrimaryOrangeButtonStyle())
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    Color(.systemBackground)
-                        .shadow(color: .black.opacity(0.06), radius: 8, y: -2)
-                )
-            }
+            .padding(20)
+            .padding(.bottom, 12)
         }
     }
 
@@ -409,28 +365,17 @@ struct EditBookingView: View {
 
     private func checklistSection(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Button {
-                withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
-                    checklistExpanded.toggle()
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "list.bullet.rectangle")
-                        .foregroundStyle(iconMuted)
-                    Text("Task details")
-                        .font(.headline)
-                        .foregroundStyle(bodyDark)
-                    Spacer()
-                    Image(systemName: checklistExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(labelMuted)
-                }
-                .padding(16)
+            HStack(spacing: 12) {
+                Image(systemName: "list.bullet.rectangle")
+                    .foregroundStyle(iconMuted)
+                Text("Task details")
+                    .font(.headline)
+                    .foregroundStyle(bodyDark)
+                Spacer()
             }
-            .buttonStyle(.plain)
+            .padding(16)
 
-            if checklistExpanded {
-                VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                     Text("Tasks and care activities scheduled for this booking.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.grayscale70)
@@ -468,8 +413,6 @@ struct EditBookingView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
-                .transition(.opacity.combined(with: .move(edge: .top)))
-            }
         }
         .background(cardFill)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
