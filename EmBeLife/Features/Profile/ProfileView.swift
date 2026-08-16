@@ -10,6 +10,7 @@ struct ProfileView: View {
     @State private var expandedBookingID: UUID?
     @State private var expandedMemberID: UUID?
     @State private var bookingToReschedule: Booking?
+    @State private var bookingToCancel: Booking?
     @State private var bookingRoute: BookingRoute?
     @State private var addTaskBookingID: UUID?
     @State private var showPayReceive = false
@@ -98,6 +99,13 @@ struct ProfileView: View {
         }
         .sheet(item: $bookingToReschedule) { booking in
             RescheduleBookingSheet(booking: booking)
+        }
+        .sheet(item: $bookingToCancel) { booking in
+            CancelBookingConfirmationSheet(booking: booking) {
+                if expandedBookingID == booking.id {
+                    expandedBookingID = nil
+                }
+            }
         }
         .sheet(isPresented: Binding(
             get: { addTaskBookingID != nil },
@@ -814,10 +822,7 @@ struct ProfileView: View {
 
                     HStack(spacing: 12) {
                         Button {
-                            appModel.cancelBooking(id: booking.id)
-                            if expandedBookingID == booking.id {
-                                expandedBookingID = nil
-                            }
+                            bookingToCancel = booking
                         } label: {
                             Text("Cancel")
                                 .font(.system(size: 16, weight: .bold))
@@ -910,10 +915,7 @@ struct ProfileView: View {
                     bookingRoute = BookingRoute(id: booking.id)
                 }
                 Button("Cancel booking", role: .destructive) {
-                    appModel.cancelBooking(id: booking.id)
-                    if expandedBookingID == booking.id {
-                        expandedBookingID = nil
-                    }
+                    bookingToCancel = booking
                 }
             } label: {
                 Image(systemName: "chevron.down")

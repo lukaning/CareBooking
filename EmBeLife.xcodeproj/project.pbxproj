@@ -19,6 +19,7 @@
 		A1CARECOMPSRC23456789AB /* CareTaskComposerViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CARECOMP234567890ABCDE /* CareTaskComposerViews.swift */; };
 		A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BOOKVW234567890ABCDEF /* BookingsView.swift */; };
 		A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */; };
+		A1CANCELBKSRC23456789AB /* CancelBookingConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CANCELBK234567890ABCDE /* CancelBookingConfirmationSheet.swift */; };
 		A2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */; };
 		A3ACTVW234567890ABCDEF1 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */; };
 		A3LOCMGR234567890ABCDEF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4LOCMGR234567890ABCDEF /* LocationManager.swift */; };
@@ -74,6 +75,7 @@
 		B1NOTESMDL234567890ABC /* NotesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesModels.swift; sourceTree = "<group>"; };
 		B2PWDSEC234567890ABCDEF /* PasswordSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSecurityView.swift; sourceTree = "<group>"; };
 		B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RescheduleBookingSheet.swift; sourceTree = "<group>"; };
+		A1CANCELBK234567890ABCDE /* CancelBookingConfirmationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBookingConfirmationSheet.swift; sourceTree = "<group>"; };
 		B3ACTVW234567890ABCDEF1 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		B4DASHVW234567890ABCDEF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		B4LOCMGR234567890ABCDEF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				A1BOOKVW234567890ABCDEF /* BookingsView.swift */,
 				D4EDITBK234567890ABCDEF /* EditBookingView.swift */,
 				B2RESCHED234567890ABCDE /* RescheduleBookingSheet.swift */,
+				A1CANCELBK234567890ABCDE /* CancelBookingConfirmationSheet.swift */,
 			);
 			path = Booking;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				A1CARECOMPSRC23456789AB /* CareTaskComposerViews.swift in Sources */,
 				A1BOOKVWSRC234567890AB /* BookingsView.swift in Sources */,
 				A1RESCHED234567890ABCDE /* RescheduleBookingSheet.swift in Sources */,
+				A1CANCELBKSRC23456789AB /* CancelBookingConfirmationSheet.swift in Sources */,
 				C3EDITBK234567890ABCDEF /* EditBookingView.swift in Sources */,
 				3DDB0209F71D4590A2F3B444 /* HomeView.swift in Sources */,
 				B6373694A844458AA0C86287 /* MainTabView.swift in Sources */,
