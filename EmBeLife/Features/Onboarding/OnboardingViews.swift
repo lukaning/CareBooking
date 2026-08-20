@@ -610,34 +610,52 @@ struct LocationStep: View {
     @Environment(AppModel.self) private var appModel
     var onContinue: () -> Void
 
+    private enum CustomField: Hashable {
+        case address
+        case zipcode
+    }
+
     @State private var locationManager = LocationManager()
     @State private var mapCoordinate = LocationManager.sampleCoordinate
+    @FocusState private var customFieldFocus: CustomField?
 
     private let titleBlue = Color(red: 0.114, green: 0.631, blue: 0.949)
     private let expandAnimation = Animation.easeInOut(duration: 0.2)
+    private let customConfirmAnchor = "customConfirm"
 
     private var canContinue: Bool {
         appModel.locationChoice != nil && appModel.locationConfirmed
     }
 
+    private var isTypingCustomLocation: Bool {
+        customFieldFocus != nil && appModel.locationChoice == .custom
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Where do you need help?")
-                        .font(.title.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                        .padding(.top, 20)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text("Where do you need help?")
+                            .font(.title.weight(.semibold))
+                            .foregroundStyle(Theme.darkText)
+                            .padding(.top, 20)
 
-                    currentLocationSection
-                    customizeLocationSection
+                        currentLocationSection
+                        customizeLocationSection
+                    }
+                    .padding(.horizontal, 24)
+                    // Extra room so Confirm can scroll above the keyboard.
+                    .padding(.bottom, isTypingCustomLocation ? 160 : 24)
+                    .animation(expandAnimation, value: appModel.locationChoice)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
-                .animation(expandAnimation, value: appModel.locationChoice)
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollDismissesKeyboard(.interactively)
+                .onChange(of: customFieldFocus) { _, field in
+                    guard field != nil else { return }
+                    scrollConfirmIntoView(using: proxy)
+                }
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .scrollDismissesKeyboard(.interactively)
 
             onboardingBottomBar(title: "Next", enabled: canContinue, action: onContinue)
         }
@@ -651,6 +669,15 @@ struct LocationStep: View {
         .onChange(of: locationManager.coordinate?.latitude) { _, _ in
             if let coordinate = locationManager.coordinate {
                 mapCoordinate = coordinate
+            }
+        }
+    }
+
+    private func scrollConfirmIntoView(using proxy: ScrollViewProxy) {
+        // Wait for the keyboard to begin presenting, then jump Confirm into view.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            withAnimation(.easeInOut(duration: 0.28)) {
+                proxy.scrollTo(customConfirmAnchor, anchor: UnitPoint(x: 0.5, y: 0.72))
             }
         }
     }
@@ -758,6 +785,8 @@ struct LocationStep: View {
                     appModel.locationConfirmed = false
                 }
             ))
+            .focused($customFieldFocus, equals: .address)
+            .textInputAutocapitalization(.words)
             .padding(14)
             .background(Color.white)
             .overlay(
@@ -773,6 +802,7 @@ struct LocationStep: View {
                     appModel.locationConfirmed = false
                 }
             ))
+            .focused($customFieldFocus, equals: .zipcode)
             .keyboardType(.numberPad)
             .padding(14)
             .background(Color.white)
@@ -793,6 +823,7 @@ struct LocationStep: View {
                 enabled: !appModel.customAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                 isConfirmed: appModel.locationConfirmed && appModel.locationChoice == .custom
             ) {
+                customFieldFocus = nil
                 appModel.customLocation = [appModel.customAddress, appModel.customZipcode]
                     .filter { !$0.isEmpty }
                     .joined(separator: ", ")
@@ -801,6 +832,7 @@ struct LocationStep: View {
                 }
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
+            .id(customConfirmAnchor)
 
             locationMapPreview(coordinate: mapCoordinate)
         }
@@ -895,6 +927,7 @@ struct LocationStep: View {
 
     private func selectLocation(_ choice: LocationChoice) {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        customFieldFocus = nil
 
         // Re-tap collapses in place without scrolling.
         if appModel.locationChoice == choice {
