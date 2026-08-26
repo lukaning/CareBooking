@@ -156,17 +156,17 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Profile Photo")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.scaledSystem(size: 17, weight: .semibold))
                     .foregroundStyle(bodyDark)
                 Text("Min 400x400px, PNG or JPG formats.")
-                    .font(.system(size: 12))
+                    .font(.scaledSystem(size: 12))
                     .foregroundStyle(Color(red: 0.35, green: 0.26, blue: 0.45))
 
                 Button {
                     showEdit = true
                 } label: {
                     Text("Upload Image")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.scaledSystem(size: 14, weight: .medium))
                         .foregroundStyle(Color(red: 0.35, green: 0.26, blue: 0.45))
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
@@ -216,7 +216,7 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 6) {
                     Text(headerDisplayName)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.scaledSystem(size: 22, weight: .bold))
                         .foregroundStyle(bodyDark)
                         .lineLimit(1)
 
@@ -227,18 +227,18 @@ struct ProfileView: View {
                 }
 
                 Text(profile.roleLabel.isEmpty ? "Customer" : profile.roleLabel)
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.scaledSystem(size: 14, weight: .regular))
                     .foregroundStyle(labelMuted)
 
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
-                        .font(.system(size: 12))
+                        .font(.scaledSystem(size: 12))
                         .foregroundStyle(Theme.brandOrange)
                     Text(String(format: "%.1f", profile.rating))
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaledSystem(size: 14, weight: .semibold))
                         .foregroundStyle(bodyDark)
                     Text("(\(profile.reviewCount) reviews)")
-                        .font(.system(size: 14))
+                        .font(.scaledSystem(size: 14))
                         .foregroundStyle(labelMuted)
                 }
             }
@@ -250,7 +250,7 @@ struct ProfileView: View {
                 showPayReceive = true
             } label: {
                 Image(systemName: "viewfinder")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.scaledSystem(size: 18, weight: .semibold))
                     .foregroundStyle(giftScanTint)
                     .frame(width: 42, height: 42)
                     .background(giftScanTint.opacity(0.12))
@@ -293,11 +293,11 @@ struct ProfileView: View {
     private var filledLanguageSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Language Preference")
-                .font(.system(size: 20, weight: .bold))
+                .font(.scaledSystem(size: 20, weight: .bold))
                 .foregroundStyle(sectionTitle)
 
             Text("Language")
-                .font(.system(size: 13, weight: .medium))
+                .font(.scaledSystem(size: 13, weight: .medium))
                 .foregroundStyle(labelMuted)
 
             HStack(spacing: 8) {
@@ -305,9 +305,9 @@ struct ProfileView: View {
                 ForEach(languages, id: \.self) { language in
                     HStack(spacing: 6) {
                         Text(language)
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.scaledSystem(size: 13, weight: .bold))
                         Text("×")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.scaledSystem(size: 14, weight: .semibold))
                     }
                     .foregroundStyle(.white)
                     .padding(.horizontal, 12)
@@ -318,7 +318,7 @@ struct ProfileView: View {
 
                 Button { showEdit = true } label: {
                     Image(systemName: "plus")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaledSystem(size: 14, weight: .semibold))
                         .foregroundStyle(labelMuted)
                         .frame(width: 34, height: 34)
                         .background(Color(red: 0.94, green: 0.94, blue: 0.95))
@@ -332,11 +332,11 @@ struct ProfileView: View {
     private var filledFamilySection: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Family & Friends")
-                .font(.system(size: 20, weight: .bold))
+                .font(.scaledSystem(size: 20, weight: .bold))
                 .foregroundStyle(sectionTitle)
 
             Text("Member List")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.scaledSystem(size: 15, weight: .semibold))
                 .foregroundStyle(bodyDark)
 
             VStack(spacing: 10) {
@@ -352,11 +352,11 @@ struct ProfileView: View {
                             .stroke(borderLight, lineWidth: 1.5)
                             .frame(width: 40, height: 40)
                         Text("+")
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.scaledSystem(size: 20, weight: .medium))
                             .foregroundStyle(Color(red: 0.41, green: 0.41, blue: 0.46))
                     }
                     Text("Adding member")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaledSystem(size: 15, weight: .semibold))
                         .foregroundStyle(bodyDark)
                     Spacer()
                 }
@@ -375,7 +375,7 @@ struct ProfileView: View {
                     .frame(width: 42, height: 42)
                     .overlay {
                         Text(member.monogram)
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaledSystem(size: 16, weight: .bold))
                             .foregroundStyle(.white)
                     }
 
@@ -386,10 +386,10 @@ struct ProfileView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Text(member.displayName)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.scaledSystem(size: 15, weight: .semibold))
                             .foregroundStyle(bodyDark)
                         Image(systemName: expanded ? "chevron.down" : "chevron.right")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.scaledSystem(size: 11, weight: .semibold))
                             .foregroundStyle(labelMuted)
                     }
                 }
@@ -398,7 +398,7 @@ struct ProfileView: View {
                 Spacer()
 
                 Image(systemName: "trash")
-                    .font(.system(size: 15))
+                    .font(.scaledSystem(size: 15))
                     .foregroundStyle(Color(red: 0.95, green: 0.35, blue: 0.35))
             }
 
@@ -406,11 +406,11 @@ struct ProfileView: View {
                 HStack(alignment: .top, spacing: 0) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Preferred Service")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.scaledSystem(size: 12, weight: .medium))
                             .foregroundStyle(labelMuted)
                         ForEach(member.preferredServices, id: \.self) { service in
                             Text(service)
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.scaledSystem(size: 13, weight: .medium))
                                 .foregroundStyle(bodyDark)
                         }
                     }
@@ -423,15 +423,15 @@ struct ProfileView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Preferred time")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.scaledSystem(size: 12, weight: .medium))
                             .foregroundStyle(labelMuted)
                         ForEach(member.preferredTimes, id: \.self) { time in
                             HStack(spacing: 6) {
                                 Image(systemName: "calendar")
-                                    .font(.system(size: 12))
+                                    .font(.scaledSystem(size: 12))
                                     .foregroundStyle(labelMuted)
                                 Text(time)
-                                    .font(.system(size: 13, weight: .medium))
+                                    .font(.scaledSystem(size: 13, weight: .medium))
                                     .foregroundStyle(bodyDark)
                             }
                         }
@@ -462,18 +462,18 @@ struct ProfileView: View {
                 .frame(width: 32, height: 32)
                 .overlay {
                     Image(systemName: "person.text.rectangle.fill")
-                        .font(.system(size: 14))
+                        .font(.scaledSystem(size: 14))
                         .foregroundStyle(Color(red: 0.15, green: 0.62, blue: 0.48))
                 }
 
             Text(title)
-                .font(.system(size: 15, weight: .medium))
+                .font(.scaledSystem(size: 15, weight: .medium))
                 .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.52))
 
             Spacer()
 
             Image(systemName: "info.circle")
-                .font(.system(size: 16))
+                .font(.scaledSystem(size: 16))
                 .foregroundStyle(Color(red: 0.45, green: 0.48, blue: 0.55))
         }
         .padding(.horizontal, 14)
@@ -486,12 +486,12 @@ struct ProfileView: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(title)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.scaledSystem(size: 12, weight: .medium))
                     .foregroundStyle(labelMuted)
                     .lineLimit(1)
 
                 Text(value)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.scaledSystem(size: 14, weight: .semibold))
                     .foregroundStyle(fieldValue)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
@@ -514,7 +514,7 @@ struct ProfileView: View {
     private func bookingsSection(showRichCards: Bool) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Bookings")
-                .font(.system(size: 20, weight: .bold))
+                .font(.scaledSystem(size: 20, weight: .bold))
                 .foregroundStyle(sectionTitle)
 
             bookingTabControl
@@ -544,7 +544,7 @@ struct ProfileView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Text(profile.isFilled ? tab.shortTitle : tab.rawValue)
-                            .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                            .font(.scaledSystem(size: 14, weight: selected ? .semibold : .regular))
                             .foregroundStyle(selected ? bodyDark : labelMuted)
                         if selected {
                             Circle()
@@ -577,11 +577,11 @@ struct ProfileView: View {
                 .frame(width: 64, height: 64)
 
             Text("No booking \(bookingTab.rawValue)!")
-                .font(.system(size: 17, weight: .bold))
+                .font(.scaledSystem(size: 17, weight: .bold))
                 .foregroundStyle(bodyDark)
 
             Text(emptySubtitle)
-                .font(.system(size: 14, weight: .medium))
+                .font(.scaledSystem(size: 14, weight: .medium))
                 .foregroundStyle(labelMuted)
                 .multilineTextAlignment(.center)
         }
@@ -607,14 +607,14 @@ struct ProfileView: View {
     private func simpleBookingRow(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(booking.provider.name)
-                .font(.system(size: 16, weight: .semibold))
+                .font(.scaledSystem(size: 16, weight: .semibold))
             Text(booking.provider.title)
-                .font(.system(size: 14))
+                .font(.scaledSystem(size: 14))
                 .foregroundStyle(labelMuted)
             Text(booking.date, style: .date)
-                .font(.system(size: 14))
+                .font(.scaledSystem(size: 14))
             Text("\(booking.durationMinutes) min · \(booking.status.rawValue.capitalized)")
-                .font(.system(size: 12, weight: .medium))
+                .font(.scaledSystem(size: 12, weight: .medium))
                 .foregroundStyle(Theme.brandOrange)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -637,13 +637,13 @@ struct ProfileView: View {
                         .frame(width: 5, height: 26)
 
                     Text(statusTitle(for: booking))
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.scaledSystem(size: 22, weight: .bold))
                         .foregroundStyle(bodyDark)
 
                     Spacer(minLength: 8)
 
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.up")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.scaledSystem(size: 12, weight: .semibold))
                         .foregroundStyle(iconMuted)
                         .frame(width: 32, height: 32)
                         .background(Color(red: 0.91, green: 0.92, blue: 0.94))
@@ -698,10 +698,10 @@ struct ProfileView: View {
                 whiteInsetCard {
                     HStack(spacing: 10) {
                         Image(systemName: "person.crop.circle")
-                            .font(.system(size: 16))
+                            .font(.scaledSystem(size: 16))
                             .foregroundStyle(labelMuted)
                         Text("Service provided to \(booking.serviceProvidedTo)")
-                            .font(.system(size: 14, weight: .medium))
+                            .font(.scaledSystem(size: 14, weight: .medium))
                             .foregroundStyle(bodyDark)
                     }
                 }
@@ -713,13 +713,13 @@ struct ProfileView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 0.38))
                         Text("You rated \(booking.clientReviewRating ?? 0) stars")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.scaledSystem(size: 14, weight: .semibold))
                             .foregroundStyle(bodyDark)
                         Spacer()
                         Button("View reviews") {
                             reviewProvider = booking.provider
                         }
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.scaledSystem(size: 13, weight: .semibold))
                         .foregroundStyle(Theme.linkBlue)
                     }
                 }
@@ -753,7 +753,7 @@ struct ProfileView: View {
                     }
                 } label: {
                     Text("Add review")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.scaledSystem(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -768,7 +768,7 @@ struct ProfileView: View {
     private func activeBookingDetails(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Here is your upcoming appointment with \(booking.provider.name)")
-                .font(.system(size: 14))
+                .font(.scaledSystem(size: 14))
                 .foregroundStyle(labelMuted)
                 .padding(.bottom, 4)
 
@@ -778,16 +778,16 @@ struct ProfileView: View {
             floatingCard {
                 HStack(spacing: 14) {
                     Image(systemName: "calendar")
-                        .font(.system(size: 20, weight: .regular))
+                        .font(.scaledSystem(size: 20, weight: .regular))
                         .foregroundStyle(iconMuted)
                         .frame(width: 26)
 
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Date")
-                            .font(.system(size: 13))
+                            .font(.scaledSystem(size: 13))
                             .foregroundStyle(labelMuted)
                         Text(formattedBookingDate(booking.date))
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaledSystem(size: 16, weight: .bold))
                             .foregroundStyle(bodyDark)
                     }
                     Spacer(minLength: 0)
@@ -799,22 +799,22 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .top, spacing: 14) {
                         Image(systemName: "clock")
-                            .font(.system(size: 20, weight: .regular))
+                            .font(.scaledSystem(size: 20, weight: .regular))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Time")
-                                .font(.system(size: 13))
+                                .font(.scaledSystem(size: 13))
                                 .foregroundStyle(labelMuted)
                             Text(durationLabel(booking.durationMinutes))
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.scaledSystem(size: 16, weight: .bold))
                                 .foregroundStyle(bodyDark)
                             Text("Start at \(clockTime(booking.startTime))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaledSystem(size: 15, weight: .bold))
                                 .foregroundStyle(bodyDark)
                             Text("End at \(clockTime(booking.endTime))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaledSystem(size: 15, weight: .bold))
                                 .foregroundStyle(bodyDark)
                         }
                         Spacer(minLength: 0)
@@ -825,7 +825,7 @@ struct ProfileView: View {
                             bookingToCancel = booking
                         } label: {
                             Text("Cancel")
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.scaledSystem(size: 16, weight: .bold))
                                 .foregroundStyle(bodyDark)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
@@ -843,16 +843,16 @@ struct ProfileView: View {
                 floatingCard {
                     HStack(spacing: 14) {
                         Image(systemName: "person.bubble")
-                            .font(.system(size: 18, weight: .regular))
+                            .font(.scaledSystem(size: 18, weight: .regular))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
 
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Services provided to")
-                                .font(.system(size: 13))
+                                .font(.scaledSystem(size: 13))
                                 .foregroundStyle(labelMuted)
                             Text(booking.serviceProvidedTo)
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.scaledSystem(size: 16, weight: .bold))
                                 .foregroundStyle(bodyDark)
                         }
                         Spacer(minLength: 0)
@@ -866,15 +866,15 @@ struct ProfileView: View {
                 floatingCard {
                     HStack(spacing: 14) {
                         Image(systemName: "list.bullet.rectangle")
-                            .font(.system(size: 18, weight: .regular))
+                            .font(.scaledSystem(size: 18, weight: .regular))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
                         Text("Checklist Details")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaledSystem(size: 16, weight: .bold))
                             .foregroundStyle(bodyDark)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.scaledSystem(size: 13, weight: .semibold))
                             .foregroundStyle(iconMuted)
                     }
                 }
@@ -896,7 +896,7 @@ struct ProfileView: View {
                 bookingToReschedule = booking
             } label: {
                 Text("Modify")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaledSystem(size: 16, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -919,7 +919,7 @@ struct ProfileView: View {
                 }
             } label: {
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.scaledSystem(size: 12, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(width: 44)
                     .padding(.vertical, 14)
@@ -940,10 +940,10 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(booking.provider.name)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaledSystem(size: 16, weight: .bold))
                     .foregroundStyle(bodyDark)
                 Text(booking.provider.title)
-                    .font(.system(size: 13))
+                    .font(.scaledSystem(size: 13))
                     .foregroundStyle(labelMuted)
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Button {
@@ -960,7 +960,7 @@ struct ProfileView: View {
                     Spacer(minLength: 4)
 
                     Text("$\(booking.provider.ratePerHour)/hour")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaledSystem(size: 14, weight: .semibold))
                         .foregroundStyle(bodyDark)
                 }
             }
@@ -976,10 +976,10 @@ struct ProfileView: View {
         floatingCard {
             HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 16))
+                    .font(.scaledSystem(size: 16))
                     .foregroundStyle(iconMuted)
                 Text(text)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.scaledSystem(size: 14, weight: .medium))
                     .foregroundStyle(bodyDark)
                 Spacer()
             }

@@ -397,7 +397,7 @@ struct RescheduleBookingSheet: View {
             Spacer(minLength: 24)
 
             Image(systemName: "paperplane.circle.fill")
-                .font(.system(size: 64))
+                .font(.scaledSystem(size: 64))
                 .foregroundStyle(Theme.brandOrange)
 
             Text("Reschedule proposal sent!")

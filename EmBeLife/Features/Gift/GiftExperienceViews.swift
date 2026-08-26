@@ -121,7 +121,7 @@ struct GiftConfirmView: View {
                                         .foregroundStyle(GiftChrome.muted)
                                 }
                                 Text(draft.amountLabel)
-                                    .font(.system(size: 28, weight: .bold))
+                                    .font(.scaledSystem(size: 28, weight: .bold))
                                     .foregroundStyle(Theme.darkText)
                                     .contentTransition(.numericText())
                             }
@@ -233,11 +233,11 @@ struct GiftConfirmView: View {
     private var amountEditor: some View {
         HStack(spacing: 4) {
             Text("$")
-                .font(.system(size: 44, weight: .bold))
+                .font(.scaledSystem(size: 44, weight: .bold))
                 .foregroundStyle(Theme.darkText)
 
             TextField("0", text: amountInputBinding)
-                .font(.system(size: 44, weight: .bold))
+                .font(.scaledSystem(size: 44, weight: .bold))
                 .foregroundStyle(Theme.darkText)
                 .keyboardType(.numberPad)
                 .textContentType(.none)

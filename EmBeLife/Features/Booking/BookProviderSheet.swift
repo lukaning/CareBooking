@@ -304,7 +304,7 @@ struct BookProviderSheet: View {
             }
 
             Text("Booking details")
-                .font(.system(size: 18, weight: .bold))
+                .font(.scaledSystem(size: 18, weight: .bold))
                 .foregroundStyle(Theme.darkText)
                 .allowsHitTesting(false)
         }
@@ -1358,7 +1358,7 @@ struct BookProviderSheet: View {
             payField("PayPal email", text: $paypalDetails.contact)
         case .giftFund:
             Text("$\(giftBalance)")
-                .font(.system(size: 32, weight: .bold))
+                .font(.scaledSystem(size: 32, weight: .bold))
                 .frame(maxWidth: .infinity)
             Text("Available gift fund balance")
                 .font(.subheadline)
@@ -1447,7 +1447,7 @@ struct BookProviderSheet: View {
                 Button("Edit") {
                     goBack()
                 }
-                .font(.system(size: 16, weight: .semibold))
+                .font(.scaledSystem(size: 16, weight: .semibold))
                 .foregroundStyle(linkBlue)
             }
 
@@ -1492,7 +1492,7 @@ struct BookProviderSheet: View {
             Button("Request Booking") {
                 goForward()
             }
-            .font(.system(size: 17, weight: .bold))
+            .font(.scaledSystem(size: 17, weight: .bold))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
@@ -1521,10 +1521,10 @@ struct BookProviderSheet: View {
     private func summaryMetaColumn(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(label)
-                .font(.system(size: 13, weight: .regular))
+                .font(.scaledSystem(size: 13, weight: .regular))
                 .foregroundStyle(Theme.mutedText)
             Text(value)
-                .font(.system(size: 17, weight: .bold))
+                .font(.scaledSystem(size: 17, weight: .bold))
                 .foregroundStyle(Theme.darkText)
                 .lineLimit(2)
                 .minimumScaleFactor(0.85)
@@ -1548,24 +1548,24 @@ struct BookProviderSheet: View {
     ) -> some View {
         HStack(alignment: .center, spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 17, weight: .regular))
+                .font(.scaledSystem(size: 17, weight: .regular))
                 .foregroundStyle(Color(red: 0.62, green: 0.64, blue: 0.68))
                 .frame(width: 22, height: 22)
 
             Text(label)
-                .font(.system(size: 14, weight: .regular))
+                .font(.scaledSystem(size: 14, weight: .regular))
                 .foregroundStyle(Theme.mutedText)
 
             Spacer(minLength: 8)
 
             VStack(alignment: .trailing, spacing: 1) {
                 Text(primaryValue)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.scaledSystem(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.darkText)
                     .multilineTextAlignment(.trailing)
                 if let secondaryValue {
                     Text(secondaryValue)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaledSystem(size: 15, weight: .semibold))
                         .foregroundStyle(Theme.darkText)
                         .multilineTextAlignment(.trailing)
                 }
@@ -1597,18 +1597,18 @@ struct BookProviderSheet: View {
 
             VStack(spacing: 14) {
                 Image(systemName: "tray.and.arrow.up")
-                    .font(.system(size: 52, weight: .light))
+                    .font(.scaledSystem(size: 52, weight: .light))
                     .foregroundStyle(Color(red: 0.62, green: 0.60, blue: 0.70))
                     .symbolRenderingMode(.monochrome)
                     .padding(.top, 8)
                     .padding(.bottom, 6)
 
                 Text("Booking Requested!")
-                    .font(.system(size: 22, weight: .bold))
+                    .font(.scaledSystem(size: 22, weight: .bold))
                     .foregroundStyle(Theme.darkText)
 
                 Text("Your booking has been requested and waiting for confirmation from your provider")
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.scaledSystem(size: 14, weight: .regular))
                     .foregroundStyle(Theme.mutedText)
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)

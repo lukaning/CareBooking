@@ -434,7 +434,7 @@ private struct MessageAvatarView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Text(initials)
-                .font(.system(size: size * 0.32, weight: .bold))
+                .font(.scaledSystem(size: size * 0.32, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(width: size, height: size)
                 .background(color)

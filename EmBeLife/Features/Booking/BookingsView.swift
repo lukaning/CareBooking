@@ -95,7 +95,7 @@ struct BookingsView: View {
                     }
                 } label: {
                     Text(tab.shortTitle)
-                        .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                        .font(.scaledSystem(size: 14, weight: selected ? .semibold : .regular))
                         .foregroundStyle(selected ? headingColor : segmentInactiveText)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 11)
@@ -171,13 +171,13 @@ struct BookingsView: View {
                         .frame(width: 5, height: 26)
 
                     Text(booking.status.rawValue.capitalized)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.scaledSystem(size: 22, weight: .bold))
                         .foregroundStyle(headingColor)
 
                     Spacer(minLength: 8)
 
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.up")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.scaledSystem(size: 12, weight: .semibold))
                         .foregroundStyle(iconMuted)
                         .frame(width: 32, height: 32)
                         .background(cancelFill)
@@ -205,7 +205,7 @@ struct BookingsView: View {
     private func bookingDetails(_ booking: Booking) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Here is your upcoming appointment with \(booking.provider.name)")
-                .font(.system(size: 14))
+                .font(.scaledSystem(size: 14))
                 .foregroundStyle(mutedColor)
                 .padding(.bottom, 4)
 
@@ -214,15 +214,15 @@ struct BookingsView: View {
             floatingCard {
                 HStack(spacing: 14) {
                     Image(systemName: "calendar")
-                        .font(.system(size: 20))
+                        .font(.scaledSystem(size: 20))
                         .foregroundStyle(iconMuted)
                         .frame(width: 26)
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Date")
-                            .font(.system(size: 13))
+                            .font(.scaledSystem(size: 13))
                             .foregroundStyle(mutedColor)
                         Text(formattedDate(booking.date))
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaledSystem(size: 16, weight: .bold))
                             .foregroundStyle(headingColor)
                     }
                     Spacer(minLength: 0)
@@ -233,21 +233,21 @@ struct BookingsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .top, spacing: 14) {
                         Image(systemName: "clock")
-                            .font(.system(size: 20))
+                            .font(.scaledSystem(size: 20))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Time")
-                                .font(.system(size: 13))
+                                .font(.scaledSystem(size: 13))
                                 .foregroundStyle(mutedColor)
                             Text(durationLabel(booking.durationMinutes))
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.scaledSystem(size: 16, weight: .bold))
                                 .foregroundStyle(headingColor)
                             Text("Start at \(clockTime(booking.startTime))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaledSystem(size: 15, weight: .bold))
                                 .foregroundStyle(headingColor)
                             Text("End at \(clockTime(booking.endTime))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaledSystem(size: 15, weight: .bold))
                                 .foregroundStyle(headingColor)
                         }
                         Spacer(minLength: 0)
@@ -259,7 +259,7 @@ struct BookingsView: View {
                                 bookingToCancel = booking
                             } label: {
                                 Text("Cancel")
-                                    .font(.system(size: 16, weight: .bold))
+                                    .font(.scaledSystem(size: 16, weight: .bold))
                                     .foregroundStyle(headingColor)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 14)
@@ -273,7 +273,7 @@ struct BookingsView: View {
                                     bookingToReschedule = booking
                                 } label: {
                                     Text("Modify")
-                                        .font(.system(size: 16, weight: .bold))
+                                        .font(.scaledSystem(size: 16, weight: .bold))
                                         .foregroundStyle(.white)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 14)
@@ -296,7 +296,7 @@ struct BookingsView: View {
                                     }
                                 } label: {
                                     Image(systemName: "chevron.down")
-                                        .font(.system(size: 12, weight: .bold))
+                                        .font(.scaledSystem(size: 12, weight: .bold))
                                         .foregroundStyle(.white)
                                         .frame(width: 44)
                                         .padding(.vertical, 14)
@@ -314,15 +314,15 @@ struct BookingsView: View {
                 floatingCard {
                     HStack(spacing: 14) {
                         Image(systemName: "person.bubble")
-                            .font(.system(size: 18))
+                            .font(.scaledSystem(size: 18))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Services provided to")
-                                .font(.system(size: 13))
+                                .font(.scaledSystem(size: 13))
                                 .foregroundStyle(mutedColor)
                             Text(booking.serviceProvidedTo)
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.scaledSystem(size: 16, weight: .bold))
                                 .foregroundStyle(headingColor)
                         }
                         Spacer(minLength: 0)
@@ -336,15 +336,15 @@ struct BookingsView: View {
                 floatingCard {
                     HStack(spacing: 14) {
                         Image(systemName: "list.bullet.rectangle")
-                            .font(.system(size: 18))
+                            .font(.scaledSystem(size: 18))
                             .foregroundStyle(iconMuted)
                             .frame(width: 26)
                         Text("Checklist Details")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaledSystem(size: 16, weight: .bold))
                             .foregroundStyle(headingColor)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.scaledSystem(size: 13, weight: .semibold))
                             .foregroundStyle(iconMuted)
                     }
                 }
@@ -370,10 +370,10 @@ struct BookingsView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(booking.provider.name)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaledSystem(size: 16, weight: .bold))
                     .foregroundStyle(headingColor)
                 Text(booking.provider.title)
-                    .font(.system(size: 13))
+                    .font(.scaledSystem(size: 13))
                     .foregroundStyle(mutedColor)
                 HStack {
                     ProviderRatingLabel(
@@ -383,7 +383,7 @@ struct BookingsView: View {
                     )
                     Spacer(minLength: 4)
                     Text("$\(booking.provider.ratePerHour)/hour")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaledSystem(size: 14, weight: .semibold))
                         .foregroundStyle(headingColor)
                 }
             }

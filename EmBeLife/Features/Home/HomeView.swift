@@ -108,7 +108,7 @@ struct HomeView: View {
 
                         if bookedCount > 0 {
                             Text(bookedCount > 9 ? "9+" : "\(bookedCount)")
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.scaledSystem(size: 9, weight: .bold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, bookedCount > 9 ? 3 : 4)
                                 .padding(.vertical, 1)

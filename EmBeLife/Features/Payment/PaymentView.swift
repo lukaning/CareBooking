@@ -136,7 +136,7 @@ struct PaymentView: View {
                         .buttonStyle(.plain)
                     }
                     Text("$\(giftBalance)")
-                        .font(.system(size: 28, weight: .semibold))
+                        .font(.scaledSystem(size: 28, weight: .semibold))
                         .foregroundStyle(Theme.darkText)
                 }
 
@@ -177,7 +177,7 @@ struct PaymentView: View {
                         .buttonStyle(.plain)
                     }
                     Text("\(completedBookings) times")
-                        .font(.system(size: 28, weight: .semibold))
+                        .font(.scaledSystem(size: 28, weight: .semibold))
                         .foregroundStyle(Theme.darkText)
                 }
 
@@ -444,7 +444,7 @@ struct PaymentView: View {
     private var giftFundDetails: some View {
         VStack(spacing: 14) {
             Text("$\(giftBalance)")
-                .font(.system(size: 36, weight: .bold))
+                .font(.scaledSystem(size: 36, weight: .bold))
                 .foregroundStyle(Theme.darkText)
                 .frame(maxWidth: .infinity)
 

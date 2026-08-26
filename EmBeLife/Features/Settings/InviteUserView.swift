@@ -235,7 +235,7 @@ struct InvitationSentOverlay: View {
             // Centered card — not a sheet, so it sits mid-screen with even spacing.
             VStack(spacing: 16) {
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 56))
+                    .font(.scaledSystem(size: 56))
                     .foregroundStyle(Color(red: 0.30, green: 0.72, blue: 0.38))
 
                 Text("Invitation Sent")

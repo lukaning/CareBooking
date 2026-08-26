@@ -87,7 +87,7 @@ struct NotesView: View {
                 startConversation()
             } label: {
                 Image(systemName: "mic.fill")
-                    .font(.system(size: 36))
+                    .font(.scaledSystem(size: 36))
                     .foregroundStyle(.white)
                     .frame(width: 96, height: 96)
                     .background(Theme.brandOrange)
@@ -352,11 +352,11 @@ struct NotesView: View {
     private var greetingHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Hi, 👋")
-                .font(.system(size: 34, weight: .bold))
+                .font(.scaledSystem(size: 34, weight: .bold))
                 .foregroundStyle(Theme.darkText)
 
             Text("Welcome to")
-                .font(.system(size: 34, weight: .bold))
+                .font(.scaledSystem(size: 34, weight: .bold))
                 .foregroundStyle(Theme.darkText)
 
             emBeLifeLogo
@@ -378,7 +378,7 @@ struct NotesView: View {
                 Text("Life")
                     .foregroundStyle(Theme.brandOrange)
             }
-            .font(.system(size: 28, weight: .bold))
+            .font(.scaledSystem(size: 28, weight: .bold))
 
             Text("™")
                 .font(.caption)

@@ -57,7 +57,7 @@ struct AuthHeader: View {
             .padding(.top, 4)
 
             Text(headline)
-                .font(.system(size: 32, weight: .bold))
+                .font(.scaledSystem(size: 32, weight: .bold))
                 .foregroundStyle(.white)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -351,7 +351,7 @@ struct EnterCodeView: View {
             VStack(spacing: 28) {
                 VStack(spacing: 10) {
                     Text("Enter Code")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.scaledSystem(size: 28, weight: .bold))
                         .foregroundStyle(Theme.darkText)
 
                     Text("We have just sent you 4 digit code via your email \(email)")
@@ -486,7 +486,7 @@ struct ForgotPasswordView: View {
             VStack(spacing: 28) {
                 VStack(spacing: 10) {
                     Text("Forgot Password")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.scaledSystem(size: 28, weight: .bold))
                         .foregroundStyle(Theme.darkText)
 
                     Text("Recover your account password")
@@ -528,7 +528,7 @@ struct CreateNewPasswordView: View {
             VStack(spacing: 28) {
                 VStack(spacing: 10) {
                     Text("Create a New Password")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.scaledSystem(size: 28, weight: .bold))
                         .foregroundStyle(Theme.darkText)
                         .multilineTextAlignment(.center)
 
@@ -627,7 +627,7 @@ private struct PasswordSuccessOverlay: View {
                         .frame(width: 120, height: 120)
 
                     Image(systemName: "hand.thumbsup.fill")
-                        .font(.system(size: 48))
+                        .font(.scaledSystem(size: 48))
                         .foregroundStyle(Theme.brandOrange)
                 }
 

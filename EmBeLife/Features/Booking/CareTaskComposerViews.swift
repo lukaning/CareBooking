@@ -26,14 +26,14 @@ struct AddTaskNavHeader: View {
             Spacer(minLength: 8)
 
             Text(title)
-                .font(.system(size: 20, weight: .bold))
+                .font(.scaledSystem(size: 20, weight: .bold))
                 .foregroundStyle(Theme.darkText)
 
             Spacer(minLength: 8)
 
             Button(action: onDone) {
                 Text("Done")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaledSystem(size: 16, weight: .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 18)
                     .padding(.vertical, 9)
@@ -105,13 +105,13 @@ struct SubtaskListSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Sub-Task")
-                .font(.system(size: 20, weight: .bold))
+                .font(.scaledSystem(size: 20, weight: .bold))
                 .foregroundStyle(Theme.darkText)
 
             if subtasks.isEmpty {
                 VStack(spacing: 6) {
                     Text("No Sub-Task added")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.scaledSystem(size: 16, weight: .bold))
                         .foregroundStyle(Theme.darkText)
                     Text("Subtitle goes here")
                         .font(.subheadline)
@@ -163,7 +163,7 @@ struct SubtaskListSection: View {
 
             Button(action: onAdd) {
                 Text("Add Sub-Task")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaledSystem(size: 16, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)

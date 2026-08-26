@@ -475,7 +475,7 @@ struct AddTaskCTAButton: View {
     var body: some View {
         Button(action: action) {
             Text("Add Task")
-                .font(.system(size: 16, weight: .bold))
+                .font(.scaledSystem(size: 16, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)

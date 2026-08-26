@@ -46,12 +46,12 @@ enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(AppModel.self) private var appModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var searchText = ""
     @State private var isSearchPresented = false
     @State private var path: [SettingsDestination] = []
     @State private var preferredLanguage = "English"
-    @State private var textSizeValue: Double = 1.0
     @State private var showGiftFund = false
 
     private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
@@ -257,7 +257,7 @@ struct SettingsView: View {
 
                 Divider()
 
-                // Text size — inline slider
+                // Text size follows iPhone Settings → Display & Brightness / Accessibility.
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 10) {
                         Image(systemName: "textformat.size")
@@ -268,27 +268,31 @@ struct SettingsView: View {
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.darkText)
                         Spacer()
-                        Text(textSizeLabel)
+                        Text(systemTextSizeLabel)
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(rowColor)
                     }
 
-                    HStack(spacing: 12) {
-                        Text("A")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(rowColor)
-                        Slider(value: $textSizeValue, in: 0.85...1.3, step: 0.05)
-                            .tint(Theme.brandOrange)
-                        Text("A")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(rowColor)
-                    }
-
                     Text("Preview text looks like this.")
-                        .font(.system(size: 16 * textSizeValue, weight: .medium))
+                        .font(.body.weight(.medium))
                         .foregroundStyle(Theme.darkText)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 2)
+
+                    Text("EmBeLife uses the system text size from iPhone Settings.")
+                        .font(.caption)
+                        .foregroundStyle(rowColor)
+
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Text("Open iPhone Settings")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.linkBlue)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 2)
                 }
             }
             .padding(16)
@@ -297,12 +301,13 @@ struct SettingsView: View {
         }
     }
 
-    private var textSizeLabel: String {
-        switch textSizeValue {
-        case ..<0.95: return "Small"
-        case ..<1.1: return "Default"
-        case ..<1.2: return "Large"
-        default: return "Extra Large"
+    private var systemTextSizeLabel: String {
+        switch dynamicTypeSize {
+        case .xSmall, .small: "Small"
+        case .medium, .large: "Default"
+        case .xLarge, .xxLarge: "Large"
+        case .xxxLarge: "Extra Large"
+        default: "Accessibility"
         }
     }
 }

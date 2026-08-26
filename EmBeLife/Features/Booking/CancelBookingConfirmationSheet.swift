@@ -148,7 +148,7 @@ struct CancelBookingConfirmationSheet: View {
         VStack(spacing: 18) {
             Spacer(minLength: 24)
             Image(systemName: "checkmark.circle")
-                .font(.system(size: 56, weight: .light))
+                .font(.scaledSystem(size: 56, weight: .light))
                 .foregroundStyle(Theme.brandOrange)
             Text("Booking cancelled")
                 .font(.title2.weight(.bold))

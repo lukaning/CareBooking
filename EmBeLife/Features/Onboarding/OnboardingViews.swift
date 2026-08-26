@@ -84,7 +84,7 @@ struct WelcomeStep: View {
 
                 Button(action: onSignUpIn) {
                     Text("Sign up/in")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaledSystem(size: 15, weight: .semibold))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 8)
@@ -99,12 +99,12 @@ struct WelcomeStep: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("Hi, 👋")
-                    .font(.system(size: 56, weight: .bold))
+                    .font(.scaledSystem(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
                     .padding(.top, 10)
 
                 Text("Welcome to")
-                    .font(.system(size: 56, weight: .bold))
+                    .font(.scaledSystem(size: 56, weight: .bold))
                     .foregroundStyle(Color.black)
                     .padding(.top, 2)
 
@@ -117,7 +117,7 @@ struct WelcomeStep: View {
                     .accessibilityLabel("EmBeLife")
 
                 Text("Find trustworthy help and support...")
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.scaledSystem(size: 15, weight: .regular))
                     .foregroundStyle(tagline)
                     .padding(.top, 16)
             }
@@ -561,7 +561,7 @@ struct ServiceNeedsStep: View {
 
                 if isSelected {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.scaledSystem(size: 16, weight: .medium))
                         .foregroundStyle(.white.opacity(0.95))
                 }
             }

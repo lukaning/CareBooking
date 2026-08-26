@@ -14,7 +14,7 @@ struct StarRatingControl: View {
         HStack(spacing: 8) {
             ForEach(1...maxStars, id: \.self) { index in
                 Image(systemName: index <= rating ? "star.fill" : "star")
-                    .font(.system(size: size))
+                    .font(.scaledSystem(size: size))
                     .foregroundStyle(index <= rating ? fillColor : emptyColor)
                     .onTapGesture {
                         guard interactive else { return }

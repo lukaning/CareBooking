@@ -9,6 +9,8 @@ struct EmBeLifeApp: App {
             RootView()
                 .environment(appModel)
                 .tint(Color("BrandOrange"))
+                // Allow the full Dynamic Type range from iPhone Settings.
+                .dynamicTypeSize(.xSmall ... .accessibility5)
         }
     }
 }
