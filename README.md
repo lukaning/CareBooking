@@ -23,4 +23,5 @@ Requires Xcode 15+ / iOS 17+.
 
 - System SF Pro is used instead of Plus Jakarta Sans / Inter / Poppins from Figma (better Dynamic Type + SF Symbol alignment).
 - Brand orange `#F15925` is the accent / primary CTA color from the file.
-- Auth and booking are local demo state only (no backend).
+- Auth and booking UI still use local demo state in the iOS app.
+- Backend schema lives in [`backend/`](backend/) (Supabase / Postgres). See [backend/README.md](backend/README.md).
