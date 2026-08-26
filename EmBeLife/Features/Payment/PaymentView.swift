@@ -354,9 +354,8 @@ struct PaymentView: View {
         let isSelected = selectedMethod == method
         let isDefault = method == defaultMethod
 
-        return VStack(alignment: .leading, spacing: 14) {
+        return VStack(alignment: .leading, spacing: isSelected ? 14 : 0) {
             Button {
-                // Single animation drives radio, colors, and expand/collapse together.
                 withAnimation(selectionAnimation) {
                     if selectedMethod == method {
                         selectedMethod = nil
@@ -365,7 +364,9 @@ struct PaymentView: View {
                     }
                 }
             } label: {
-                HStack(spacing: 12) {
+                // Keep radio, title, badge, and logos in one compositing group so
+                // press + selection motion moves them together.
+                HStack(alignment: .center, spacing: 12) {
                     selectionRadio(isSelected: isSelected)
 
                     HStack(spacing: 8) {
@@ -381,15 +382,20 @@ struct PaymentView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     trailingAccessory(for: method)
+                        .opacity(isSelected ? 1 : 0.92)
                 }
+                .padding(.vertical, 2)
                 .contentShape(Rectangle())
+                .compositingGroup()
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PaymentMethodRowButtonStyle())
 
-            if isSelected {
-                // No custom transition — height layout + radio share one animation.
-                expandedDetails(for: method)
-            }
+            expandedDetails(for: method)
+                .frame(maxHeight: isSelected ? nil : 0, alignment: .top)
+                .opacity(isSelected ? 1 : 0)
+                .clipped()
+                .allowsHitTesting(isSelected)
+                .accessibilityHidden(!isSelected)
         }
         .padding(14)
         .background(isSelected ? selectedMethodFill : Color.white)
@@ -399,6 +405,7 @@ struct PaymentView: View {
                 .stroke(isSelected ? Theme.brandOrange : rowBorder, lineWidth: isSelected ? 1.5 : 1)
         )
         .shadow(color: .black.opacity(0.03), radius: 6, y: 2)
+        .animation(selectionAnimation, value: isSelected)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel(for: method, isSelected: isSelected, isDefault: isDefault))
     }
@@ -673,6 +680,16 @@ struct PaymentView: View {
                 .font(.subheadline.weight(valueWeight))
                 .foregroundStyle(valueColor ?? rowTitle)
         }
+    }
+}
+
+/// Scales the whole payment-method header (radio + title + logos) as one unit on press.
+private struct PaymentMethodRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.985 : 1, anchor: .leading)
+            .opacity(configuration.isPressed ? 0.92 : 1)
+            .animation(.easeInOut(duration: 0.14), value: configuration.isPressed)
     }
 }
 
