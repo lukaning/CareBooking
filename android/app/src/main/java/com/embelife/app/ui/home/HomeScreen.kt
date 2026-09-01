@@ -72,6 +72,8 @@ fun HomeScreen(
     var bookingTarget by remember {
         mutableStateOf<Pair<Provider, BookingAppointmentType>?>(null)
     }
+    var showSettings by remember { mutableStateOf(false) }
+    var reviewProvider by remember { mutableStateOf<Provider?>(null) }
 
     LaunchedEffect(Unit) { appViewModel.seedBookingsIfNeeded() }
 
@@ -101,7 +103,11 @@ fun HomeScreen(
             .background(PageBackground)
             .padding(bottom = contentPadding.calculateBottomPadding()),
     ) {
-        HomeTopBar(bookedCount = bookedCount, onOpenBookings = onOpenBookings)
+        HomeTopBar(
+            bookedCount = bookedCount,
+            onOpenBookings = onOpenBookings,
+            onOpenSettings = { showSettings = true },
+        )
 
         MatchesHeader(
             listMode = listMode,
@@ -140,7 +146,7 @@ fun HomeScreen(
                         bookingMenuProviderID = null
                         bookingTarget = provider to type
                     },
-                    onRatingTap = { },
+                    onRatingTap = { reviewProvider = provider },
                 )
             }
         }
@@ -166,10 +172,29 @@ fun HomeScreen(
             onDismiss = { bookingTarget = null },
         )
     }
+
+    if (showSettings) {
+        com.embelife.app.ui.settings.SettingsSheet(
+            appViewModel = appViewModel,
+            onDismiss = { showSettings = false },
+        )
+    }
+
+    reviewProvider?.let { provider ->
+        com.embelife.app.ui.review.RateAndReviewScreen(
+            provider = provider,
+            appViewModel = appViewModel,
+            onDismiss = { reviewProvider = null },
+        )
+    }
 }
 
 @Composable
-private fun HomeTopBar(bookedCount: Int, onOpenBookings: () -> Unit) {
+private fun HomeTopBar(
+    bookedCount: Int,
+    onOpenBookings: () -> Unit,
+    onOpenSettings: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,6 +207,7 @@ private fun HomeTopBar(bookedCount: Int, onOpenBookings: () -> Unit) {
             imageVector = Icons.Filled.Menu,
             contentDescription = "Settings",
             tint = EmBeColors.DarkText,
+            modifier = Modifier.clickable(onClick = onOpenSettings),
         )
 
         Spacer(modifier = Modifier.weight(1f))

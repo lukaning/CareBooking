@@ -1,11 +1,14 @@
 package com.embelife.app.ui.main
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Sms
@@ -35,6 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embelife.app.ui.booking.BookingsScreen
 import com.embelife.app.ui.home.HomeScreen
+import com.embelife.app.ui.messages.MessagesScreen
+import com.embelife.app.ui.notes.NotesScreen
+import com.embelife.app.ui.notification.NotificationScreen
+import com.embelife.app.ui.payment.PaymentScreen
 import com.embelife.app.ui.theme.EmBeColors
 import com.embelife.app.viewmodel.AppViewModel
 
@@ -60,79 +67,84 @@ private val InactiveTabColor = Color(0xFF9CA3AF)
 @Composable
 fun MainTabScreen(appViewModel: AppViewModel) {
     var selectedTab by remember { mutableStateOf(AppTab.Home) }
+    var showBookingsOverlay by remember { mutableStateOf(false) }
 
-    Scaffold(
-        containerColor = Color.White,
-        bottomBar = {
-            NavigationBar(containerColor = Color.White, tonalElevation = 0.dp) {
-                AppTab.entries.forEach { tab ->
-                    val isSelected = selectedTab == tab
-                    NavigationBarItem(
-                        selected = isSelected,
-                        onClick = { selectedTab = tab },
-                        icon = {
-                            Icon(
-                                imageVector = if (isSelected) tab.filledIcon else tab.outlineIcon,
-                                contentDescription = tab.title,
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = Color.White,
+            bottomBar = {
+                if (!showBookingsOverlay) {
+                    NavigationBar(containerColor = Color.White, tonalElevation = 0.dp) {
+                        AppTab.entries.forEach { tab ->
+                            val isSelected = selectedTab == tab
+                            NavigationBarItem(
+                                selected = isSelected,
+                                onClick = { selectedTab = tab },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (isSelected) tab.filledIcon else tab.outlineIcon,
+                                        contentDescription = tab.title,
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = tab.title,
+                                        fontSize = 10.sp,
+                                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                                    )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = EmBeColors.BrandOrange,
+                                    selectedTextColor = EmBeColors.BrandOrange,
+                                    unselectedIconColor = InactiveTabColor,
+                                    unselectedTextColor = InactiveTabColor,
+                                    indicatorColor = Color.Transparent,
+                                ),
                             )
-                        },
-                        label = {
-                            Text(
-                                text = tab.title,
-                                fontSize = 10.sp,
-                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = EmBeColors.BrandOrange,
-                            selectedTextColor = EmBeColors.BrandOrange,
-                            unselectedIconColor = InactiveTabColor,
-                            unselectedTextColor = InactiveTabColor,
-                            indicatorColor = Color.Transparent,
-                        ),
-                    )
+                        }
+                    }
                 }
+            },
+        ) { innerPadding ->
+            when (selectedTab) {
+                AppTab.Home -> HomeScreen(
+                    appViewModel = appViewModel,
+                    contentPadding = innerPadding,
+                    onOpenBookings = { showBookingsOverlay = true },
+                )
+
+                AppTab.Notes -> NotesScreen(contentPadding = innerPadding)
+
+                AppTab.Messages -> MessagesScreen(contentPadding = innerPadding)
+
+                AppTab.Notification -> NotificationScreen(contentPadding = innerPadding)
+
+                AppTab.Payment -> PaymentScreen(contentPadding = innerPadding)
             }
-        },
-    ) { innerPadding ->
-        when (selectedTab) {
-            AppTab.Home -> HomeScreen(
-                appViewModel = appViewModel,
-                contentPadding = innerPadding,
-                onOpenBookings = { selectedTab = AppTab.Notes },
-            )
-
-            AppTab.Notes -> BookingsScreen(
-                appViewModel = appViewModel,
-                contentPadding = innerPadding,
-            )
-
-            AppTab.Messages -> PlaceholderTab(
-                title = "Messages",
-                modifier = Modifier.padding(innerPadding),
-            )
-
-            AppTab.Notification -> PlaceholderTab(
-                title = "Notification",
-                modifier = Modifier.padding(innerPadding),
-            )
-
-            AppTab.Payment -> PlaceholderTab(
-                title = "Payment",
-                modifier = Modifier.padding(innerPadding),
-            )
         }
-    }
-}
 
-@Composable
-private fun PlaceholderTab(title: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = title, color = EmBeColors.DarkText, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-        Text(text = "Not ported yet", color = EmBeColors.Grayscale70, fontSize = 15.sp)
+        if (showBookingsOverlay) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+            ) {
+                BookingsScreen(
+                    appViewModel = appViewModel,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                )
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Close bookings",
+                    tint = EmBeColors.DarkText,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .statusBarsPadding()
+                        .padding(start = 12.dp, top = 8.dp)
+                        .clickable { showBookingsOverlay = false }
+                        .padding(8.dp),
+                )
+            }
+        }
     }
 }

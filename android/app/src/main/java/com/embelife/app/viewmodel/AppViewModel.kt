@@ -9,10 +9,16 @@ import androidx.lifecycle.ViewModel
 import com.embelife.app.model.Booking
 import com.embelife.app.model.BookingChecklistTask
 import com.embelife.app.model.BookingStatus
+import com.embelife.app.model.FeatureAccessKey
+import com.embelife.app.model.ManagedTeamUser
+import com.embelife.app.model.NestedFeatureAccess
 import com.embelife.app.model.OnboardingServiceCatalog
 import com.embelife.app.model.Provider
+import com.embelife.app.model.ProviderReview
 import com.embelife.app.model.ServiceCategory
+import com.embelife.app.model.TeamAccessRole
 import com.embelife.app.model.UserProfile
+import androidx.compose.ui.graphics.Color
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -71,6 +77,16 @@ class AppViewModel : ViewModel() {
     val savedTaskTemplates = mutableStateListOf<BookingChecklistTask>()
 
     val providers = mutableStateListOf<Provider>().apply { addAll(Provider.samples) }
+
+    val managedUsers = mutableStateListOf<ManagedTeamUser>().apply {
+        addAll(ManagedTeamUser.samples)
+    }
+
+    val providerReviews = mutableStateListOf<ProviderReview>().apply {
+        addAll(ProviderReview.samples("eric"))
+        addAll(ProviderReview.samples("maya"))
+        addAll(ProviderReview.samples("jordan"))
+    }
 
     // MARK: - Auth
 
@@ -268,10 +284,136 @@ class AppViewModel : ViewModel() {
     fun submitBookingReview(bookingID: UUID, rating: Int, text: String) {
         val index = bookings.indexOfFirst { it.id == bookingID }
         if (index < 0) return
+        val clipped = rating.coerceIn(1, 5)
+        val trimmed = text.trim()
         bookings[index] = bookings[index].copy(
-            clientReviewRating = rating.coerceIn(1, 5),
-            clientReviewText = text.trim(),
+            clientReviewRating = clipped,
+            clientReviewText = trimmed,
         )
+        addProviderReview(
+            providerID = bookings[index].provider.id,
+            rating = clipped,
+            body = trimmed,
+            authorName = userName.ifEmpty { "You" },
+        )
+    }
+
+    fun reviews(providerID: String): List<ProviderReview> =
+        providerReviews.filter { it.providerID == providerID }
+
+    fun addProviderReview(providerID: String, rating: Int, body: String, authorName: String) {
+        providerReviews.add(
+            0,
+            ProviderReview(
+                providerID = providerID,
+                authorName = authorName,
+                avatarColor = Color(0xFF598CF2),
+                rating = rating.coerceIn(1, 5),
+                body = body,
+                relativeTime = "just now",
+            ),
+        )
+        val index = providers.indexOfFirst { it.id == providerID }
+        if (index >= 0) {
+            val p = providers[index]
+            providers[index] = p.copy(reviewCount = p.reviewCount + 1)
+        }
+    }
+
+    fun toggleReviewLike(id: UUID) {
+        val index = providerReviews.indexOfFirst { it.id == id }
+        if (index < 0) return
+        val review = providerReviews[index]
+        providerReviews[index] = review.copy(liked = !review.liked)
+    }
+
+    fun inviteManagedUser(
+        firstName: String,
+        lastName: String,
+        email: String,
+        role: TeamAccessRole,
+        permissions: Map<FeatureAccessKey, Boolean>,
+        nestedPermissions: Map<FeatureAccessKey, List<NestedFeatureAccess>>,
+    ) {
+        managedUsers.add(
+            ManagedTeamUser(
+                id = UUID.randomUUID().toString(),
+                firstName = firstName.trim(),
+                lastName = lastName.trim(),
+                email = email.trim(),
+                role = role,
+                invitePending = true,
+                permissions = permissions,
+                nestedPermissions = nestedPermissions,
+            ),
+        )
+    }
+
+    fun updateManagedUserRole(id: String, role: TeamAccessRole) {
+        val index = managedUsers.indexOfFirst { it.id == id }
+        if (index < 0) return
+        val user = managedUsers[index]
+        managedUsers[index] = user.copy(
+            role = role,
+            permissions = FeatureAccessKey.defaults(role),
+            invitePending = if (role == TeamAccessRole.Admin) false else user.invitePending,
+        )
+    }
+
+    fun updateManagedUserPermission(id: String, key: FeatureAccessKey, isEnabled: Boolean) {
+        val index = managedUsers.indexOfFirst { it.id == id }
+        if (index < 0) return
+        val user = managedUsers[index]
+        managedUsers[index] = user.copy(
+            permissions = user.permissions.toMutableMap().also { it[key] = isEnabled },
+        )
+    }
+
+    fun updateManagedNestedPermission(
+        id: String,
+        key: FeatureAccessKey,
+        nestedID: String,
+        isEnabled: Boolean,
+    ) {
+        val index = managedUsers.indexOfFirst { it.id == id }
+        if (index < 0) return
+        val user = managedUsers[index]
+        val items = user.nestedPermissions[key]?.toMutableList() ?: return
+        val nestedIndex = items.indexOfFirst { it.id == nestedID }
+        if (nestedIndex < 0) return
+        items[nestedIndex] = items[nestedIndex].copy(isEnabled = isEnabled)
+        managedUsers[index] = user.copy(
+            nestedPermissions = user.nestedPermissions.toMutableMap().also { it[key] = items },
+        )
+    }
+
+    fun publishProfile(draft: UserProfile) {
+        var next = draft.copy(
+            hasUploadedPhoto = true,
+            isPublished = true,
+        )
+        if (next.servicesRequestedFor.isEmpty()) {
+            next = next.copy(servicesRequestedFor = "mother, father, aunt, child")
+        }
+        profile = next
+        userName = next.displayFirstLast
+        if (next.email.isNotEmpty()) userEmail = next.email
+
+        if (bookings.isEmpty() && providers.isNotEmpty()) {
+            val eric = providers.first()
+            val date = LocalDate.of(2025, 1, 25)
+            addBooking(
+                Booking(
+                    provider = eric,
+                    date = date,
+                    startTime = LocalDateTime.of(date, LocalTime.of(15, 0)),
+                    durationMinutes = 120,
+                    status = BookingStatus.Requested,
+                    serviceProvidedTo = next.familyMembers.firstOrNull()?.displayName ?: "Family",
+                    dateCreated = LocalDateTime.of(2024, 11, 10, 12, 0),
+                ),
+            )
+        }
     }
 
     /** Seeds sample Requested / Booked / Completed items when the list is empty. */
