@@ -15,9 +15,14 @@ Jetpack Compose.
 | Bookings (inbox, cancel, reschedule) | Ported |
 | Book provider (multi-step sheet) | Ported |
 | Edit booking, add/edit task, sub-tasks | Ported |
-| Messages, Notification, Payment, Settings, Profile, Reviews | Not ported |
+| Messages (inbox + conversation) | Ported |
+| Notification feed | Ported |
+| Hands-free Notes | Ported |
+| Payment tab + Gift / Pay-Receive flows | Ported |
+| Settings hub (Dashboard, Users, Password, Activities, Gift Fund) | Ported |
+| Profile + edit + Rate & Review | Ported |
 
-Unported tabs render a labelled placeholder so navigation stays intact.
+Unported: real map SDK, backend networking, camera QR scan (placeholder).
 
 ## How iOS constructs map
 
