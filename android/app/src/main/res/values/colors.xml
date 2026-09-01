@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from EmBeLife/Assets.xcassets colorsets and Theme.swift literals. -->
+<resources>
+    <color name="brand_orange">#F15925</color>
+    <color name="input_fill">#F6F8FE</color>
+    <color name="link_blue">#5A73D8</color>
+    <color name="error_coral">#F2A8A4</color>
+    <color name="grayscale_70">#78828A</color>
+    <color name="grayscale_60">#9CA4AB</color>
+    <color name="dark_text">#0E111A</color>
+    <color name="muted_text">#9393AA</color>
+    <color name="card_border">#EFEFF3</color>
+    <color name="profile_pill">#F0F4F9</color>
+    <color name="segment_bg">#F0F4F9</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

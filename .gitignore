@@ -17,3 +17,14 @@ xcuserdata/
 # SwiftPM
 .build/
 .swiftpm/
+
+# Android
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+*.apk
+*.aab
+
+# Self-contained JDK / Android SDK / Gradle distribution
+.toolchain/

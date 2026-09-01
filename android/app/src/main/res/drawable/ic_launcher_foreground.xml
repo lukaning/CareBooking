@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Heart mark centred in the 72dp adaptive-icon safe zone. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,74.5 C54,74.5 34,61.5 34,49.5 C34,42.6 39.6,37 46.5,37 C50.2,37 53.1,38.9 54,41.2 C54.9,38.9 57.8,37 61.5,37 C68.4,37 74,42.6 74,49.5 C74,61.5 54,74.5 54,74.5 Z" />
+</vector>
