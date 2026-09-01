@@ -13,7 +13,8 @@ Jetpack Compose.
 | Onboarding (welcome, role, services, location) | Ported |
 | Home (provider feed, filters) | Ported |
 | Bookings (inbox, cancel, reschedule) | Ported |
-| Book provider, edit booking, add task | Not ported |
+| Book provider (multi-step sheet) | Ported |
+| Edit booking, add/edit task, sub-tasks | Ported |
 | Messages, Notification, Payment, Settings, Profile, Reviews | Not ported |
 
 Unported tabs render a labelled placeholder so navigation stays intact.
