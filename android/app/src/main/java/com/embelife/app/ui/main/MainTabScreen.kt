@@ -99,6 +99,7 @@ fun MainTabScreen(appViewModel: AppViewModel) {
             AppTab.Home -> HomeScreen(
                 appViewModel = appViewModel,
                 contentPadding = innerPadding,
+                onOpenBookings = { selectedTab = AppTab.Notes },
             )
 
             AppTab.Notes -> BookingsScreen(

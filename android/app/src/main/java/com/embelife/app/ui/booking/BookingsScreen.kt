@@ -87,6 +87,8 @@ fun BookingsScreen(
     var expandedBookingID by remember { mutableStateOf<UUID?>(null) }
     var bookingToCancel by remember { mutableStateOf<Booking?>(null) }
     var bookingToReschedule by remember { mutableStateOf<Booking?>(null) }
+    var bookingToEdit by remember { mutableStateOf<UUID?>(null) }
+    var addTaskBookingID by remember { mutableStateOf<UUID?>(null) }
 
     LaunchedEffect(Unit) { appViewModel.seedBookingsIfNeeded() }
 
@@ -98,56 +100,69 @@ fun BookingsScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(bottom = contentPadding.calculateBottomPadding()),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(vertical = 12.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = bookingTab.title,
-                color = EmBeColors.DarkText,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold,
-            )
-        }
-
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(top = 12.dp, bottom = 28.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .background(Color.White)
+                .padding(bottom = contentPadding.calculateBottomPadding()),
         ) {
-            BookingSegmentControl(
-                selected = bookingTab,
-                onSelect = { bookingTab = it },
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(vertical = 12.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = bookingTab.title,
+                    color = EmBeColors.DarkText,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
 
-            if (filtered.isEmpty()) {
-                EmptyBookingsState(tab = bookingTab)
-            } else {
-                filtered.forEach { booking ->
-                    BookingCard(
-                        booking = booking,
-                        isExpanded = expandedBookingID == booking.id,
-                        onToggle = {
-                            expandedBookingID =
-                                if (expandedBookingID == booking.id) null else booking.id
-                        },
-                        onCancel = { bookingToCancel = booking },
-                        onReschedule = { bookingToReschedule = booking },
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 12.dp, bottom = 28.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                BookingSegmentControl(
+                    selected = bookingTab,
+                    onSelect = { bookingTab = it },
+                )
+
+                if (filtered.isEmpty()) {
+                    EmptyBookingsState(tab = bookingTab)
+                } else {
+                    filtered.forEach { booking ->
+                        BookingCard(
+                            booking = booking,
+                            isExpanded = expandedBookingID == booking.id,
+                            onToggle = {
+                                expandedBookingID =
+                                    if (expandedBookingID == booking.id) null else booking.id
+                            },
+                            onCancel = { bookingToCancel = booking },
+                            onReschedule = { bookingToReschedule = booking },
+                            onEdit = { bookingToEdit = booking.id },
+                            onAddTask = { addTaskBookingID = booking.id },
+                            onOpenChecklist = { bookingToEdit = booking.id },
+                        )
+                    }
                 }
             }
+        }
+
+        bookingToEdit?.let { id ->
+            EditBookingScreen(
+                bookingID = id,
+                appViewModel = appViewModel,
+                onDismiss = { bookingToEdit = null },
+            )
         }
     }
 
@@ -167,6 +182,14 @@ fun BookingsScreen(
             booking = booking,
             appViewModel = appViewModel,
             onDismiss = { bookingToReschedule = null },
+        )
+    }
+
+    addTaskBookingID?.let { id ->
+        AddTaskToBookingSheet(
+            bookingID = id,
+            appViewModel = appViewModel,
+            onDismiss = { addTaskBookingID = null },
         )
     }
 }
@@ -273,6 +296,9 @@ private fun BookingCard(
     onToggle: () -> Unit,
     onCancel: () -> Unit,
     onReschedule: () -> Unit,
+    onEdit: () -> Unit,
+    onAddTask: () -> Unit,
+    onOpenChecklist: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -327,6 +353,9 @@ private fun BookingCard(
                 booking = booking,
                 onCancel = onCancel,
                 onReschedule = onReschedule,
+                onEdit = onEdit,
+                onAddTask = onAddTask,
+                onOpenChecklist = onOpenChecklist,
             )
         }
     }
@@ -337,6 +366,9 @@ private fun BookingDetails(
     booking: Booking,
     onCancel: () -> Unit,
     onReschedule: () -> Unit,
+    onEdit: () -> Unit,
+    onAddTask: () -> Unit,
+    onOpenChecklist: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
@@ -392,6 +424,7 @@ private fun BookingDetails(
                     BookingActionRow(
                         onCancel = onCancel,
                         onReschedule = onReschedule,
+                        onEdit = onEdit,
                     )
                 }
             }
@@ -409,7 +442,9 @@ private fun BookingDetails(
 
         FloatingCard {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onOpenChecklist),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
@@ -442,7 +477,7 @@ private fun BookingDetails(
                     .padding(top = 4.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(EmBeColors.BrandOrange)
-                    .clickable { }
+                    .clickable(onClick = onAddTask)
                     .padding(vertical = 16.dp),
                 contentAlignment = Alignment.Center,
             ) {
@@ -461,6 +496,7 @@ private fun BookingDetails(
 private fun BookingActionRow(
     onCancel: () -> Unit,
     onReschedule: () -> Unit,
+    onEdit: () -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -540,7 +576,10 @@ private fun BookingActionRow(
                     )
                     DropdownMenuItem(
                         text = { Text("Edit booking") },
-                        onClick = { menuExpanded = false },
+                        onClick = {
+                            menuExpanded = false
+                            onEdit()
+                        },
                     )
                     DropdownMenuItem(
                         text = { Text("Cancel booking", color = EmBeColors.ErrorCoral) },

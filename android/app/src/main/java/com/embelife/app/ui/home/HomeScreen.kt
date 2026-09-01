@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.embelife.app.model.BookingStatus
 import com.embelife.app.model.Provider
+import com.embelife.app.ui.booking.BookProviderSheet
 import com.embelife.app.ui.theme.EmBeColors
 import com.embelife.app.viewmodel.AppViewModel
 
@@ -60,6 +61,7 @@ private val MenuInactiveText = Color(0xFF73798C)
 fun HomeScreen(
     appViewModel: AppViewModel,
     contentPadding: PaddingValues,
+    onOpenBookings: () -> Unit = {},
 ) {
     var filtersExpanded by remember { mutableStateOf(false) }
     var activeFilter by remember { mutableStateOf<HomeFilterCriterion?>(null) }
@@ -67,6 +69,9 @@ fun HomeScreen(
     var bookingMenuProviderID by remember { mutableStateOf<String?>(null) }
     var listMode by remember { mutableStateOf(HomeProviderListMode.YourMatches) }
     var showListMenu by remember { mutableStateOf(false) }
+    var bookingTarget by remember {
+        mutableStateOf<Pair<Provider, BookingAppointmentType>?>(null)
+    }
 
     LaunchedEffect(Unit) { appViewModel.seedBookingsIfNeeded() }
 
@@ -96,7 +101,7 @@ fun HomeScreen(
             .background(PageBackground)
             .padding(bottom = contentPadding.calculateBottomPadding()),
     ) {
-        HomeTopBar(bookedCount = bookedCount)
+        HomeTopBar(bookedCount = bookedCount, onOpenBookings = onOpenBookings)
 
         MatchesHeader(
             listMode = listMode,
@@ -131,9 +136,9 @@ fun HomeScreen(
                         bookingMenuProviderID =
                             if (bookingMenuProviderID == provider.id) null else provider.id
                     },
-                    onSelectAppointmentType = {
+                    onSelectAppointmentType = { type ->
                         bookingMenuProviderID = null
-                        // Booking sheet is wired up with the Booking module.
+                        bookingTarget = provider to type
                     },
                     onRatingTap = { },
                 )
@@ -152,10 +157,19 @@ fun HomeScreen(
             onDismiss = { activeFilter = null },
         )
     }
+
+    bookingTarget?.let { (provider, type) ->
+        BookProviderSheet(
+            provider = provider,
+            appointmentType = type,
+            appViewModel = appViewModel,
+            onDismiss = { bookingTarget = null },
+        )
+    }
 }
 
 @Composable
-private fun HomeTopBar(bookedCount: Int) {
+private fun HomeTopBar(bookedCount: Int, onOpenBookings: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,7 +195,11 @@ private fun HomeTopBar(bookedCount: Int) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Box(modifier = Modifier.size(width = 32.dp, height = 28.dp)) {
+        Box(
+            modifier = Modifier
+                .size(width = 32.dp, height = 28.dp)
+                .clickable(onClick = onOpenBookings),
+        ) {
             Icon(
                 imageVector = Icons.Filled.CalendarToday,
                 contentDescription = "Booked",
