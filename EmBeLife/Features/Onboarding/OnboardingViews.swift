@@ -116,7 +116,7 @@ struct WelcomeStep: View {
                     .padding(.top, 18)
                     .accessibilityLabel("EmBeLife")
 
-                Text("Find trustworthy help and support...")
+                Text("Find trustworthy help and rehabilitative services")
                     .font(.scaledSystem(size: 15, weight: .regular))
                     .foregroundStyle(tagline)
                     .padding(.top, 16)
