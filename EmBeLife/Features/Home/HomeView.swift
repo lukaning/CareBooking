@@ -353,7 +353,6 @@ enum HomeFilterCriterion: String, CaseIterable, Identifiable {
     case location
     case typeOfHelp
     case forWho
-    case ageRange
     case genderIdentity
     case language
     case priceRange
@@ -364,12 +363,11 @@ enum HomeFilterCriterion: String, CaseIterable, Identifiable {
     var label: String {
         switch self {
         case .location: "Location"
-        case .typeOfHelp: "Type of Help"
-        case .forWho: "For Who"
-        case .ageRange: "Age Range"
-        case .genderIdentity: "Gender Identity"
-        case .language: "Language"
-        case .priceRange: "Price Range"
+        case .typeOfHelp: "Services"
+        case .forWho: "Recipient"
+        case .genderIdentity: "Gender identity (Provider)"
+        case .language: "Languages Spoken (Provider)"
+        case .priceRange: "Rate"
         case .specialNeed: "Special need"
         }
     }
@@ -381,7 +379,6 @@ enum HomeFilterCriterion: String, CaseIterable, Identifiable {
         case .location: "safari"
         case .typeOfHelp: "handshake"
         case .forWho: "leaf.fill"
-        case .ageRange: "megaphone.fill"
         case .genderIdentity: "person.2.fill"
         case .language: "globe"
         case .priceRange: "tag.fill"
@@ -391,11 +388,10 @@ enum HomeFilterCriterion: String, CaseIterable, Identifiable {
 }
 
 struct HomeFilterState: Equatable {
-    var location = "California; Bay Area"
+    var location = "California: SF Bay Area"
     var typeOfHelp = "Child Care"
     var forWho = "Child"
     var careRecipientAgeGroup = "3-5"
-    var ageRanges: [String] = ["25-30", "30-35"]
     var genderIdentity = "Female"
     var languages: [String] = ["English"]
     var minPrice = 15.0
@@ -409,9 +405,7 @@ struct HomeFilterState: Equatable {
         case .typeOfHelp:
             return typeOfHelp
         case .forWho:
-            return "\(forWho); Age Group: \(careRecipientAgeGroup)"
-        case .ageRange:
-            return ageRanges.joined(separator: "; ")
+            return "\(forWho); Recipient age range: \(careRecipientAgeGroup)"
         case .genderIdentity:
             return genderIdentity
         case .language:
@@ -698,10 +692,10 @@ struct FilterSheet: View {
     private let priceStep: Double = 1
 
     private let locationOptions = [
-        "California; Bay Area",
-        "California; Los Angeles",
-        "New York; NYC",
-        "Texas; Austin",
+        "California: SF Bay Area",
+        "California: Los Angeles",
+        "New York: NYC",
+        "Texas: Austin",
         "Remote only"
     ]
     private let typeOfHelpOptions = [
@@ -712,9 +706,8 @@ struct FilterSheet: View {
         "Special Needs",
         "Respite Care"
     ]
-    private let forWhoOptions = ["Child", "Parent", "Spouse", "Self", "Other Family"]
-    private let careAgeGroupOptions = ["0-2", "3-5", "6-12", "13-17", "18+", "Senior"]
-    private let ageRangeOptions = ["18-25", "25-30", "30-35", "35-45", "45-55", "55+"]
+    private let forWhoOptions = ["Child", "Parent", "Spouse", "Self", "Other Relative", "Friend"]
+    private let careAgeGroupOptions = ["0-2", "3-5", "6-12", "13-17", "18-29", "30-44", "45-69", "70+"]
     private let genderOptions = ["Any", "Female", "Male", "Non-binary", "Prefer not to say"]
     private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
     private let specialNeedOptions = [
@@ -740,57 +733,43 @@ struct FilterSheet: View {
             Form {
                 switch criterion {
                 case .location:
-                    Section("Location") {
-                        Picker("Area", selection: $draft.location) {
+                    Section {
+                        Picker("Location", selection: $draft.location) {
                             ForEach(locationOptions, id: \.self) { Text($0).tag($0) }
                         }
                         .pickerStyle(.inline)
+                        .labelsHidden()
                     }
                 case .typeOfHelp:
-                    Section("Type of Help") {
-                        Picker("Help type", selection: $draft.typeOfHelp) {
+                    Section {
+                        Picker("Services", selection: $draft.typeOfHelp) {
                             ForEach(typeOfHelpOptions, id: \.self) { Text($0).tag($0) }
                         }
                         .pickerStyle(.inline)
+                        .labelsHidden()
                     }
                 case .forWho:
-                    Section("Recipient") {
-                        Picker("For who", selection: $draft.forWho) {
+                    Section {
+                        Picker("Recipient", selection: $draft.forWho) {
                             ForEach(forWhoOptions, id: \.self) { Text($0).tag($0) }
                         }
                         .pickerStyle(.inline)
+                        .labelsHidden()
                     }
-                    Section("Age group") {
-                        Picker("Age group", selection: $draft.careRecipientAgeGroup) {
+                    Section("Recipient age range") {
+                        Picker("Recipient age range", selection: $draft.careRecipientAgeGroup) {
                             ForEach(careAgeGroupOptions, id: \.self) { Text($0).tag($0) }
                         }
                         .pickerStyle(.inline)
-                    }
-                case .ageRange:
-                    Section("Provider age range") {
-                        ForEach(ageRangeOptions, id: \.self) { range in
-                            Button {
-                                toggleAgeRange(range)
-                            } label: {
-                                HStack {
-                                    Text(range)
-                                        .foregroundStyle(Theme.darkText)
-                                    Spacer()
-                                    if draft.ageRanges.contains(range) {
-                                        Image(systemName: "checkmark")
-                                            .font(.body.weight(.semibold))
-                                            .foregroundStyle(Theme.brandOrange)
-                                    }
-                                }
-                            }
-                        }
+                        .labelsHidden()
                     }
                 case .genderIdentity:
-                    Section("Gender Identity") {
-                        Picker("Gender", selection: $draft.genderIdentity) {
+                    Section {
+                        Picker("Gender identity (Provider)", selection: $draft.genderIdentity) {
                             ForEach(genderOptions, id: \.self) { Text($0).tag($0) }
                         }
                         .pickerStyle(.inline)
+                        .labelsHidden()
                     }
                 case .language:
                     Section {
@@ -810,10 +789,8 @@ struct FilterSheet: View {
                                 }
                             }
                         }
-                    } header: {
-                        Text("Languages")
                     } footer: {
-                        Text("Select one or more languages. Currently selected: \(draft.languages.isEmpty ? "none" : draft.languages.joined(separator: ", ")).")
+                        Text("Select one or more languages to broaden matches. Currently selected: \(draft.languages.isEmpty ? "none" : draft.languages.joined(separator: ", ")).")
                     }
                 case .priceRange:
                     priceFilterSection
@@ -838,9 +815,6 @@ struct FilterSheet: View {
                             commitMinRateText()
                             commitMaxRateText()
                         }
-                        if draft.ageRanges.isEmpty {
-                            draft.ageRanges = ["25-30"]
-                        }
                         if draft.languages.isEmpty {
                             draft.languages = ["English"]
                         }
@@ -860,17 +834,6 @@ struct FilterSheet: View {
                         .fontWeight(.semibold)
                     }
                 }
-            }
-        }
-    }
-
-    private func toggleAgeRange(_ range: String) {
-        if let index = draft.ageRanges.firstIndex(of: range) {
-            draft.ageRanges.remove(at: index)
-        } else {
-            draft.ageRanges.append(range)
-            draft.ageRanges.sort { lhs, rhs in
-                (ageRangeOptions.firstIndex(of: lhs) ?? 0) < (ageRangeOptions.firstIndex(of: rhs) ?? 0)
             }
         }
     }
