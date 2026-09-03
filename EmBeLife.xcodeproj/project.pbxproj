@@ -35,6 +35,7 @@
 		B6373694A844458AA0C86287 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D4A1803BAD494E9EA0297C /* MainTabView.swift */; };
 		B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1C0010000000000000001 /* BookingTaskCatalog.swift */; };
 		B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1050CDF517458A8ACD1927 /* AuthViews.swift */; };
+		C8SOCAUTHSRC234567890AB /* SocialAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8SOCAUTH234567890ABCDEF /* SocialAuthService.swift */; };
 		B8NOTVW234567890ABCDEF /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7NOTVW234567890ABCDEF /* NotificationView.swift */; };
 		B9E42D7F3C5E4B2A0D8F6E31 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F31C6E2B4D4A1F9C7E5D20 /* SettingsView.swift */; };
 		C2NOTESMDL234567890ABC /* NotesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1NOTESMDL234567890ABC /* NotesModels.swift */; };
@@ -56,6 +57,9 @@
 /* Begin PBXFileReference section */
 		18D4A1803BAD494E9EA0297C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		1F1050CDF517458A8ACD1927 /* AuthViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViews.swift; sourceTree = "<group>"; };
+		C8SOCAUTH234567890ABCDEF /* SocialAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialAuthService.swift; sourceTree = "<group>"; };
+		C8ENTITLE234567890ABCDEF /* EmBeLife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EmBeLife.entitlements; sourceTree = "<group>"; };
+		C8INFOPL234567890ABCDEF0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30D1503C76AA4E0198DB2D93 /* EmBeLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmBeLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45B75D03AEEC4CF6974167B0 /* EmBeLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmBeLifeApp.swift; sourceTree = "<group>"; };
 		4FC90410B92A471FBE8CFBBB /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -215,6 +219,8 @@
 				AADFE0B15A0D4164BC258B0C /* Models */,
 				FA738B42FB1D438ABECB5BC8 /* Theme */,
 				D6AE23790F13461B911BAD1F /* Assets.xcassets */,
+				C8ENTITLE234567890ABCDEF /* EmBeLife.entitlements */,
+				C8INFOPL234567890ABCDEF0 /* Info.plist */,
 			);
 			path = EmBeLife;
 			sourceTree = "<group>";
@@ -245,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				1F1050CDF517458A8ACD1927 /* AuthViews.swift */,
+				C8SOCAUTH234567890ABCDEF /* SocialAuthService.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -401,6 +408,7 @@
 				04BA17E838DF4F2FA2B63A71 /* EmBeLifeApp.swift in Sources */,
 				34C35D32CE844BECB1EE6270 /* RootView.swift in Sources */,
 				B8E6B3951C9642E5BC9D4011 /* AuthViews.swift in Sources */,
+				C8SOCAUTHSRC234567890AB /* SocialAuthService.swift in Sources */,
 				8E0180C6678E4170A663C299 /* BookProviderSheet.swift in Sources */,
 				B7A1C0010000000000000002 /* BookingTaskCatalog.swift in Sources */,
 				A1ADDTSKSRC234567890AB /* AddTaskToBookingSheet.swift in Sources */,
@@ -453,10 +461,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = EmBeLife/EmBeLife.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = P3FZF6PS58;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmBeLife/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access lets you scan gift QR codes to receive gift fund or services.";
@@ -577,10 +587,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = EmBeLife/EmBeLife.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = P3FZF6PS58;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmBeLife/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EmBeLife;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access lets you scan gift QR codes to receive gift fund or services.";

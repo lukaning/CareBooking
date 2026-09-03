@@ -26,6 +26,8 @@ targets:
         INFOPLIST_KEY_NSCameraUsageDescription: "Camera access lets you scan gift QR codes to receive gift fund or services."
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Photo library access lets you scan gift QR codes from saved images."
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: EmBeLife/Info.plist
+        CODE_SIGN_ENTITLEMENTS: EmBeLife/EmBeLife.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_EMIT_LOC_STRINGS: YES

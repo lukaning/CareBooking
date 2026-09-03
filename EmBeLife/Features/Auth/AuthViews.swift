@@ -96,6 +96,10 @@ struct AuthBackButton: View {
 }
 
 struct SocialSignInRow: View {
+    @Environment(AppModel.self) private var appModel
+    @State private var isBusy = false
+    @State private var errorMessage: String?
+
     var body: some View {
         VStack(spacing: 16) {
             HStack(spacing: 12) {
@@ -112,15 +116,34 @@ struct SocialSignInRow: View {
             }
 
             HStack(spacing: 16) {
-                socialButton(image: "googleLogo")
-                socialButton(image: "appleLogo")
+                socialButton(image: "googleLogo") {
+                    await authenticate(provider: .google)
+                }
+                socialButton(image: "appleLogo") {
+                    await authenticate(provider: .apple)
+                }
             }
+            .opacity(isBusy ? 0.55 : 1)
+            .disabled(isBusy)
+        }
+        .alert("Sign-in failed", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { errorMessage = nil }
+        } message: {
+            Text(errorMessage ?? "")
         }
     }
 
-    private func socialButton(image: String) -> some View {
+    private enum Provider {
+        case google
+        case apple
+    }
+
+    private func socialButton(image: String, action: @escaping () async -> Void) -> some View {
         Button {
-            // Social auth placeholder for MVP
+            Task { await action() }
         } label: {
             Image(image)
                 .resizable()
@@ -131,6 +154,29 @@ struct SocialSignInRow: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
+    }
+
+    @MainActor
+    private func authenticate(provider: Provider) async {
+        guard !isBusy else { return }
+        isBusy = true
+        defer { isBusy = false }
+
+        do {
+            let profile: SocialAuthProfile
+            switch provider {
+            case .google:
+                profile = try await SocialAuthService.shared.signInWithGoogle()
+            case .apple:
+                profile = try await SocialAuthService.shared.signInWithApple()
+            }
+            appModel.completeSignIn(email: profile.email, name: profile.name)
+        } catch let error as SocialAuthError {
+            if case .cancelled = error { return }
+            errorMessage = error.errorDescription ?? error.localizedDescription
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
