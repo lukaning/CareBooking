@@ -183,57 +183,55 @@ struct RoleLanguageStep: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Do you need help or can you provide services?")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(Theme.darkText)
-                        .padding(.top, 20)
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Do you need help or can you provide services?")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(Theme.darkText)
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack(spacing: 6) {
-                            Text("Select Your Preferred Language")
-                                .font(.headline)
-                            Image(systemName: "info.circle.fill")
-                                .foregroundStyle(Theme.grayscale60)
-                        }
-
-                        LanguageDropdown(
-                            selection: Binding(
-                                get: { appModel.preferredLanguage },
-                                set: { appModel.preferredLanguage = $0 }
-                            ),
-                            isOpen: $isLanguageMenuOpen
-                        )
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 6) {
+                        Text("Select Your Preferred Language")
+                            .font(.headline)
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(Theme.grayscale60)
                     }
-                    .zIndex(2)
 
-                    roleCard(
-                        role: .client,
-                        title: Text("I'm ")
-                            + Text("looking").fontWeight(.bold)
-                            + Text(" for help or rehabilitative services"),
-                        subtitle: "Those are usually the Individuals who need help",
-                        image: "roleClient",
-                        selectedImage: "roleClientSelected"
-                    )
-                    .zIndex(0)
+                    LanguageDropdown(
+                        selection: Binding(
+                            get: { appModel.preferredLanguage },
+                            set: { appModel.preferredLanguage = $0 }
+                        ),
+                        isOpen: $isLanguageMenuOpen
+                    ) {
+                        VStack(spacing: 20) {
+                            roleCard(
+                                role: .client,
+                                title: Text("I'm ")
+                                    + Text("looking").fontWeight(.bold)
+                                    + Text(" for help or rehabilitative services"),
+                                subtitle: "Those are usually the Individuals who need help",
+                                image: "roleClient",
+                                selectedImage: "roleClientSelected"
+                            )
 
-                    roleCard(
-                        role: .provider,
-                        title: Text("I ")
-                            + Text("provide").fontWeight(.bold)
-                            + Text(" help or rehabilitative services"),
-                        subtitle: "Those are usually professionals",
-                        image: "roleProvider",
-                        selectedImage: "roleProviderSelected"
-                    )
-                    .zIndex(0)
+                            roleCard(
+                                role: .provider,
+                                title: Text("I ")
+                                    + Text("provide").fontWeight(.bold)
+                                    + Text(" help or rehabilitative services"),
+                                subtitle: "Those are usually professionals",
+                                image: "roleProvider",
+                                selectedImage: "roleProviderSelected"
+                            )
+
+                            Spacer(minLength: 0)
+                        }
+                    }
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
             }
-            .scrollClipDisabled()
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
             onboardingBottomBar(title: "Get Started", enabled: appModel.selectedRole != nil, action: onContinue)
         }
@@ -289,9 +287,10 @@ struct RoleLanguageStep: View {
     }
 }
 
-private struct LanguageDropdown: View {
+private struct LanguageDropdown<Backdrop: View>: View {
     @Binding var selection: String
     @Binding var isOpen: Bool
+    @ViewBuilder var backdrop: Backdrop
 
     private let languages = [
         "Spanish",
@@ -316,41 +315,36 @@ private struct LanguageDropdown: View {
     private let muted = Color(red: 0.537, green: 0.537, blue: 0.537)
 
     var body: some View {
-        header
-            .background(fill)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(border, lineWidth: 2)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(alignment: .top) {
-                if isOpen {
-                    VStack(spacing: 0) {
-                        header
-                        Rectangle()
-                            .fill(border)
-                            .frame(height: 1)
-                        ScrollView {
-                            LazyVStack(spacing: 0) {
-                                ForEach(languages, id: \.self) { language in
-                                    languageRow(language)
-                                }
+        VStack(spacing: 20) {
+            header
+            backdrop
+        }
+        .overlay(alignment: .top) {
+            if isOpen {
+                VStack(spacing: 0) {
+                    header
+                    Rectangle()
+                        .fill(border)
+                        .frame(height: 1)
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(languages, id: \.self) { language in
+                                languageRow(language)
                             }
                         }
-                        .frame(maxHeight: 320)
                     }
-                    .background(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(border, lineWidth: 2)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .shadow(color: .black.opacity(0.12), radius: 16, y: 8)
-                    .transition(.opacity.combined(with: .scale(scale: 0.98, anchor: .top)))
+                    .frame(maxHeight: 280)
                 }
+                .background(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(border, lineWidth: 2)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .shadow(color: .black.opacity(0.12), radius: 16, y: 8)
             }
-            .animation(.easeInOut(duration: 0.18), value: isOpen)
-            .accessibilityElement(children: .contain)
+        }
+        .animation(.easeInOut(duration: 0.18), value: isOpen)
     }
 
     private var header: some View {
@@ -371,13 +365,19 @@ private struct LanguageDropdown: View {
                     .rotationEffect(.degrees(isOpen ? 180 : 0))
             }
             .padding(16)
+            .frame(maxWidth: .infinity)
+            .background(fill)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(border, lineWidth: 2)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Preferred language")
         .accessibilityValue(selection)
         .accessibilityHint(isOpen ? "Collapses the language list" : "Expands the language list")
-        .accessibilityAddTraits(.isButton)
     }
 
     private func languageRow(_ language: String) -> some View {
