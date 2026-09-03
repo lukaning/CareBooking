@@ -20,8 +20,8 @@ struct Provider: Identifiable, Hashable {
             ratePerHour: 25,
             rating: 4.8,
             reviewCount: 5,
-            bio: "I believe that every child is unique, and I tailor my care to meet the individual needs and personalities of each child in my care.",
-            specialties: "Specialties: meal prep, light housekeeping, running errands",
+            bio: "I tailor everyday support to each person’s pace, preferences, and home routine. That includes meal prep, medications reminders, light housekeeping, and getting ready for appointments without rushing. I keep families in the loop, notice small changes in mood or mobility, and adjust the day’s plan so care stays dignified and familiar.",
+            specialties: "Specialties: meal prep, medication reminders, light housekeeping, running errands, mobility assistance, companionship",
             bookingCount: 56,
             imageName: "providerAvatar"
         ),
@@ -32,8 +32,8 @@ struct Provider: Identifiable, Hashable {
             ratePerHour: 40,
             rating: 4.9,
             reviewCount: 18,
-            bio: "I support families through the early postpartum weeks with feeding guidance, recovery care, and calm companionship.",
-            specialties: "Specialties: lactation support, newborn care, overnight support",
+            bio: "I support families through the early postpartum weeks with feeding guidance, recovery care, and calm overnight help. I can settle a newborn, prep nourishing meals, and give parents rest while watching for recovery needs. I also coach on soothing, sleep rhythms, and when to call a clinician so you never have to guess alone.",
+            specialties: "Specialties: lactation support, newborn care, overnight support, postpartum recovery, sibling adjustment",
             bookingCount: 112,
             imageName: "providerAvatar"
         ),
@@ -44,8 +44,8 @@ struct Provider: Identifiable, Hashable {
             ratePerHour: 28,
             rating: 4.7,
             reviewCount: 9,
-            bio: "I focus on meaningful conversation, light activity, and helping clients stay connected to daily routines.",
-            specialties: "Specialties: companionship, transportation, grocery help",
+            bio: "I focus on meaningful conversation, light activity, and staying connected to daily routines. Visits might include a walk, a favorite show, groceries, or a ride to an appointment. I look out for isolation, missed meals, and small safety issues, then share a clear update with family so everyone knows how the day went.",
+            specialties: "Specialties: companionship, transportation, grocery help, social outings, meal check-ins",
             bookingCount: 41,
             imageName: "providerAvatar"
         )

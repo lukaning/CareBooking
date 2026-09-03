@@ -491,8 +491,18 @@ struct ProviderCard: View {
     var onSelectAppointmentType: (BookingAppointmentType) -> Void
     var onRatingTap: () -> Void
 
+    @State private var isDetailsExpanded = false
+
     private let menuBorder = Color(red: 0.90, green: 0.91, blue: 0.93)
     private let toggleAnimation = Animation.easeInOut(duration: 0.15)
+    private let collapsedLineLimit = 3
+    private let expandedLineLimit = 7
+
+    private var cardDetails: String {
+        [provider.bio, provider.specialties]
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .joined(separator: "\n")
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -520,14 +530,29 @@ struct ProviderCard: View {
 
             Divider()
 
-            (Text(provider.bio).font(.body).foregroundStyle(Theme.darkText)
-                + Text(" ").font(.body)
-                + Text("More details").font(.body.weight(.bold)).foregroundStyle(Color.accentColor))
+            VStack(alignment: .leading, spacing: 8) {
+                Text(cardDetails)
+                    .font(.body)
+                    .foregroundStyle(Theme.darkText)
+                    .lineLimit(isDetailsExpanded ? expandedLineLimit : collapsedLineLimit)
+                    .truncationMode(.tail)
 
-            Text(provider.specialties)
-                .font(.subheadline)
-                .foregroundStyle(Theme.mutedText)
-                .lineLimit(1)
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isDetailsExpanded.toggle()
+                    }
+                } label: {
+                    Text(isDetailsExpanded ? "Less details" : "More details")
+                        .font(.body.weight(.bold))
+                        .foregroundStyle(Color.accentColor)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint(
+                    isDetailsExpanded
+                        ? "Collapse provider details"
+                        : "Expand provider details, up to seven lines"
+                )
+            }
 
             HStack(spacing: 12) {
                 iconButton(systemName: "ellipsis")
