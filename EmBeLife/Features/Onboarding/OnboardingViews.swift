@@ -206,9 +206,7 @@ struct RoleLanguageStep: View {
                         VStack(spacing: 20) {
                             roleCard(
                                 role: .client,
-                                title: Text("I'm ")
-                                    + Text("looking").fontWeight(.bold)
-                                    + Text(" for help or rehabilitative services"),
+                                title: LocalizedMarkdownText(key: "I'm **looking** for help or rehabilitative services"),
                                 subtitle: "Those are usually the Individuals who need help",
                                 image: "roleClient",
                                 selectedImage: "roleClientSelected"
@@ -216,9 +214,7 @@ struct RoleLanguageStep: View {
 
                             roleCard(
                                 role: .provider,
-                                title: Text("I ")
-                                    + Text("provide").fontWeight(.bold)
-                                    + Text(" help or rehabilitative services"),
+                                title: LocalizedMarkdownText(key: "I **provide** help or rehabilitative services"),
                                 subtitle: "Those are usually professionals",
                                 image: "roleProvider",
                                 selectedImage: "roleProviderSelected"
@@ -239,7 +235,7 @@ struct RoleLanguageStep: View {
 
     private func roleCard(
         role: UserRole,
-        title: Text,
+        title: LocalizedMarkdownText,
         subtitle: String,
         image: String,
         selectedImage: String
@@ -266,7 +262,7 @@ struct RoleLanguageStep: View {
                         .foregroundStyle(Theme.darkText)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text(subtitle)
+                    Text(subtitle.localizedKey)
                         .font(.subheadline)
                         .foregroundStyle(Color(red: 0.537, green: 0.537, blue: 0.537))
                         .multilineTextAlignment(.leading)
@@ -292,22 +288,7 @@ private struct LanguageDropdown<Backdrop: View>: View {
     @Binding var isOpen: Bool
     @ViewBuilder var backdrop: Backdrop
 
-    private let languages = [
-        "Spanish",
-        "Chinese",
-        "English",
-        "Tagalog",
-        "Vietnamese",
-        "Korean",
-        "Russian",
-        "American Sign Language (ASL)",
-        "Armenian",
-        "Persian",
-        "Japanese",
-        "French",
-        "German",
-        "Italian"
-    ]
+    private let languages = AppLanguage.pickerNames
 
     private let fill = Color(red: 0.988, green: 0.988, blue: 0.988)
     private let border = Color(red: 0.937, green: 0.937, blue: 0.937)
@@ -468,7 +449,7 @@ struct ServiceNeedsStep: View {
 
                     serviceCategoryIcon(service, isSelected: isSelected)
 
-                    Text(service.title)
+                    Text(service.title.localizedKey)
                         .font(.body.weight(.semibold))
                         .foregroundStyle(isSelected ? Theme.brandOrange : Theme.darkText)
                         .multilineTextAlignment(.leading)
@@ -557,7 +538,8 @@ struct ServiceNeedsStep: View {
 
     private func notesField(for option: ServiceSubOption) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(option.requiresDescription ? "Describe: \(option.title)" : "Notes: \(option.title)")
+            (Text(option.requiresDescription ? "Describe: " : "Notes: ")
+                + Text(option.title.localizedKey))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.grayscale70)
 
@@ -644,7 +626,7 @@ struct ServiceNeedsStep: View {
             }
         } label: {
             HStack(spacing: 8) {
-                Text(group.title)
+                Text(group.title.localizedKey)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(isSelected ? .white : Theme.darkText)
                     .lineLimit(2)
@@ -692,7 +674,7 @@ struct ServiceNeedsStep: View {
             }
         } label: {
             HStack(spacing: 8) {
-                Text(option.title)
+                Text(option.title.localizedKey)
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(isSelected ? .white : Theme.darkText)
                     .lineLimit(2)
@@ -1206,7 +1188,9 @@ private struct OnboardingRadioControl: View {
 private func onboardingBottomBar(title: String, enabled: Bool, action: @escaping () -> Void) -> some View {
     VStack(spacing: 0) {
         Divider().opacity(0.01)
-        Button(title, action: action)
+        Button(action: action) {
+            Text(title.localizedKey)
+        }
             .buttonStyle(PrimaryBlackButtonStyle())
             .disabled(!enabled)
             .opacity(enabled ? 1 : 0.45)

@@ -1,0 +1,7505 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    " and ": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " và "
+          }
+        }
+      }
+    },
+    "ABA Routing Number": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số routing ABA"
+          }
+        }
+      }
+    },
+    "Accept": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chấp nhận"
+          }
+        }
+      }
+    },
+    "Account Holder Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên chủ tài khoản"
+          }
+        }
+      }
+    },
+    "Account Number": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số tài khoản"
+          }
+        }
+      }
+    },
+    "Active": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang hoạt động"
+          }
+        }
+      }
+    },
+    "Activities": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoạt động"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actividades"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动态"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activités"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activités"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activités"
+          }
+        }
+      }
+    },
+    "Activities of daily living (ADL)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sinh hoạt hàng ngày (ADL)"
+          }
+        }
+      }
+    },
+    "Acupuncture": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Châm cứu"
+          }
+        }
+      }
+    },
+    "Add": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm"
+          }
+        }
+      }
+    },
+    "Add a category, description, or sub-task before tapping Done": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm nhóm, mô tả hoặc việc phụ trước khi nhấn Xong"
+          }
+        }
+      }
+    },
+    "Add any relevant files/ photos": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm tệp hoặc ảnh liên quan"
+          }
+        }
+      }
+    },
+    "Add details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm chi tiết"
+          }
+        }
+      }
+    },
+    "Add family or friend": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm gia đình hoặc bạn"
+          }
+        }
+      }
+    },
+    "Add Sub-Task": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm việc phụ"
+          }
+        }
+      }
+    },
+    "Add Task": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm việc"
+          }
+        }
+      }
+    },
+    "Add task details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm chi tiết công việc"
+          }
+        }
+      }
+    },
+    "Addiction": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nghiện"
+          }
+        }
+      }
+    },
+    "Adding member": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm thành viên"
+          }
+        }
+      }
+    },
+    "Admin Account": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tài khoản quản trị"
+          }
+        }
+      }
+    },
+    "Agree": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đồng ý"
+          }
+        }
+      }
+    },
+    "Align a gift QR code inside the frame": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Căn mã QR quà tặng vào khung"
+          }
+        }
+      }
+    },
+    "Amount": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số tiền"
+          }
+        }
+      }
+    },
+    "Anxiety": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo âu"
+          }
+        }
+      }
+    },
+    "Apply": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Áp dụng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aplicar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appliquer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anwenden"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applica"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "적용"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "適用"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Применить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ilapat"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اعمال"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Կիրառել"
+          }
+        }
+      }
+    },
+    "Are you sure you want to cancel this visit?": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bạn chắc muốn hủy buổi này?"
+          }
+        }
+      }
+    },
+    "Autism spectrum disorder": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn phổ tự kỷ"
+          }
+        }
+      }
+    },
+    "Available gift fund balance": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số dư quỹ quà tặng"
+          }
+        }
+      }
+    },
+    "Average rating of providers you engaged": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Điểm trung bình của người hỗ trợ bạn đã dùng"
+          }
+        }
+      }
+    },
+    "Back": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quay lại"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atrás"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "返回"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retour"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indietro"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "뒤로"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "戻る"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Назад"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bumalik"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بازگشت"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հետ"
+          }
+        }
+      }
+    },
+    "Birth doula": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doula sinh"
+          }
+        }
+      }
+    },
+    "Birth, Newborn & Postpartum Services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sinh, trẻ sơ sinh & sau sinh"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parto, recién nacido y posparto"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分娩、新生儿与产后服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naissance, nouveau-né et post-partum"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naissance, nouveau-né et post-partum"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naissance, nouveau-né et post-partum"
+          }
+        }
+      }
+    },
+    "Book a Video Appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đặt lịch video"
+          }
+        }
+      }
+    },
+    "Book an in-person Appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đặt lịch gặp trực tiếp"
+          }
+        }
+      }
+    },
+    "Book Now": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đặt ngay"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reservar ahora"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "立即预约"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réserver"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt buchen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réserver"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 예약"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今すぐ予約"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забронировать"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mag-book ngayon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "همین حالا رزرو کنید"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ամրագրել"
+          }
+        }
+      }
+    },
+    "booked": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "đã đặt"
+          }
+        }
+      }
+    },
+    "Booked": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã đặt"
+          }
+        }
+      }
+    },
+    "Booking cancelled": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã hủy đặt lịch"
+          }
+        }
+      }
+    },
+    "Booking Dates": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày đặt lịch"
+          }
+        }
+      }
+    },
+    "Booking details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chi tiết đặt lịch"
+          }
+        }
+      }
+    },
+    "Booking pipeline": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luồng đặt lịch"
+          }
+        }
+      }
+    },
+    "Booking Requested!": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã gửi yêu cầu đặt lịch!"
+          }
+        }
+      }
+    },
+    "Bookings": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch đặt"
+          }
+        }
+      }
+    },
+    "By signing up you agree to our ": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khi đăng ký, bạn đồng ý với "
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hủy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "취소"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キャンセル"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отмена"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanselahin"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لغو"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Չեղարկել"
+          }
+        }
+      }
+    },
+    "Cancel booking": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hủy đặt lịch"
+          }
+        }
+      }
+    },
+    "Cancer-related symptoms and side effects": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Triệu chứng và tác dụng phụ liên quan ung thư"
+          }
+        }
+      }
+    },
+    "Card Number": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số thẻ"
+          }
+        }
+      }
+    },
+    "Cardholder Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên chủ thẻ"
+          }
+        }
+      }
+    },
+    "Care hours this week": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giờ chăm sóc tuần này"
+          }
+        }
+      }
+    },
+    "Change": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi"
+          }
+        }
+      }
+    },
+    "Change Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi mật khẩu"
+          }
+        }
+      }
+    },
+    "Checklist Details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chi tiết danh sách việc"
+          }
+        }
+      }
+    },
+    "Choose a day and time in the future you want to propose": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ngày giờ trong tương lai bạn muốn đề xuất"
+          }
+        }
+      }
+    },
+    "Choose a day and time you want to schedule": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ngày và giờ bạn muốn đặt"
+          }
+        }
+      }
+    },
+    "Choose at least one care task category for this visit": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ít nhất một nhóm việc cho buổi này"
+          }
+        }
+      }
+    },
+    "Chronic conditions management": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý bệnh mạn tính"
+          }
+        }
+      }
+    },
+    "Chronic pain": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đau mạn tính"
+          }
+        }
+      }
+    },
+    "Clear": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xóa"
+          }
+        }
+      }
+    },
+    "Cleft palate": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hở hàm ếch"
+          }
+        }
+      }
+    },
+    "Close": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerrar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "닫기"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "閉じる"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыть"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isara"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بستن"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Փակել"
+          }
+        }
+      }
+    },
+    "Cognitive communication disorder": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn giao tiếp nhận thức"
+          }
+        }
+      }
+    },
+    "Collapses the language list": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu gọn danh sách ngôn ngữ"
+          }
+        }
+      }
+    },
+    "Coming soon in a later scope.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sắp có trong phiên bản sau."
+          }
+        }
+      }
+    },
+    "Companionship/ emotional support": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đồng hành / hỗ trợ tinh thần"
+          }
+        }
+      }
+    },
+    "Completed": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoàn thành"
+          }
+        }
+      }
+    },
+    "Conditions of Use": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Điều kiện sử dụng"
+          }
+        }
+      }
+    },
+    "Confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestätigen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conferma"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "확인"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "確認"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подтвердить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kumpirmahin"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تأیید"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հաստատել"
+          }
+        }
+      }
+    },
+    "Confirm Gift": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận quà"
+          }
+        }
+      }
+    },
+    "Confirm New Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận mật khẩu mới"
+          }
+        }
+      }
+    },
+    "Confirm Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận mật khẩu"
+          }
+        }
+      }
+    },
+    "Confirm your password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận mật khẩu của bạn"
+          }
+        }
+      }
+    },
+    "Contact": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liên hệ"
+          }
+        }
+      }
+    },
+    "Contact info": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thông tin liên hệ"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếp tục"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continua"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계속"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "続ける"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Продолжить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Magpatuloy"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ادامه"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Շարունակել"
+          }
+        }
+      }
+    },
+    "Counts care visits you have completed through EmBeLife.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đếm số buổi chăm sóc bạn đã hoàn thành trên EmBeLife."
+          }
+        }
+      }
+    },
+    "Create a New Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tạo mật khẩu mới"
+          }
+        }
+      }
+    },
+    "Create Account": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tạo tài khoản"
+          }
+        }
+      }
+    },
+    "Create An Account": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tạo tài khoản"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crear una cuenta"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建账户"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créer un compte"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konto erstellen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créer un compte"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계정 만들기"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウントを作成"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Создать аккаунт"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gumawa ng account"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ایجاد حساب"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ստեղծել հաշիվ"
+          }
+        }
+      }
+    },
+    "Current appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch hẹn hiện tại"
+          }
+        }
+      }
+    },
+    "Current Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu hiện tại"
+          }
+        }
+      }
+    },
+    "Customize location": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tùy chỉnh vị trí"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizar ubicación"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义位置"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personnaliser le lieu"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standort anpassen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizza posizione"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "위치 직접 설정"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "場所を指定"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Указать место"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I-customize ang lokasyon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنظیم مکان"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Կարգավորել տեղը"
+          }
+        }
+      }
+    },
+    "CVC": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CVC"
+          }
+        }
+      }
+    },
+    "Dashboard": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bảng điều khiển"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panel"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表盘"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau de bord"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersicht"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau de bord"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "대시보드"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ダッシュボード"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Панель"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dashboard"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "داشبورد"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Վահանակ"
+          }
+        }
+      }
+    },
+    "Date": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fecha"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日期"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "날짜"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日付"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дата"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petsa"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تاریخ"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ամսաթիվ"
+          }
+        }
+      }
+    },
+    "Date Created": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày tạo"
+          }
+        }
+      }
+    },
+    "Decline": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Từ chối"
+          }
+        }
+      }
+    },
+    "Default": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mặc định"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xóa"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "삭제"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tanggalin"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ջնջել"
+          }
+        }
+      }
+    },
+    "Depression": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trầm cảm"
+          }
+        }
+      }
+    },
+    "Describe: ": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mô tả: "
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Describe: "
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "描述："
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Décrire : "
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreiben: "
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descrivi: "
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "설명: "
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "説明："
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Опишите: "
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ilarawan: "
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شرح: "
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Նկարագրել՝ "
+          }
+        }
+      }
+    },
+    "Description": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mô tả"
+          }
+        }
+      }
+    },
+    "Didn't receive code?": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không nhận được mã?"
+          }
+        }
+      }
+    },
+    "Dietary management": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý chế độ ăn"
+          }
+        }
+      }
+    },
+    "Digestive disorders": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn tiêu hóa"
+          }
+        }
+      }
+    },
+    "Disagree": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không đồng ý"
+          }
+        }
+      }
+    },
+    "Display & Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiển thị & ngôn ngữ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pantalla e idioma"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示与语言"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage et langue"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anzeige & Sprache"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage et langue"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화면 및 언어"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表示と言語"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экран и язык"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display at wika"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمایش و زبان"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ցուցադրում և լեզու"
+          }
+        }
+      }
+    },
+    "Do you need help or can you provide services?": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bạn cần giúp đỡ hay có thể cung cấp dịch vụ?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Necesitas ayuda o puedes prestar servicios?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "您需要帮助，还是可以提供服务？"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avez-vous besoin d’aide ou pouvez-vous proposer des services ?"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brauchen Sie Hilfe oder können Sie Dienste anbieten?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai bisogno di aiuto o puoi offrire servizi?"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "도움이 필요하신가요, 아니면 서비스를 제공하시나요?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サポートが必要ですか、それともサービスを提供できますか？"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вам нужна помощь или вы оказываете услуги?"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kailangan mo ba ng tulong o makakapagbigay ka ng serbisyo?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "به کمک نیاز دارید یا می‌توانید خدمات ارائه دهید؟"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Օգնություն է պետք, թե կարող եք ծառայություններ տրամադրել։"
+          }
+        }
+      }
+    },
+    "Don't have an account?": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có tài khoản?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿No tienes cuenta?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有账户？"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore de compte ?"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch kein Konto?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore de compte ?"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계정이 없나요?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウントをお持ちでない方"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет аккаунта?"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wala pang account?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حساب ندارید؟"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հաշիվ չունե՞ք"
+          }
+        }
+      }
+    },
+    "Done": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xong"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "완료"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tapos"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تمام"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Պատրաստ է"
+          }
+        }
+      }
+    },
+    "Drag either handle to set a range, or type an exact min and max rate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo nút để chọn khoảng, hoặc nhập mức tối thiểu và tối đa."
+          }
+        }
+      }
+    },
+    "Duration": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời lượng"
+          }
+        }
+      }
+    },
+    "E-mail": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sửa"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "编辑"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "편집"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "編集"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I-edit"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ویرایش"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Խմբագրել"
+          }
+        }
+      }
+    },
+    "Edit booking": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sửa đặt lịch"
+          }
+        }
+      }
+    },
+    "Edit Tasks": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sửa việc"
+          }
+        }
+      }
+    },
+    "Email": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        }
+      }
+    },
+    "Email Address": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Địa chỉ email"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correo electrónico"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "电子邮箱"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse e-mail"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-Mail-Adresse"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse e-mail"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이메일 주소"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メールアドレス"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Эл. почта"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ایمیل"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Էլ. փոստ"
+          }
+        }
+      }
+    },
+    "Email or Mobile phone number": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email hoặc số điện thoại"
+          }
+        }
+      }
+    },
+    "EmBeLife uses the system text size from iPhone Settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EmBeLife dùng cỡ chữ hệ thống từ Cài đặt iPhone."
+          }
+        }
+      }
+    },
+    "End conversation": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết thúc trò chuyện"
+          }
+        }
+      }
+    },
+    "End of life support": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hỗ trợ cuối đời"
+          }
+        }
+      }
+    },
+    "Enter a sub-task name to continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập tên việc phụ để tiếp tục"
+          }
+        }
+      }
+    },
+    "Enter Code": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập mã"
+          }
+        }
+      }
+    },
+    "Enter new password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập mật khẩu mới"
+          }
+        }
+      }
+    },
+    "Enter your email": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập email của bạn"
+          }
+        }
+      }
+    },
+    "Enter your email address": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập địa chỉ email"
+          }
+        }
+      }
+    },
+    "Enter your name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập tên của bạn"
+          }
+        }
+      }
+    },
+    "Enter your new password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập mật khẩu mới"
+          }
+        }
+      }
+    },
+    "Enter your password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập mật khẩu của bạn"
+          }
+        }
+      }
+    },
+    "Estimated Time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời gian ước tính"
+          }
+        }
+      }
+    },
+    "Estimated Time/Due time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời gian ước tính / hạn"
+          }
+        }
+      }
+    },
+    "Exit": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thoát"
+          }
+        }
+      }
+    },
+    "Expands the language list": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở danh sách ngôn ngữ"
+          }
+        }
+      }
+    },
+    "Expiry": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hết hạn"
+          }
+        }
+      }
+    },
+    "Family & Friends": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gia đình & bạn bè"
+          }
+        }
+      }
+    },
+    "Family support": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hỗ trợ gia đình"
+          }
+        }
+      }
+    },
+    "Filter": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lọc"
+          }
+        }
+      }
+    },
+    "Find trustworthy help and rehabilitative services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm sự giúp đỡ và dịch vụ phục hồi chức năng đáng tin cậy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encuentra ayuda y servicios de rehabilitación de confianza"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "寻找可信赖的帮助和康复服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trouvez une aide et des services de réadaptation de confiance"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finden Sie vertrauenswürdige Hilfe und Rehabilitation"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trova aiuto e servizi riabilitativi affidabili"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "믿을 수 있는 도움과 재활 서비스를 찾아보세요"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "信頼できる支援とリハビリサービスを見つけましょう"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Найдите надёжную помощь и реабилитацию"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maghanap ng mapagkakatiwalaang tulong at rehabilitasyon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کمک و توانبخشی قابل اعتماد پیدا کنید"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Գտեք վստահելի օգնություն և վերականգնում"
+          }
+        }
+      }
+    },
+    "First Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên"
+          }
+        }
+      }
+    },
+    "Forgot Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quên mật khẩu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olvidé la contraseña"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "忘记密码"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe oublié"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passwort vergessen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe oublié"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "비밀번호 찾기"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "パスワードをお忘れですか"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забыли пароль"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nakalimutan ang password"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فراموشی رمز عبور"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Մոռացել եմ գաղտնաբառը"
+          }
+        }
+      }
+    },
+    "Full Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Họ và tên"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nombre completo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "姓名"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom complet"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vollständiger Name"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom complet"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이름"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "氏名"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полное имя"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buong pangalan"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نام کامل"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ամբողջական անուն"
+          }
+        }
+      }
+    },
+    "General well-being": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sức khỏe tổng quát"
+          }
+        }
+      }
+    },
+    "Get Started": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bắt đầu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comenzar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开始"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loslegen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizia"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작하기"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "はじめる"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Начать"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Magsimula"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شروع"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Սկսել"
+          }
+        }
+      }
+    },
+    "Gift Balance": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số dư quà tặng"
+          }
+        }
+      }
+    },
+    "Gift Fund": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quỹ quà tặng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fondo de regalos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "礼金"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cagnotte cadeau"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cagnotte cadeau"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cagnotte cadeau"
+          }
+        }
+      }
+    },
+    "Gift fund received!": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhận quỹ quà tặng!"
+          }
+        }
+      }
+    },
+    "Gift funds can be sent to providers or received from friends and family.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quỹ quà tặng có thể gửi cho người hỗ trợ hoặc nhận từ bạn bè và gia đình."
+          }
+        }
+      }
+    },
+    "Gift out": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi quà đi"
+          }
+        }
+      }
+    },
+    "Gift to EmBeLife": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tặng quà EmBeLife"
+          }
+        }
+      }
+    },
+    "Grief counseling": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tư vấn đau buồn"
+          }
+        }
+      }
+    },
+    "Hands-free": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rảnh tay"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manos libres"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "免提"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mains libres"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freisprechen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mains libres"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "핸즈프리"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ハンズフリー"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Громкая связь"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hands-free"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دست‌آزاد"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Առանց ձեռքերի"
+          }
+        }
+      }
+    },
+    "Headaches": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đau đầu"
+          }
+        }
+      }
+    },
+    "Help & getting started": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trợ giúp & bắt đầu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayuda y primeros pasos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帮助与入门"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide et démarrage"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide et démarrage"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide et démarrage"
+          }
+        }
+      }
+    },
+    "Hi, Welcome Back! 👋": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xin chào, chào mừng trở lại! 👋"
+          }
+        }
+      }
+    },
+    "Hi, 👋": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xin chào, 👋"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hola, 👋"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你好，👋"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonjour, 👋"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hallo, 👋"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ciao, 👋"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "안녕하세요, 👋"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こんにちは、👋"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Привет, 👋"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hi, 👋"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سلام، 👋"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Բարև, 👋"
+          }
+        }
+      }
+    },
+    "High blood pressure": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Huyết áp cao"
+          }
+        }
+      }
+    },
+    "Home": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang chủ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inicio"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "首页"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accueil"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "홈"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ホーム"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Главная"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خانه"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Գլխավոր"
+          }
+        }
+      }
+    },
+    "Hourly rate": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giá theo giờ"
+          }
+        }
+      }
+    },
+    "Hours of support booked across the last 7 days": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số giờ hỗ trợ đã đặt trong 7 ngày qua"
+          }
+        }
+      }
+    },
+    "I **provide** help or rehabilitative services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tôi **cung cấp** sự giúp đỡ hoặc dịch vụ phục hồi chức năng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Presto** ayuda o servicios de rehabilitación"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我**提供**帮助或康复服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je **propose** de l’aide ou des services de réadaptation"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich **biete** Hilfe oder Rehabilitationsdienste"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Offro** aiuto o servizi riabilitativi"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "도움 또는 재활 서비스를 **제공**해요"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支援またはリハビリサービスを**提供**します"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Я **оказываю** помощь или реабилитационные услуги"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Nagbibigay** ako ng tulong o serbisyong rehabilitasyon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من کمک یا خدمات توانبخشی ارائه می‌دهم"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ես **տրամադրում եմ** օգնություն կամ վերականգնողական ծառայություններ"
+          }
+        }
+      }
+    },
+    "I agree to the Terms of Service and Conditions of Use including consent to electronic communications and I affirm that the information provided is my own.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tôi đồng ý với Điều khoản dịch vụ và Điều kiện sử dụng, bao gồm đồng ý nhận thông tin điện tử, và xác nhận thông tin cung cấp là của tôi."
+          }
+        }
+      }
+    },
+    "I'm **looking** for help or rehabilitative services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tôi đang **tìm** sự giúp đỡ hoặc dịch vụ phục hồi chức năng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estoy **buscando** ayuda o servicios de rehabilitación"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我正在**寻找**帮助或康复服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je **cherche** de l’aide ou des services de réadaptation"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich **suche** Hilfe oder Rehabilitationsdienste"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sto **cercando** aiuto o servizi riabilitativi"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "도움 또는 재활 서비스를 **찾고** 있어요"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支援またはリハビリサービスを**探して**います"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Я **ищу** помощь или реабилитационные услуги"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Naghahanap** ako ng tulong o serbisyong rehabilitasyon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من به دنبال کمک یا خدمات توانبخشی هستم"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ես **փնտրում եմ** օգնություն կամ վերականգնողական ծառայություններ"
+          }
+        }
+      }
+    },
+    "Immediately arrive to the embelife account, support ACH, Venmo, paypal, credit card, etc": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vào tài khoản EmBeLife ngay, hỗ trợ ACH, Venmo, PayPal, thẻ tín dụng, v.v."
+          }
+        }
+      }
+    },
+    "In-person Appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hẹn trực tiếp"
+          }
+        }
+      }
+    },
+    "Infertility": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vô sinh"
+          }
+        }
+      }
+    },
+    "Insomnia": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mất ngủ"
+          }
+        }
+      }
+    },
+    "Invitation Sent": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã gửi lời mời"
+          }
+        }
+      }
+    },
+    "Invite": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mời"
+          }
+        }
+      }
+    },
+    "Invite sent": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã gửi lời mời"
+          }
+        }
+      }
+    },
+    "Invite teammates and control what each role can access in EmBeLife.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mời đồng đội và kiểm soát quyền của từng vai trò trong EmBeLife."
+          }
+        }
+      }
+    },
+    "John": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "John"
+          }
+        }
+      }
+    },
+    "Keep booking": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ đặt lịch"
+          }
+        }
+      }
+    },
+    "Lactation/ feeding support": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hỗ trợ cho bú / ăn"
+          }
+        }
+      }
+    },
+    "Language disorder": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn ngôn ngữ"
+          }
+        }
+      }
+    },
+    "Language Preference": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngôn ngữ ưa thích"
+          }
+        }
+      }
+    },
+    "Language Setting": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt ngôn ngữ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言设置"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lingua"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언어 설정"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語設定"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wika"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زبان"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Լեզու"
+          }
+        }
+      }
+    },
+    "Languages": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngôn ngữ"
+          }
+        }
+      }
+    },
+    "Last Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Họ"
+          }
+        }
+      }
+    },
+    "Light housekeeping": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dọn dẹp nhẹ"
+          }
+        }
+      }
+    },
+    "Location": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vị trí"
+          }
+        }
+      }
+    },
+    "Log out": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng xuất"
+          }
+        }
+      }
+    },
+    "Log Out From All Devices": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng xuất mọi thiết bị"
+          }
+        }
+      }
+    },
+    "Lorem ipsum dolor sit amet, consectetur": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chào mừng bạn quay lại EmBeLife"
+          }
+        }
+      }
+    },
+    "Loss, Bereavement & End of Life Services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mất mát, tang chế & cuối đời"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pérdida, duelo y final de la vida"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "丧亲与临终服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deuil et fin de vie"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deuil et fin de vie"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deuil et fin de vie"
+          }
+        }
+      }
+    },
+    "Max ($/hr)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tối đa ($/giờ)"
+          }
+        }
+      }
+    },
+    "Meal planning": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lên thực đơn"
+          }
+        }
+      }
+    },
+    "Meals": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bữa ăn"
+          }
+        }
+      }
+    },
+    "Meals & Groceries": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bữa ăn & đi chợ"
+          }
+        }
+      }
+    },
+    "Medications": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thuốc men"
+          }
+        }
+      }
+    },
+    "Member List": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danh sách thành viên"
+          }
+        }
+      }
+    },
+    "Memorial planning": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lên kế hoạch tưởng niệm"
+          }
+        }
+      }
+    },
+    "Menstrual issues": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vấn đề kinh nguyệt"
+          }
+        }
+      }
+    },
+    "Message to provider (optional)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tin nhắn tới người hỗ trợ (không bắt buộc)"
+          }
+        }
+      }
+    },
+    "Messages": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tin nhắn"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensajes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "消息"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Messages"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachrichten"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Messaggi"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메시지"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メッセージ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщения"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensahe"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیام‌ها"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հաղորդագրություններ"
+          }
+        }
+      }
+    },
+    "Midwife": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nữ hộ sinh"
+          }
+        }
+      }
+    },
+    "Min ($/hr)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tối thiểu ($/giờ)"
+          }
+        }
+      }
+    },
+    "Mobility and function improvement (general)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cải thiện vận động và chức năng (chung)"
+          }
+        }
+      }
+    },
+    "Mobility assistance": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hỗ trợ di chuyển"
+          }
+        }
+      }
+    },
+    "Modify": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉnh sửa"
+          }
+        }
+      }
+    },
+    "More details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm chi tiết"
+          }
+        }
+      }
+    },
+    "Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên"
+          }
+        }
+      }
+    },
+    "New Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu mới"
+          }
+        }
+      }
+    },
+    "Newborn care": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chăm sóc trẻ sơ sinh"
+          }
+        }
+      }
+    },
+    "Next": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếp"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siguiente"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下一步"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivant"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avanti"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다음"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次へ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Далее"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Susunod"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بعدی"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հաջորդ"
+          }
+        }
+      }
+    },
+    "No categories selected": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa chọn nhóm nào"
+          }
+        }
+      }
+    },
+    "No devices are currently signed in.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện không có thiết bị nào đăng nhập."
+          }
+        }
+      }
+    },
+    "No Sub-Task added": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có việc phụ"
+          }
+        }
+      }
+    },
+    "Notes: ": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi chú: "
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notas: "
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "备注："
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notes : "
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen: "
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note: "
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메모: "
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メモ："
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заметки: "
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mga tala: "
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یادداشت: "
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Նշումներ՝ "
+          }
+        }
+      }
+    },
+    "Notification": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thông báo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notificación"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notification"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mitteilung"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifiche"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "알림"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уведомления"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abiso"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اعلان"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ծանուցում"
+          }
+        }
+      }
+    },
+    "Number of Bookings Completed": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số lịch đã hoàn thành"
+          }
+        }
+      }
+    },
+    "Nutrition & Dietary Services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinh dưỡng & chế độ ăn"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutrición y dieta"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "营养与饮食服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutrition et régime"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutrition et régime"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutrition et régime"
+          }
+        }
+      }
+    },
+    "Nutrition counseling": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tư vấn dinh dưỡng"
+          }
+        }
+      }
+    },
+    "Occupational Therapy": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoạt động trị liệu"
+          }
+        }
+      }
+    },
+    "OK": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "확인"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "باشه"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Only people invited in this list can access": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉ người được mời trong danh sách này mới vào được"
+          }
+        }
+      }
+    },
+    "Open iPhone Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở Cài đặt iPhone"
+          }
+        }
+      }
+    },
+    "Optional attachments": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tệp đính kèm (không bắt buộc)"
+          }
+        }
+      }
+    },
+    "Or Sign In with": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoặc đăng nhập bằng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O inicia sesión con"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "或使用以下方式登录"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ou se connecter avec"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oder anmelden mit"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ou se connecter avec"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "또는 다음으로 로그인"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "または次でログイン"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Или войти через"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O mag-sign in gamit ang"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یا ورود با"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Կամ մուտք գործել"
+          }
+        }
+      }
+    },
+    "Other (describe)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khác (mô tả)"
+          }
+        }
+      }
+    },
+    "Pain management": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý đau"
+          }
+        }
+      }
+    },
+    "Password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contraseña"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "密码"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passwort"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "비밀번호"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "パスワード"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароль"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "رمز عبور"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Գաղտնաբառ"
+          }
+        }
+      }
+    },
+    "Password & Security": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu & bảo mật"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contraseña y seguridad"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "密码与安全"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe et sécurité"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe et sécurité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mot de passe et sécurité"
+          }
+        }
+      }
+    },
+    "Password must be at least 8 characters and include upper case, lower case, a number, and a special character.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt."
+          }
+        }
+      }
+    },
+    "Payment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thanh toán"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pago"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支付"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paiement"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahlung"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pagamento"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "결제"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支払い"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оплата"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bayad"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پرداخت"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Վճարում"
+          }
+        }
+      }
+    },
+    "Payment Method": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phương thức thanh toán"
+          }
+        }
+      }
+    },
+    "Payment method:": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phương thức thanh toán:"
+          }
+        }
+      }
+    },
+    "PayPal email": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email PayPal"
+          }
+        }
+      }
+    },
+    "Pediatric development": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phát triển trẻ em"
+          }
+        }
+      }
+    },
+    "pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "chờ"
+          }
+        }
+      }
+    },
+    "Personal care": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chăm sóc cá nhân"
+          }
+        }
+      }
+    },
+    "Personal Care/Activities of Daily Living Services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chăm sóc cá nhân / sinh hoạt hàng ngày"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuidado personal / actividades de la vida diaria"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "个人护理 / 日常生活服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soins personnels / activités quotidiennes"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soins personnels / activités quotidiennes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soins personnels / activités quotidiennes"
+          }
+        }
+      }
+    },
+    "Personal hygiene": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vệ sinh cá nhân"
+          }
+        }
+      }
+    },
+    "Pet care (feed/ walk)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chăm thú cưng (cho ăn / dắt đi)"
+          }
+        }
+      }
+    },
+    "Physical Therapy": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vật lý trị liệu"
+          }
+        }
+      }
+    },
+    "Postpartum doula (day/ night)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doula sau sinh (ngày / đêm)"
+          }
+        }
+      }
+    },
+    "Powered by": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cung cấp bởi"
+          }
+        }
+      }
+    },
+    "Preferred language": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngôn ngữ ưa thích"
+          }
+        }
+      }
+    },
+    "Preferred Service": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dịch vụ ưa thích"
+          }
+        }
+      }
+    },
+    "Preferred time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời gian ưa thích"
+          }
+        }
+      }
+    },
+    "Preview text looks like this.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chữ xem trước trông như thế này."
+          }
+        }
+      }
+    },
+    "Previous Providers": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Người hỗ trợ trước đây"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proveedores anteriores"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "以前的服务者"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires précédents"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires précédents"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires précédents"
+          }
+        }
+      }
+    },
+    "Price": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giá"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quyền riêng tư"
+          }
+        }
+      }
+    },
+    "Profile": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hồ sơ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perfil"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "个人资料"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profilo"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "프로필"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プロフィール"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Профиль"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پروفایل"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Պրոֆիլ"
+          }
+        }
+      }
+    },
+    "Proposed appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch hẹn đề xuất"
+          }
+        }
+      }
+    },
+    "Provider": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Người hỗ trợ"
+          }
+        }
+      }
+    },
+    "Provider match quality": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chất lượng ghép người hỗ trợ"
+          }
+        }
+      }
+    },
+    "Rate": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đánh giá"
+          }
+        }
+      }
+    },
+    "Reason for reschedule (optional)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lý do đổi lịch (không bắt buộc)"
+          }
+        }
+      }
+    },
+    "Receive": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhận"
+          }
+        }
+      }
+    },
+    "Receive gift fund or service by using the link below, or QR code, follow the guidance to finish the process": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhận quỹ quà tặng hoặc dịch vụ bằng liên kết hoặc mã QR bên dưới, làm theo hướng dẫn để hoàn tất"
+          }
+        }
+      }
+    },
+    "Recover your account password": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khôi phục mật khẩu tài khoản"
+          }
+        }
+      }
+    },
+    "Rehabilitation/recovery from injury or surgery": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phục hồi sau chấn thương hoặc phẫu thuật"
+          }
+        }
+      }
+    },
+    "Remember Me": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi nhớ tôi"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recuérdame"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "记住我"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se souvenir de moi"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angemeldet bleiben"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se souvenir de moi"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로그인 유지"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ログイン状態を保持"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запомнить меня"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tandaan ako"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مرا به خاطر بسپار"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Հիշել ինձ"
+          }
+        }
+      }
+    },
+    "Request": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yêu cầu"
+          }
+        }
+      }
+    },
+    "Request Booking": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi yêu cầu đặt lịch"
+          }
+        }
+      }
+    },
+    "Requested": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã yêu cầu"
+          }
+        }
+      }
+    },
+    "Requests": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yêu cầu"
+          }
+        }
+      }
+    },
+    "Reschedule": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi lịch"
+          }
+        }
+      }
+    },
+    "Reschedule proposal sent!": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã gửi đề xuất đổi lịch!"
+          }
+        }
+      }
+    },
+    "Resend Code": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi lại mã"
+          }
+        }
+      }
+    },
+    "Role": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vai trò"
+          }
+        }
+      }
+    },
+    "Running errands": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chạy việc vặt"
+          }
+        }
+      }
+    },
+    "Save": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "저장"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранить"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I-save"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ذخیره"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Պահել"
+          }
+        }
+      }
+    },
+    "Saved for next time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu cho lần sau"
+          }
+        }
+      }
+    },
+    "Saved Providers": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Người hỗ trợ đã lưu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proveedores guardados"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存的服务者"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires enregistrés"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires enregistrés"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prestataires enregistrés"
+          }
+        }
+      }
+    },
+    "Search": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm kiếm"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suchen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "검색"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検索"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поиск"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maghanap"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جستجو"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Որոնել"
+          }
+        }
+      }
+    },
+    "Select Your Preferred Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ngôn ngữ ưa thích"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige tu idioma preferido"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择您的首选语言"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez votre langue préférée"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie Ihre bevorzugte Sprache"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona la lingua preferita"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "선호 언어를 선택하세요"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "希望する言語を選択"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите предпочитаемый язык"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Piliin ang iyong gustong wika"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زبان مورد نظر را انتخاب کنید"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ընտրեք նախընտրած լեզուն"
+          }
+        }
+      }
+    },
+    "Send": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi"
+          }
+        }
+      }
+    },
+    "Send Gift": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi quà"
+          }
+        }
+      }
+    },
+    "Service Date:": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày dịch vụ:"
+          }
+        }
+      }
+    },
+    "Service mix": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cơ cấu dịch vụ"
+          }
+        }
+      }
+    },
+    "Services provided to": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dịch vụ cung cấp cho"
+          }
+        }
+      }
+    },
+    "Services Requested for": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dịch vụ yêu cầu cho"
+          }
+        }
+      }
+    },
+    "Set up your Contact info": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết lập liên hệ"
+          }
+        }
+      }
+    },
+    "Set up your Location": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết lập vị trí"
+          }
+        }
+      }
+    },
+    "Set up your Payment info": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết lập thanh toán"
+          }
+        }
+      }
+    },
+    "Set up your preference": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết lập lựa chọn"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设置"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "설정"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنظیمات"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Կարգավորումներ"
+          }
+        }
+      }
+    },
+    "Share": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chia sẻ"
+          }
+        }
+      }
+    },
+    "Sign In": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng nhập"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iniciar sesión"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anmelden"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accedi"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로그인"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ログイン"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войти"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mag-sign in"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ورود"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Մուտք"
+          }
+        }
+      }
+    },
+    "Sign out": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng xuất"
+          }
+        }
+      }
+    },
+    "Sign Up": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng ký"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrarse"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "注册"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inscription"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrieren"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrati"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "회원가입"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新規登録"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Регистрация"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mag-sign up"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت‌نام"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Գրանցում"
+          }
+        }
+      }
+    },
+    "Sign up or sign in": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng ký hoặc đăng nhập"
+          }
+        }
+      }
+    },
+    "Sign up/in": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng ký/nhập"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regístrate/entra"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "注册/登录"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S’inscrire / se connecter"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrieren/anmelden"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S’inscrire / se connecter"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "가입/로그인"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登録/ログイン"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Регистрация/вход"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mag-sign up/in"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ثبت‌نام/ورود"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Գրանցում/մուտք"
+          }
+        }
+      }
+    },
+    "Sign-in failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đăng nhập không thành công"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ qua"
+          }
+        }
+      }
+    },
+    "Smith": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smith"
+          }
+        }
+      }
+    },
+    "Snapshot of appointment status": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tình trạng các cuộc hẹn"
+          }
+        }
+      }
+    },
+    "Speech and articulation disorder": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn phát âm"
+          }
+        }
+      }
+    },
+    "Speech Therapy": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngôn ngữ trị liệu"
+          }
+        }
+      }
+    },
+    "Start Time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giờ bắt đầu"
+          }
+        }
+      }
+    },
+    "Sub-Task": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Việc phụ"
+          }
+        }
+      }
+    },
+    "Submit Proposal": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi đề xuất"
+          }
+        }
+      }
+    },
+    "Subtitle goes here": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phụ đề ở đây"
+          }
+        }
+      }
+    },
+    "Success": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thành công"
+          }
+        }
+      }
+    },
+    "Suggested Tasks Checklist": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danh sách việc gợi ý"
+          }
+        }
+      }
+    },
+    "Swallowing disorder (Dysphagia)": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn nuốt (khó nuốt)"
+          }
+        }
+      }
+    },
+    "Task Category": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhóm công việc"
+          }
+        }
+      }
+    },
+    "Task Details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chi tiết công việc"
+          }
+        }
+      }
+    },
+    "Task list details": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chi tiết danh sách việc"
+          }
+        }
+      }
+    },
+    "Tasks and care activities scheduled for this booking.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Các việc và hoạt động chăm sóc cho lịch này."
+          }
+        }
+      }
+    },
+    "Tasks Checklist": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danh sách việc"
+          }
+        }
+      }
+    },
+    "Terms": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Điều khoản"
+          }
+        }
+      }
+    },
+    "Text Size": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ chữ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamaño del texto"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文字大小"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taille du texte"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textgröße"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taille du texte"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "글자 크기"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文字サイズ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Размер текста"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laki ng teksto"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اندازه متن"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Տեքստի չափ"
+          }
+        }
+      }
+    },
+    "Therapeutic and Rehabilitation Services": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trị liệu và phục hồi chức năng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Servicios terapéuticos y de rehabilitación"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "治疗与康复服务"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services thérapeutiques et de réadaptation"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services thérapeutiques et de réadaptation"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services thérapeutiques et de réadaptation"
+          }
+        }
+      }
+    },
+    "This removes the booking from your list. You can book the provider again later.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Việc này xóa lịch khỏi danh sách. Bạn vẫn có thể đặt lại người hỗ trợ sau."
+          }
+        }
+      }
+    },
+    "Those are usually professionals": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thường là chuyên gia"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suelen ser profesionales"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通常是专业人士"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce sont généralement des professionnels"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das sind in der Regel Fachkräfte"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di solito sono professionisti"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보통 전문가입니다"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通常は専門職の方です"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обычно это специалисты"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karaniwan silang mga propesyonal"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "معمولاً افراد متخصص"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Սովորաբար մասնագետներ են"
+          }
+        }
+      }
+    },
+    "Those are usually the Individuals who need help": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thường là người cần được hỗ trợ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suelen ser las personas que necesitan apoyo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通常是需要帮助的个人"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce sont généralement les personnes qui ont besoin d’aide"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das sind in der Regel Menschen, die Hilfe brauchen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di solito sono le persone che hanno bisogno di aiuto"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보통 도움이 필요한 개인입니다"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通常はサポートを必要とする方です"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обычно это люди, которым нужна поддержка"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karaniwan silang mga indibidwal na nangangailangan ng tulong"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "معمولاً افرادی که به کمک نیاز دارند"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Սովորաբար օգնության կարիք ունեցող անձինք են"
+          }
+        }
+      }
+    },
+    "Time": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giờ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时间"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시간"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Время"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oras"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "زمان"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ժամ"
+          }
+        }
+      }
+    },
+    "Time:": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giờ:"
+          }
+        }
+      }
+    },
+    "Title": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiêu đề"
+          }
+        }
+      }
+    },
+    "To who": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho ai"
+          }
+        }
+      }
+    },
+    "Total:": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tổng:"
+          }
+        }
+      }
+    },
+    "Transportation/ errand assistance": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đưa đón / việc vặt"
+          }
+        }
+      }
+    },
+    "Transportation/ medical and other appointments": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đưa đón / lịch khám và hẹn khác"
+          }
+        }
+      }
+    },
+    "Use current location": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dùng vị trí hiện tại"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar ubicación actual"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用当前位置"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser la position actuelle"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktuellen Standort verwenden"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa posizione attuale"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "현재 위치 사용"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在地を使う"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использовать текущее местоположение"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gamitin ang kasalukuyang lokasyon"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استفاده از مکان فعلی"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Օգտագործել ընթացիկ տեղը"
+          }
+        }
+      }
+    },
+    "Use sample gift QR": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dùng QR quà mẫu"
+          }
+        }
+      }
+    },
+    "User management": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý người dùng"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestión de usuarios"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户管理"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestion des utilisateurs"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestion des utilisateurs"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestion des utilisateurs"
+          }
+        }
+      }
+    },
+    "Venmo username or phone": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên Venmo hoặc số điện thoại"
+          }
+        }
+      }
+    },
+    "Video Appointment": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hẹn video"
+          }
+        }
+      }
+    },
+    "visits": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lượt"
+          }
+        }
+      }
+    },
+    "Voice disorder": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rối loạn giọng nói"
+          }
+        }
+      }
+    },
+    "Welcome to": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chào mừng đến với"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bienvenido a"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "欢迎来到"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bienvenue sur"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Willkommen bei"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benvenuto in"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "환영합니다"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ようこそ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добро пожаловать в"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maligayang pagdating sa"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خوش آمدید به"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Բարի գալուստ"
+          }
+        }
+      }
+    },
+    "What kind of help or support do you need?": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bạn cần loại giúp đỡ hoặc hỗ trợ nào?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Qué tipo de ayuda o apoyo necesitas?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "您需要哪种帮助或支持？"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De quel type d’aide ou de soutien avez-vous besoin ?"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welche Art von Hilfe oder Unterstützung brauchen Sie?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Che tipo di aiuto o supporto ti serve?"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "어떤 도움이나 지원이 필요하신가요?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どのような支援が必要ですか？"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Какая помощь или поддержка вам нужна?"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anong klaseng tulong o suporta ang kailangan mo?"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "به چه نوع کمک یا پشتیبانی نیاز دارید؟"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ինչպիսի օգնություն կամ աջակցություն է ձեզ պետք։"
+          }
+        }
+      }
+    },
+    "Where your EmBeLife care budget is going": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngân sách chăm sóc EmBeLife của bạn đang dùng cho"
+          }
+        }
+      }
+    },
+    "Who will you book for": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bạn đặt cho ai"
+          }
+        }
+      }
+    },
+    "Yes, cancel booking": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Có, hủy đặt lịch"
+          }
+        }
+      }
+    },
+    "Your booking has been requested and waiting for confirmation from your provider": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yêu cầu đặt lịch đang chờ người hỗ trợ xác nhận"
+          }
+        }
+      }
+    },
+    "Your Devices": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết bị của bạn"
+          }
+        }
+      }
+    },
+    "Your devices linked to this EmBeLife account.": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Các thiết bị liên kết với tài khoản EmBeLife này."
+          }
+        }
+      }
+    },
+    "Your gift receiving Link": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liên kết nhận quà của bạn"
+          }
+        }
+      }
+    },
+    "Your Matches": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phù hợp với bạn"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tus coincidencias"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "为你匹配"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos correspondances"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ihre Treffer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos correspondances"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "추천 매칭"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おすすめ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подходящие специалисты"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mga tugma mo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موارد مطابق"
+          }
+        },
+        "hy": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ձեր համընկնումները"
+          }
+        }
+      }
+    },
+    "Your password is successfully created": {
+      "extractionState": "manual",
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu của bạn đã được tạo"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

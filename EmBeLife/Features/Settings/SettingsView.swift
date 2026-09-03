@@ -54,7 +54,7 @@ struct SettingsView: View {
     @State private var preferredLanguage = "English"
     @State private var showGiftFund = false
 
-    private let languageOptions = ["English", "Spanish", "Mandarin", "Cantonese", "French", "ASL"]
+    private let languageOptions = AppLanguage.pickerNames
     private let rowColor = Color(red: 0.435, green: 0.463, blue: 0.494)
     private let badgeFill = Color(red: 0.792, green: 0.741, blue: 1.0)
     private let badgeText = Color(red: 0.102, green: 0.114, blue: 0.122)
@@ -181,7 +181,7 @@ struct SettingsView: View {
                     .foregroundStyle(rowColor)
                     .frame(width: 28, height: 28)
 
-                Text(item.title)
+                Text(item.title.localizedKey)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(rowColor)
                     .frame(maxWidth: .infinity, alignment: .leading)

@@ -15,6 +15,8 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: appModel.flow)
+        .environment(\.locale, appModel.appLocale)
+        .environment(\.layoutDirection, appModel.appLanguage.layoutDirection)
     }
 }
 

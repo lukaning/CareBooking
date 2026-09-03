@@ -240,7 +240,7 @@ struct HomeView: View {
             }
         } label: {
             HStack(spacing: 6) {
-                Text(listMode.title)
+                Text(listMode.title.localizedKey)
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(Theme.darkText)
                 Image(systemName: "chevron.down")
@@ -272,7 +272,7 @@ struct HomeView: View {
                         showListMenu = false
                     }
                 } label: {
-                    Text(mode.title)
+                    Text(mode.title.localizedKey)
                         .font(.system(
                             size: 15,
                             weight: listMode == mode ? .semibold : .regular

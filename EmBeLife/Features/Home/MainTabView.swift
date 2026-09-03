@@ -85,10 +85,11 @@ struct MainTabView: View {
     @ViewBuilder
     private func tabLabel(_ tab: AppTab) -> some View {
         let isSelected = selectedTab == tab
-        Label(
-            tab.title,
-            systemImage: isSelected ? tab.fillSymbol : tab.outlineSymbol
-        )
+        Label {
+            Text(tab.title.localizedKey)
+        } icon: {
+            Image(systemName: isSelected ? tab.fillSymbol : tab.outlineSymbol)
+        }
     }
 
     private func configureTabBarAppearance() {

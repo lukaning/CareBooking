@@ -94,7 +94,7 @@ struct BookingsView: View {
                         bookingTab = tab
                     }
                 } label: {
-                    Text(tab.shortTitle)
+                    Text(tab.shortTitle.localizedKey)
                         .font(.scaledSystem(size: 14, weight: selected ? .semibold : .regular))
                         .foregroundStyle(selected ? headingColor : segmentInactiveText)
                         .frame(maxWidth: .infinity)

@@ -48,7 +48,14 @@ final class AppModel {
 
     var userName = ""
     var userEmail = ""
-    var preferredLanguage = "English"
+    var preferredLanguage: String = UserDefaults.standard.string(forKey: "preferredLanguage") ?? "English" {
+        didSet {
+            UserDefaults.standard.set(preferredLanguage, forKey: "preferredLanguage")
+        }
+    }
+
+    var appLanguage: AppLanguage { AppLanguage.from(displayName: preferredLanguage) }
+    var appLocale: Locale { appLanguage.locale }
     var selectedRole: UserRole?
     var selectedServiceIDs: Set<String> = []
     /// Flat chip selections, or Level 3 leaf selections for nested categories.
