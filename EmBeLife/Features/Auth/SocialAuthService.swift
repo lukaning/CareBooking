@@ -1,13 +1,14 @@
 import AuthenticationServices
 import Foundation
+import GoogleSignIn
 import UIKit
 
 enum SocialAuthError: LocalizedError {
     case missingWindow
     case cancelled
-    case missingToken
     case missingEmail
     case invalidCallback
+    case googleNotConfigured
     case message(String)
 
     var errorDescription: String? {
@@ -16,12 +17,12 @@ enum SocialAuthError: LocalizedError {
             "Unable to present the sign-in sheet."
         case .cancelled:
             "Sign-in was cancelled."
-        case .missingToken:
-            "Sign-in did not return a session. Enable Google in Supabase Auth → Providers, and add redirect URL com.embelife.app://auth-callback."
         case .missingEmail:
             "No email was returned. Try again or use another method."
         case .invalidCallback:
             "Sign-in returned an unexpected response."
+        case .googleNotConfigured:
+            "Google Sign-In needs an iOS OAuth client ID for bundle com.embelife.app. Add GIDClientID and the reversed client ID URL scheme in Info.plist."
         case .message(let text):
             text
         }
@@ -34,21 +35,17 @@ struct SocialAuthProfile: Equatable {
     var provider: String
 }
 
-/// Native Apple Sign In + Google via Supabase OAuth.
+/// Native Apple Sign In + Google Sign-In (GIDSignIn).
 final class SocialAuthService: NSObject {
     static let shared = SocialAuthService()
 
-    private let supabaseProjectRef = "jmtqytfbzgfvcabjqimw"
-    private let redirectScheme = "com.embelife.app"
-    private let redirectURL = "com.embelife.app://auth-callback"
     private let appleEmailDefaultsKey = "socialAuth.appleEmails"
-
     private var appleContinuation: CheckedContinuation<SocialAuthProfile, Error>?
     private var appleController: ASAuthorizationController?
-    private var webSession: ASWebAuthenticationSession?
 
-    private var supabaseAuthorizeBase: URL {
-        URL(string: "https://\(supabaseProjectRef).supabase.co/auth/v1/authorize")!
+    @discardableResult
+    func handleOpenURL(_ url: URL) -> Bool {
+        GIDSignIn.sharedInstance.handle(url)
     }
 
     @MainActor
@@ -69,74 +66,68 @@ final class SocialAuthService: NSObject {
 
     @MainActor
     func signInWithGoogle() async throws -> SocialAuthProfile {
-        var components = URLComponents(url: supabaseAuthorizeBase, resolvingAgainstBaseURL: false)!
-        components.queryItems = [
-            URLQueryItem(name: "provider", value: "google"),
-            URLQueryItem(name: "redirect_to", value: redirectURL)
+        configureGoogleIfNeeded()
+
+        guard GIDSignIn.sharedInstance.configuration != nil else {
+            throw SocialAuthError.googleNotConfigured
+        }
+        guard let presenter = topViewController() else {
+            throw SocialAuthError.missingWindow
+        }
+
+        do {
+            let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presenter)
+            let profile = result.user.profile
+            let email = profile?.email ?? ""
+            let name = profile?.name ?? [profile?.givenName, profile?.familyName]
+                .compactMap { $0 }
+                .joined(separator: " ")
+            guard !email.isEmpty else { throw SocialAuthError.missingEmail }
+            return SocialAuthProfile(email: email, name: name, provider: "google")
+        } catch {
+            throw mappedGoogleError(error)
+        }
+    }
+
+    private func configureGoogleIfNeeded() {
+        if GIDSignIn.sharedInstance.configuration != nil { return }
+        guard let clientID = resolvedGoogleClientID() else { return }
+        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+    }
+
+    private func resolvedGoogleClientID() -> String? {
+        let candidates = [
+            Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String,
+            googleServiceInfoClientID()
         ]
-        guard let url = components.url else {
-            throw SocialAuthError.invalidCallback
+        for raw in candidates {
+            guard let raw else { continue }
+            let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty,
+                  !trimmed.hasPrefix("YOUR_"),
+                  !trimmed.hasPrefix("$(")
+            else { continue }
+            return trimmed
         }
-
-        let callbackURL = try await startWebAuth(url: url)
-        return try profile(from: callbackURL, provider: "google")
+        return nil
     }
 
-    @MainActor
-    private func startWebAuth(url: URL) async throws -> URL {
-        try await withCheckedThrowingContinuation { continuation in
-            let session = ASWebAuthenticationSession(
-                url: url,
-                callbackURLScheme: redirectScheme
-            ) { [weak self] callbackURL, error in
-                self?.webSession = nil
-                if let error {
-                    let nsError = error as NSError
-                    if nsError.domain == ASWebAuthenticationSessionErrorDomain,
-                       nsError.code == ASWebAuthenticationSessionError.canceledLogin.rawValue {
-                        continuation.resume(throwing: SocialAuthError.cancelled)
-                    } else {
-                        continuation.resume(throwing: error)
-                    }
-                    return
-                }
-                guard let callbackURL else {
-                    continuation.resume(throwing: SocialAuthError.invalidCallback)
-                    return
-                }
-                continuation.resume(returning: callbackURL)
-            }
-            session.presentationContextProvider = self
-            session.prefersEphemeralWebBrowserSession = false
-            webSession = session
-            if !session.start() {
-                continuation.resume(throwing: SocialAuthError.missingWindow)
-            }
-        }
+    private func googleServiceInfoClientID() -> String? {
+        guard let url = Bundle.main.url(forResource: "GoogleService-Info", withExtension: "plist"),
+              let dict = NSDictionary(contentsOf: url) else { return nil }
+        return dict["CLIENT_ID"] as? String
     }
 
-    private func profile(from callbackURL: URL, provider: String) throws -> SocialAuthProfile {
-        let params = Self.queryItems(from: callbackURL)
-        if let errorDescription = params["error_description"] ?? params["error"] {
-            throw SocialAuthError.message(errorDescription.replacingOccurrences(of: "+", with: " "))
+    private func mappedGoogleError(_ error: Error) -> Error {
+        let nsError = error as NSError
+        if nsError.domain == GIDSignInError.errorDomain,
+           nsError.code == GIDSignInError.canceled.rawValue {
+            return SocialAuthError.cancelled
         }
-        guard let accessToken = params["access_token"], !accessToken.isEmpty else {
-            throw SocialAuthError.missingToken
+        if nsError.domain == GIDSignInError.errorDomain {
+            return SocialAuthError.message(nsError.localizedDescription)
         }
-
-        let claims = Self.decodeJWTPayload(accessToken) ?? [:]
-        let metadata = claims["user_metadata"] as? [String: Any]
-        let email = (claims["email"] as? String)
-            ?? (metadata?["email"] as? String)
-            ?? ""
-        let name = (metadata?["full_name"] as? String)
-            ?? (metadata?["name"] as? String)
-            ?? [metadata?["given_name"] as? String, metadata?["family_name"] as? String]
-            .compactMap { $0 }
-            .joined(separator: " ")
-
-        guard !email.isEmpty else { throw SocialAuthError.missingEmail }
-        return SocialAuthProfile(email: email, name: name, provider: provider)
+        return error
     }
 
     private func storedAppleEmail(for userID: String) -> String? {
@@ -156,34 +147,13 @@ final class SocialAuthService: NSObject {
             ?? scenes.flatMap(\.windows).first
     }
 
-    private static func queryItems(from url: URL) -> [String: String] {
-        var items: [String: String] = [:]
-        for part in [url.fragment ?? "", url.query ?? ""] where !part.isEmpty {
-            for pair in part.split(separator: "&") {
-                let pieces = pair.split(separator: "=", maxSplits: 1).map(String.init)
-                guard pieces.count == 2 else { continue }
-                let key = pieces[0].removingPercentEncoding ?? pieces[0]
-                let value = pieces[1].removingPercentEncoding ?? pieces[1]
-                items[key] = value
-            }
+    private func topViewController() -> UIViewController? {
+        guard let root = topWindow()?.rootViewController else { return nil }
+        var current = root
+        while let presented = current.presentedViewController {
+            current = presented
         }
-        return items
-    }
-
-    private static func decodeJWTPayload(_ jwt: String) -> [String: Any]? {
-        let parts = jwt.split(separator: ".")
-        guard parts.count >= 2 else { return nil }
-        var base64 = String(parts[1])
-            .replacingOccurrences(of: "-", with: "+")
-            .replacingOccurrences(of: "_", with: "/")
-        let remainder = base64.count % 4
-        if remainder > 0 {
-            base64.append(String(repeating: "=", count: 4 - remainder))
-        }
-        guard let data = Data(base64Encoded: base64),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { return nil }
-        return json
+        return current
     }
 }
 
@@ -242,12 +212,6 @@ extension SocialAuthService: ASAuthorizationControllerDelegate {
 
 extension SocialAuthService: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        topWindow() ?? ASPresentationAnchor()
-    }
-}
-
-extension SocialAuthService: ASWebAuthenticationPresentationContextProviding {
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         topWindow() ?? ASPresentationAnchor()
     }
 }

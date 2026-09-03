@@ -10,12 +10,19 @@ settings:
     TARGETED_DEVICE_FAMILY: "1"
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "4"
+packages:
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: 9.0.0
 targets:
   EmBeLife:
     type: application
     platform: iOS
     sources:
       - path: EmBeLife
+    dependencies:
+      - package: GoogleSignIn
+        product: GoogleSignIn
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.embelife.app

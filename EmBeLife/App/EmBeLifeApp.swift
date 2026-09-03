@@ -11,6 +11,9 @@ struct EmBeLifeApp: App {
                 .tint(Color("BrandOrange"))
                 // Allow the full Dynamic Type range from iPhone Settings.
                 .dynamicTypeSize(.xSmall ... .accessibility5)
+                .onOpenURL { url in
+                    SocialAuthService.shared.handleOpenURL(url)
+                }
         }
     }
 }
