@@ -415,7 +415,7 @@ struct ServiceNeedsStep: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("What kind of help or support do you need?")
+                    Text("What kind of help or rehabilitative services do you need?")
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(Theme.darkText)
                         .padding(.top, 20)
@@ -993,7 +993,7 @@ struct LocationStep: View {
                         appModel.locationConfirmed = false
                     }
                 ),
-                in: 1...250,
+                in: 1...100,
                 step: 1
             )
             .tint(Theme.brandOrange)
@@ -1001,7 +1001,7 @@ struct LocationStep: View {
             HStack {
                 Text("1 mile")
                 Spacer()
-                Text("250 miles")
+                Text("100 miles")
             }
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.darkText)
