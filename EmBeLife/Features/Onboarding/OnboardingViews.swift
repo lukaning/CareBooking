@@ -15,15 +15,15 @@ struct OnboardingFlowView: View {
                     onSignUpIn: { appModel.showAuth() }
                 )
             case 1:
-                OnboardingStepContainer {
+                OnboardingStepContainer(onBack: { step = 0 }, onExit: exitOnboarding) {
                     RoleLanguageStep(onContinue: { step = 2 })
                 }
             case 2:
-                OnboardingStepContainer {
+                OnboardingStepContainer(onBack: { step = 1 }, onExit: exitOnboarding) {
                     ServiceNeedsStep(onContinue: { step = 3 })
                 }
             default:
-                OnboardingStepContainer {
+                OnboardingStepContainer(onBack: { step = 2 }, onExit: exitOnboarding) {
                     LocationStep(onContinue: { appModel.finishOnboarding() })
                 }
             }
@@ -38,14 +38,46 @@ struct OnboardingFlowView: View {
             }
         }
     }
+
+    private func exitOnboarding() {
+        if appModel.isSignedIn {
+            appModel.finishOnboarding()
+        } else {
+            appModel.showAuth()
+        }
+    }
 }
 
 private struct OnboardingStepContainer<Content: View>: View {
+    var onBack: (() -> Void)?
+    var onExit: (() -> Void)?
     @ViewBuilder let content: Content
 
     var body: some View {
         VStack(spacing: 0) {
-            OnboardingHero()
+            ZStack(alignment: .top) {
+                OnboardingHero()
+                if onBack != nil || onExit != nil {
+                    HStack {
+                        AuthBackButton(action: onBack)
+                        Spacer()
+                        if let onExit {
+                            Button(action: onExit) {
+                                Image(systemName: "xmark")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.white.opacity(0.2))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Exit")
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                }
+            }
             content
         }
         .background(Color(.systemBackground))
@@ -193,7 +225,9 @@ struct RoleLanguageStep: View {
 
                     roleCard(
                         role: .client,
-                        title: "I'm looking for help or support",
+                        title: Text("I'm ")
+                            + Text("looking").fontWeight(.bold)
+                            + Text(" for help or rehabilitative services"),
                         subtitle: "Those are usually the Individuals who need help",
                         image: "roleClient",
                         selectedImage: "roleClientSelected"
@@ -201,7 +235,9 @@ struct RoleLanguageStep: View {
 
                     roleCard(
                         role: .provider,
-                        title: "I'm a Provider",
+                        title: Text("I ")
+                            + Text("provide").fontWeight(.bold)
+                            + Text(" help or rehabilitative services"),
                         subtitle: "Those are usually professionals",
                         image: "roleProvider",
                         selectedImage: "roleProviderSelected"
@@ -217,7 +253,7 @@ struct RoleLanguageStep: View {
 
     private func roleCard(
         role: UserRole,
-        title: String,
+        title: Text,
         subtitle: String,
         image: String,
         selectedImage: String
@@ -238,10 +274,11 @@ struct RoleLanguageStep: View {
                     .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(title)
-                        .font(.headline)
+                    title
+                        .font(.headline.weight(.regular))
                         .foregroundStyle(Theme.darkText)
                         .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(subtitle)
                         .font(.subheadline)
                         .foregroundStyle(Color(red: 0.537, green: 0.537, blue: 0.537))
