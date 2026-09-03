@@ -179,7 +179,7 @@ struct RoleLanguageStep: View {
     @Environment(AppModel.self) private var appModel
     var onContinue: () -> Void
 
-    private let languages = ["English", "Spanish", "Chinese", "French"]
+    @State private var isLanguageMenuOpen = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -198,30 +198,15 @@ struct RoleLanguageStep: View {
                                 .foregroundStyle(Theme.grayscale60)
                         }
 
-                        Menu {
-                            ForEach(languages, id: \.self) { language in
-                                Button(language) {
-                                    appModel.preferredLanguage = language
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Text(appModel.preferredLanguage)
-                                    .font(.headline)
-                                    .foregroundStyle(Theme.darkText)
-                                Spacer()
-                                Image(systemName: "chevron.down")
-                                    .foregroundStyle(Theme.grayscale60)
-                            }
-                            .padding(16)
-                            .background(Color(red: 0.988, green: 0.988, blue: 0.988))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color(red: 0.937, green: 0.937, blue: 0.937), lineWidth: 2)
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        }
+                        LanguageDropdown(
+                            selection: Binding(
+                                get: { appModel.preferredLanguage },
+                                set: { appModel.preferredLanguage = $0 }
+                            ),
+                            isOpen: $isLanguageMenuOpen
+                        )
                     }
+                    .zIndex(2)
 
                     roleCard(
                         role: .client,
@@ -232,6 +217,7 @@ struct RoleLanguageStep: View {
                         image: "roleClient",
                         selectedImage: "roleClientSelected"
                     )
+                    .zIndex(0)
 
                     roleCard(
                         role: .provider,
@@ -242,10 +228,12 @@ struct RoleLanguageStep: View {
                         image: "roleProvider",
                         selectedImage: "roleProviderSelected"
                     )
+                    .zIndex(0)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
             }
+            .scrollClipDisabled()
 
             onboardingBottomBar(title: "Get Started", enabled: appModel.selectedRole != nil, action: onContinue)
         }
@@ -263,6 +251,7 @@ struct RoleLanguageStep: View {
 
         return Button {
             withAnimation(.easeInOut(duration: 0.18)) {
+                isLanguageMenuOpen = false
                 appModel.selectedRole = role
             }
         } label: {
@@ -297,6 +286,119 @@ struct RoleLanguageStep: View {
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.18), value: selected)
+    }
+}
+
+private struct LanguageDropdown: View {
+    @Binding var selection: String
+    @Binding var isOpen: Bool
+
+    private let languages = [
+        "Spanish",
+        "Chinese",
+        "English",
+        "Tagalog",
+        "Vietnamese",
+        "Korean",
+        "Russian",
+        "American Sign Language (ASL)",
+        "Armenian",
+        "Persian",
+        "Japanese",
+        "French",
+        "German",
+        "Italian"
+    ]
+
+    private let fill = Color(red: 0.988, green: 0.988, blue: 0.988)
+    private let border = Color(red: 0.937, green: 0.937, blue: 0.937)
+    private let selectedFill = Color(red: 0.937, green: 0.937, blue: 0.937)
+    private let muted = Color(red: 0.537, green: 0.537, blue: 0.537)
+
+    var body: some View {
+        header
+            .background(fill)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(border, lineWidth: 2)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(alignment: .top) {
+                if isOpen {
+                    VStack(spacing: 0) {
+                        header
+                        Rectangle()
+                            .fill(border)
+                            .frame(height: 1)
+                        ScrollView {
+                            LazyVStack(spacing: 0) {
+                                ForEach(languages, id: \.self) { language in
+                                    languageRow(language)
+                                }
+                            }
+                        }
+                        .frame(maxHeight: 320)
+                    }
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(border, lineWidth: 2)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .shadow(color: .black.opacity(0.12), radius: 16, y: 8)
+                    .transition(.opacity.combined(with: .scale(scale: 0.98, anchor: .top)))
+                }
+            }
+            .animation(.easeInOut(duration: 0.18), value: isOpen)
+            .accessibilityElement(children: .contain)
+    }
+
+    private var header: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.18)) {
+                isOpen.toggle()
+            }
+        } label: {
+            HStack {
+                Text(selection)
+                    .font(.headline)
+                    .foregroundStyle(Theme.darkText)
+                    .lineLimit(1)
+                Spacer()
+                Image(systemName: "chevron.down")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.grayscale60)
+                    .rotationEffect(.degrees(isOpen ? 180 : 0))
+            }
+            .padding(16)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Preferred language")
+        .accessibilityValue(selection)
+        .accessibilityHint(isOpen ? "Collapses the language list" : "Expands the language list")
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private func languageRow(_ language: String) -> some View {
+        let selected = language == selection
+        return Button {
+            selection = language
+            withAnimation(.easeInOut(duration: 0.18)) {
+                isOpen = false
+            }
+        } label: {
+            Text(language)
+                .font(.body.weight(selected ? .semibold : .regular))
+                .foregroundStyle(selected ? Theme.darkText : muted)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(selected ? selectedFill : Color.white)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? [.isSelected, .isButton] : .isButton)
     }
 }
 
