@@ -171,11 +171,14 @@ struct SocialSignInRow: View {
                 profile = try await SocialAuthService.shared.signInWithApple()
             }
             appModel.completeSignIn(email: profile.email, name: profile.name)
-        } catch let error as SocialAuthError {
-            if case .cancelled = error { return }
-            errorMessage = error.errorDescription ?? error.localizedDescription
         } catch {
-            errorMessage = error.localizedDescription
+            // Native Apple/Google sheets dismiss via Cancel / "Not Now" — stay on this options screen.
+            if SocialAuthService.isCancellation(error) { return }
+            if let social = error as? SocialAuthError {
+                errorMessage = social.errorDescription ?? social.localizedDescription
+            } else {
+                errorMessage = error.localizedDescription
+            }
         }
     }
 }

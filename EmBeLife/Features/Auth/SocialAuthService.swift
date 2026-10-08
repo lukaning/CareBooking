@@ -48,9 +48,18 @@ final class SocialAuthService: NSObject {
         GIDSignIn.sharedInstance.handle(url)
     }
 
+    /// Presents the system Sign in with Apple sheet (`ASAuthorizationController`).
+    /// That UI is owned by Apple (including its "Not Now" / Cancel dismiss control) and can't be customized.
     @MainActor
     func signInWithApple() async throws -> SocialAuthProfile {
-        try await withCheckedThrowingContinuation { continuation in
+        // Drop any prior in-flight request so a second tap after dismiss can't hang or double-resume.
+        if let pending = appleContinuation {
+            appleContinuation = nil
+            appleController = nil
+            pending.resume(throwing: SocialAuthError.cancelled)
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
             appleContinuation = continuation
 
             let request = ASAuthorizationAppleIDProvider().createRequest()
@@ -200,13 +209,28 @@ extension SocialAuthService: ASAuthorizationControllerDelegate {
         guard let continuation = appleContinuation else { return }
         appleContinuation = nil
 
-        let nsError = error as NSError
-        if nsError.domain == ASAuthorizationError.errorDomain,
-           nsError.code == ASAuthorizationError.canceled.rawValue {
+        if Self.isCancellation(error) {
             continuation.resume(throwing: SocialAuthError.cancelled)
         } else {
             continuation.resume(throwing: error)
         }
+    }
+
+    /// True when the user dismissed a system sign-in sheet (Apple "Not Now" / Cancel, or Google cancel).
+    static func isCancellation(_ error: Error) -> Bool {
+        if let social = error as? SocialAuthError, case .cancelled = social {
+            return true
+        }
+        let nsError = error as NSError
+        if nsError.domain == ASAuthorizationError.errorDomain,
+           nsError.code == ASAuthorizationError.canceled.rawValue {
+            return true
+        }
+        if nsError.domain == GIDSignInError.errorDomain,
+           nsError.code == GIDSignInError.canceled.rawValue {
+            return true
+        }
+        return false
     }
 }
 
